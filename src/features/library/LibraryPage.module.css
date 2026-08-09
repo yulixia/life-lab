@@ -1,6 +1,6 @@
 .listPage {
   display: grid;
-  height: calc(100dvh - 173px - env(safe-area-inset-bottom));
+  height: calc(100dvh - 179px - env(safe-area-inset-bottom));
   min-height: 0;
   gap: 14px;
   grid-template-rows: auto minmax(0, 1fr);
