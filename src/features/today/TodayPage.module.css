@@ -42,6 +42,35 @@
   gap: 8px;
 }
 
+.overview {
+  display: grid;
+  gap: 14px;
+}
+
+.tagList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tagList span {
+  border-radius: 999px;
+  padding: 4px 9px;
+  color: var(--color-muted);
+  background: rgba(255, 255, 255, 0.58);
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.evidenceList {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
+  color: var(--color-muted);
+  line-height: 1.55;
+}
+
 .linkButton,
 .disabledAction {
   display: inline-flex;

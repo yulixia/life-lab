@@ -6,6 +6,7 @@ import { Card } from '../../components/Card'
 import { EnergyScale } from '../../components/EnergyScale'
 import { InlineError } from '../../components/InlineError'
 import { SelectField } from '../../components/SelectField'
+import { TagPicker } from '../../components/TagPicker'
 import { TextArea } from '../../components/TextArea'
 import { TextField } from '../../components/TextField'
 import { useLifeLab } from '../../app/LifeLabContext'
@@ -14,6 +15,8 @@ import { selectDailyEntry, selectEffectiveCyclePlan } from '../../domain/selecto
 import { addCycleAdjustment, saveDailyEntry } from '../../domain/transitions'
 import { DomainError, type MissReason } from '../../domain/types'
 import styles from './CheckInPage.module.css'
+
+const feelingOptions = ['轻松', '清醒', '稳定', '兴奋', '疲惫', '焦虑', '烦躁', '卡住']
 
 export function CheckInPage() {
   const { cycleId } = useParams()
@@ -27,6 +30,7 @@ export function CheckInPage() {
   const [status, setStatus] = useState<'practiced' | 'not_practiced'>(existing?.status ?? 'practiced')
   const [actionSummary, setActionSummary] = useState(existing?.actionSummary ?? '')
   const [durationMinutes, setDurationMinutes] = useState(existing?.durationMinutes?.toString() ?? '')
+  const [feelingTags, setFeelingTags] = useState<string[]>(existing?.feelingTags ?? [])
   const [energyDelta, setEnergyDelta] = useState(existing?.energyDelta ?? 0)
   const [observation, setObservation] = useState(existing?.observation ?? '')
   const [missReason, setMissReason] = useState<MissReason | ''>(existing?.missReason ?? '')
@@ -58,6 +62,7 @@ export function CheckInPage() {
           status,
           actionSummary,
           durationMinutes: durationMinutes ? Number(durationMinutes) : undefined,
+          feelingTags,
           energyDelta,
           observation,
           missReason: status === 'not_practiced' ? missReason || undefined : undefined,
@@ -133,6 +138,7 @@ export function CheckInPage() {
                   type="number"
                   value={durationMinutes}
                 />
+                <TagPicker label="感受标签" onChange={setFeelingTags} options={feelingOptions} value={feelingTags} />
                 <EnergyScale label="能量变化" name="energyDelta" onChange={setEnergyDelta} value={energyDelta} />
                 <TextArea
                   label="观察"

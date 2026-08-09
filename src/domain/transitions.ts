@@ -223,6 +223,48 @@ export function restoreArchivedItem(state: LifeLabState, itemId: UUID, now: Date
   }
 }
 
+export function archiveLifeItem(state: LifeLabState, itemId: UUID, now: Date): LifeLabState {
+  const item = state.items.find((candidate) => candidate.id === itemId)
+  if (!item) {
+    throw new DomainError('not_found', 'item does not exist')
+  }
+  if (item.status === 'archived') {
+    return state
+  }
+  if (state.cycles.some((cycle) => cycle.itemId === item.id && isOpenCycle(cycle))) {
+    throw new DomainError('invalid_state', 'open cycle must be reviewed before archiving')
+  }
+
+  return {
+    ...state,
+    meta: { ...state.meta, updatedAt: now.toISOString() },
+    items: state.items.map((candidate) =>
+      candidate.id === item.id
+        ? { ...candidate, status: 'archived', archivedAt: now.toISOString(), updatedAt: now.toISOString() }
+        : candidate,
+    ),
+  }
+}
+
+export function deleteLifeItem(state: LifeLabState, itemId: UUID, now: Date): LifeLabState {
+  if (!state.items.some((item) => item.id === itemId)) {
+    throw new DomainError('not_found', 'item does not exist')
+  }
+
+  const cycleIds = new Set(
+    state.cycles.filter((cycle) => cycle.itemId === itemId).map((cycle) => cycle.id),
+  )
+
+  return {
+    ...state,
+    meta: { ...state.meta, updatedAt: now.toISOString() },
+    items: state.items.filter((item) => item.id !== itemId),
+    cycles: state.cycles.filter((cycle) => cycle.itemId !== itemId),
+    dailyEntries: state.dailyEntries.filter((entry) => !cycleIds.has(entry.cycleId)),
+    reviews: state.reviews.filter((review) => !cycleIds.has(review.cycleId)),
+  }
+}
+
 export function findDuplicateItemTitle(
   state: LifeLabState,
   input: Pick<SaveItemInput, 'title' | 'track'>,
@@ -383,6 +425,36 @@ export function addCycleAdjustment(
             updatedAt: now.toISOString(),
           }
         : candidate,
+    ),
+  }
+}
+
+export function endCycleEarly(state: LifeLabState, cycleId: UUID, now: Date): LifeLabState {
+  const cycle = state.cycles.find((candidate) => candidate.id === cycleId)
+  if (!cycle) {
+    throw new DomainError('not_found', 'cycle does not exist')
+  }
+  if (cycle.status !== 'active' && cycle.status !== 'scheduled') {
+    throw new DomainError('invalid_state', 'only active or scheduled cycles can end early')
+  }
+
+  return {
+    ...state,
+    meta: { ...state.meta, updatedAt: now.toISOString() },
+    cycles: state.cycles.map((candidate) =>
+      candidate.id === cycle.id
+        ? {
+            ...candidate,
+            status: 'review_due',
+            endedEarlyAt: now.toISOString(),
+            updatedAt: now.toISOString(),
+          }
+        : candidate,
+    ),
+    items: state.items.map((item) =>
+      item.id === cycle.itemId
+        ? { ...item, status: 'review_due', updatedAt: now.toISOString() }
+        : item,
     ),
   }
 }

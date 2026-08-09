@@ -1,9 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import {
   addCycleAdjustment,
+  archiveLifeItem,
   createExperimentCycle,
   createLifeItem,
   deleteEnergyEntry,
+  deleteLifeItem,
+  endCycleEarly,
   findDuplicateItemTitle,
   refreshTemporalState,
   restoreArchivedItem,
@@ -223,6 +226,71 @@ describe('domain transitions', () => {
       minimumStandard: '打开文档',
       idealStandard: '写 40 分钟',
     })
+  })
+
+  it('ends an active cycle early without changing the planned end date', () => {
+    const cycle = makeCycle({ status: 'active', endDate: '2026-08-15' })
+    const state = makeState({ items: [makeItem({ status: 'active' })], cycles: [cycle] })
+
+    const ended = endCycleEarly(state, cycle.id, atLocalNoon('2026-08-11'))
+
+    expect(ended.cycles[0]).toMatchObject({
+      status: 'review_due',
+      endDate: '2026-08-15',
+      endedEarlyAt: '2026-08-11T04:00:00.000Z',
+    })
+    expect(ended.items[0].status).toBe('review_due')
+  })
+
+  it('archives only items without open cycles and deletes item evidence together', () => {
+    const item = makeItem({ status: 'exploring' })
+    const cycle = makeCycle({ status: 'reviewed' })
+    const state = makeState({
+      items: [item],
+      cycles: [cycle],
+      dailyEntries: [
+        {
+          id: 'entry-1',
+          cycleId: cycle.id,
+          date: '2026-08-09',
+          status: 'practiced',
+          actionSummary: '写了 10 分钟',
+          feelingTags: [],
+          createdAt: '2026-08-09T04:00:00.000Z',
+          updatedAt: '2026-08-09T04:00:00.000Z',
+        },
+      ],
+      reviews: [
+        {
+          id: 'review-1',
+          cycleId: cycle.id,
+          effectiveDays: 1,
+          missedDays: 0,
+          blankDays: 6,
+          factSummary: '完成一天。',
+          conclusion: '先保留。',
+          decision: 'defer',
+          submittedAt: '2026-08-16T04:00:00.000Z',
+        },
+      ],
+    })
+
+    const archived = archiveLifeItem(state, item.id, atLocalNoon('2026-08-17'))
+    expect(archived.items[0]).toMatchObject({ status: 'archived', archivedAt: '2026-08-17T04:00:00.000Z' })
+
+    expect(() =>
+      archiveLifeItem(
+        makeState({ items: [makeItem({ status: 'active' })], cycles: [makeCycle({ status: 'active' })] }),
+        item.id,
+        atLocalNoon('2026-08-17'),
+      ),
+    ).toThrowError(DomainError)
+
+    const deleted = deleteLifeItem(state, item.id, atLocalNoon('2026-08-18'))
+    expect(deleted.items).toEqual([])
+    expect(deleted.cycles).toEqual([])
+    expect(deleted.dailyEntries).toEqual([])
+    expect(deleted.reviews).toEqual([])
   })
 
   it('submits each review once, freezes the old cycle, and creates continuation from next local day', () => {

@@ -48,6 +48,33 @@
   line-height: 1.65;
 }
 
+.actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.linkButton {
+  display: inline-flex;
+  min-height: var(--tap-min);
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 16px;
+  padding: 10px 16px;
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-strong));
+  font-size: 0.82rem;
+  font-weight: 900;
+  line-height: 1.3;
+  text-decoration: none;
+}
+
+.linkButton:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
 .cycleSummary {
   display: grid;
   gap: 5px;
@@ -74,7 +101,7 @@
 
 .cycleItem {
   display: grid;
-  gap: 4px;
+  gap: 8px;
   border-radius: 16px;
   padding: 10px 12px;
   background: rgba(255, 255, 255, 0.42);
@@ -83,4 +110,31 @@
 .reviewConclusion {
   color: var(--color-ink);
   font-weight: 800;
+}
+
+.dailyList {
+  display: grid;
+  gap: 5px;
+  margin: 0;
+  padding-left: 18px;
+  color: var(--color-muted);
+  line-height: 1.55;
+}
+
+.reviewEvidence {
+  display: grid;
+  gap: 6px;
+  border-radius: 14px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.45);
+}
+
+.reviewEvidence strong {
+  color: var(--color-ink);
+}
+
+@media (max-width: 360px) {
+  .actions {
+    grid-template-columns: 1fr;
+  }
 }
