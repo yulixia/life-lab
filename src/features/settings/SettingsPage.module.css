@@ -145,17 +145,8 @@
   gap: 10px;
 }
 
-.actions > :only-child {
-  grid-column: 1 / -1;
-  justify-self: center;
-}
-
 .dangerZone {
   background: rgba(255, 255, 255, 0.78);
-}
-
-.dangerZone > button {
-  justify-self: center;
 }
 
 @media (min-width: 640px) {

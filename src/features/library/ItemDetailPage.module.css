@@ -79,12 +79,6 @@
   grid-column: 2;
 }
 
-.actions > :only-child,
-.quietActions > :only-child {
-  grid-column: 1 / -1;
-  justify-self: center;
-}
-
 .moreActions {
   border-top: 1px solid rgba(139, 158, 184, 0.12);
   padding-top: 4px;

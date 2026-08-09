@@ -51,11 +51,6 @@
   background: linear-gradient(rgba(247, 250, 252, 0), var(--color-surface) 35%);
 }
 
-.actions > :only-child {
-  grid-column: 1 / -1;
-  justify-self: center;
-}
-
 .linkButton {
   display: inline-flex;
   min-height: var(--tap-min);
