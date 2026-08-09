@@ -9,6 +9,13 @@ type EnergyScaleProps = {
 }
 
 const values: EnergyDelta[] = [-2, -1, 0, 1, 2]
+const labels: Record<EnergyDelta, string> = {
+  '-2': '明显消耗',
+  '-1': '有些消耗',
+  0: '无变化',
+  1: '有些补充',
+  2: '明显补充',
+}
 
 export function EnergyScale({ label, name, onChange, value }: EnergyScaleProps) {
   return (
@@ -25,6 +32,7 @@ export function EnergyScale({ label, name, onChange, value }: EnergyScaleProps) 
               value={option}
             />
             <span>{option > 0 ? `+${option}` : option}</span>
+            <small>{labels[option]}</small>
           </label>
         ))}
       </div>

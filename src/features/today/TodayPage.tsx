@@ -70,26 +70,35 @@ export function TodayPage() {
           const day = selectCycleDay(cycle, today)
           const entry = selectDailyEntry(state, cycle.id, today)
           const isRecordable = typeof day === 'number'
+          const daysLeft = typeof day === 'number' ? 7 - day : 7
           return (
-            <Card className={styles.card} key={cycle.id}>
-              <div className={styles.cardTitleRow}>
-                <h2>{item?.title ?? '当前实践'}</h2>
-                {isRecordable ? (
-                  <Link className={styles.linkButton} to={`/experiments/${cycle.id}/check-in?date=${today}`}>
-                    {entry ? '查看记录' : '记录今日'}
-                  </Link>
-                ) : (
-                  <span className={styles.disabledAction}>明日开始</span>
-                )}
-              </div>
-              <div className={styles.meta}>
+            <Card className={`${styles.card} ${styles.focusCard}`} key={cycle.id}>
+              <div className={styles.focusHeader}>
+                <div>
+                  <span className={styles.kicker}>今天的实践</span>
+                  <h2>{item?.title ?? '当前实践'}</h2>
+                </div>
                 <TrackBadge track={track} />
-                <StatusBadge status={cycle.status === 'scheduled' ? 'active' : 'active'} />
               </div>
-              <p>
+              <div className={styles.dayLine}>
+                <strong>{day === 'scheduled' ? '明天开始' : `第 ${day} 天`}</strong>
+                <span>{day === 'scheduled' ? `${cycle.startDate} 开始` : `还剩 ${daysLeft} 天`}</span>
+              </div>
+              <p className={styles.planText}>
                 第 {cycle.cycleNumber} 轮，{cycle.startDate} 至 {cycle.endDate}
               </p>
-              <p>{day === 'scheduled' ? '还未开始' : `第 ${day} 天`}</p>
+              {isRecordable ? (
+                <div className={styles.primaryActions}>
+                  <Link className={styles.primaryButton} to={`/experiments/${cycle.id}/check-in?date=${today}`}>
+                    {entry ? '查看今日记录' : '记录今日'}
+                  </Link>
+                  <Link className={styles.secondaryButton} to={`/experiments/${cycle.id}/check-in?date=${today}&status=not_practiced`}>
+                    标记未实践
+                  </Link>
+                </div>
+              ) : (
+                <span className={styles.disabledAction}>开始前先保留精力</span>
+              )}
             </Card>
           )
         })}
@@ -99,7 +108,7 @@ export function TodayPage() {
           .map((track) => (
             <Card className={styles.card} key={track}>
               <div className={styles.cardTitleRow}>
-                <h2>当前没有重点实践</h2>
+                <h2>{track === 'ideal_self' ? '理想自我空着' : '副业探索空着'}</h2>
                 <Link className={styles.linkButton} to="/library">
                   去总库
                 </Link>
@@ -112,6 +121,7 @@ export function TodayPage() {
           ))}
 
         <section className={styles.overview} aria-label="极简总览">
+          <h2 className={styles.sectionTitle}>最近的证据</h2>
           <OverviewCard
             category="energy"
             entries={selectRecentEnergy(state, 'energy', 5)}

@@ -20,13 +20,16 @@
 .options label {
   display: grid;
   min-height: var(--tap-min);
+  gap: 2px;
   place-items: center;
   border: 0;
   border-radius: 16px;
+  padding: 7px 4px;
   color: var(--color-muted);
   background: rgba(255, 255, 255, 0.62);
   box-shadow: inset 0 0 0 1px rgba(139, 158, 184, 0.08);
   font-weight: 850;
+  text-align: center;
 }
 
 .options input {
@@ -43,4 +46,11 @@
   border-color: var(--color-primary) !important;
   color: var(--color-primary) !important;
   background: var(--color-primary-soft) !important;
+}
+
+.options small {
+  color: inherit;
+  font-size: 0.62rem;
+  font-weight: 800;
+  line-height: 1.15;
 }

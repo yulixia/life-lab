@@ -83,7 +83,7 @@ export function EnergyFormPage({ mode }: EnergyFormPageProps) {
 
   return (
     <>
-      <AppHeader backTo="/energy" title={mode === 'edit' ? '编辑情绪' : '新增情绪'} eyebrow="情绪" />
+      <AppHeader backTo="/energy" title={mode === 'edit' ? '编辑记录' : '记录一件事'} eyebrow="情绪能量" />
       <Card>
         <form className={styles.form} onSubmit={handleSubmit}>
           <div className={styles.formGrid}>
@@ -105,28 +105,33 @@ export function EnergyFormPage({ mode }: EnergyFormPageProps) {
               value={occurredAt}
             />
           </div>
-          <TextField label="场景" maxLength={80} onChange={(changeEvent) => setScene(changeEvent.target.value)} value={scene} />
           <TextArea
-            label="事件"
+            label="发生了什么？"
             maxLength={240}
             onChange={(changeEvent) => setEvent(changeEvent.target.value)}
             required
             value={event}
           />
           <TagPicker label="感受标签" onChange={setFeelingTags} options={feelingOptions} value={feelingTags} />
-          <EnergyScale label="情绪变化" name="energyDelta" onChange={setEnergyDelta} value={energyDelta} />
-          <TextArea
-            label="原因"
-            maxLength={240}
-            onChange={(changeEvent) => setReason(changeEvent.target.value)}
-            value={reason}
-          />
-          <TextArea
-            label="补充观察"
-            maxLength={500}
-            onChange={(changeEvent) => setReflection(changeEvent.target.value)}
-            value={reflection}
-          />
+          <EnergyScale label="这件事让你更有能量还是更消耗？" name="energyDelta" onChange={setEnergyDelta} value={energyDelta} />
+          <details className={styles.optional} open={Boolean(scene || reason || reflection)}>
+            <summary>补充更多</summary>
+            <div className={styles.optionalFields}>
+              <TextField label="场景" maxLength={80} onChange={(changeEvent) => setScene(changeEvent.target.value)} value={scene} />
+              <TextArea
+                label="原因"
+                maxLength={240}
+                onChange={(changeEvent) => setReason(changeEvent.target.value)}
+                value={reason}
+              />
+              <TextArea
+                label="补充观察"
+                maxLength={500}
+                onChange={(changeEvent) => setReflection(changeEvent.target.value)}
+                value={reflection}
+              />
+            </div>
+          </details>
           {error ? <InlineError>{error}</InlineError> : null}
           <div className={styles.actions}>
             <Link className={styles.cancelLink} to="/energy">

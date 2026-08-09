@@ -24,10 +24,11 @@ export function CheckInPage() {
   const navigate = useNavigate()
   const { replaceState, state } = useLifeLab()
   const date = searchParams.get('date') || todayLocalDate()
+  const initialStatus = searchParams.get('status') === 'not_practiced' ? 'not_practiced' : 'practiced'
   const cycle = state?.cycles.find((candidate) => candidate.id === cycleId)
   const existing = state && cycleId ? selectDailyEntry(state, cycleId, date) : null
   const plan = useMemo(() => (cycle ? selectEffectiveCyclePlan(cycle, date) : null), [cycle, date])
-  const [status, setStatus] = useState<'practiced' | 'not_practiced'>(existing?.status ?? 'practiced')
+  const [status, setStatus] = useState<'practiced' | 'not_practiced'>(existing?.status ?? initialStatus)
   const [actionSummary, setActionSummary] = useState(existing?.actionSummary ?? '')
   const [durationMinutes, setDurationMinutes] = useState(existing?.durationMinutes?.toString() ?? '')
   const [feelingTags, setFeelingTags] = useState<string[]>(existing?.feelingTags ?? [])
@@ -114,7 +115,7 @@ export function CheckInPage() {
               <p>最低标准：{plan.minimumStandard}</p>
             </div>
             <SelectField
-              label="记录类型"
+              label="今天达到最低标准了吗？"
               onChange={(event) => setStatus(event.target.value as 'practiced' | 'not_practiced')}
               value={status}
             >

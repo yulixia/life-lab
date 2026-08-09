@@ -14,6 +14,33 @@
   gap: 10px;
 }
 
+.optional {
+  border-radius: 16px;
+  padding: 2px 0 0;
+}
+
+.optional summary {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  color: var(--color-primary);
+  font-size: 0.84rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.optional summary:focus-visible {
+  border-radius: 8px;
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.optionalFields {
+  display: grid;
+  gap: 14px;
+  margin-top: 8px;
+}
+
 .cancelLink {
   display: inline-flex;
   min-height: var(--tap-min);

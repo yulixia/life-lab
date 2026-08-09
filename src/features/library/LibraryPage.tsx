@@ -17,6 +17,14 @@ import type { ExperimentCycle, LifeItem } from '../../domain/types'
 import { statusLabels } from './libraryLabels'
 import styles from './LibraryPage.module.css'
 
+const statusClassNames: Record<LifeItem['status'], string> = {
+  active: styles.activeItem,
+  archived: styles.archivedItem,
+  exploring: styles.exploringItem,
+  long_term: styles.longTermItem,
+  review_due: styles.reviewDueItem,
+}
+
 export function LibraryPage() {
   const { state } = useLifeLab()
   const [trackFilter, setTrackFilter] = useState<LibraryTrackFilter>('all')
@@ -104,7 +112,7 @@ function LibraryItemCard({
 
   return (
     <Link className={styles.item} to={`/items/${item.id}`}>
-      <Card className={styles.itemCard}>
+      <Card className={`${styles.itemCard} ${statusClassNames[item.status]}`}>
         <div className={styles.itemTop}>
           <h2>{item.title}</h2>
           <span className={styles.ratio}>{progress.ratio}</span>
@@ -139,7 +147,7 @@ function getCycleProgress(cycle: ExperimentCycle | null, today: string) {
     dueText: `到期 ${formatShortDate(cycle.endDate)}`,
     label: cycle.status === 'review_due' ? '待复盘' : cycle.status === 'scheduled' ? '未开始' : '当前周期',
     percent: Math.min(100, Math.max(0, (dayNumber / 7) * 100)),
-    ratio: `第 ${dayNumber}/7 天`,
+    ratio: cycle.status === 'review_due' ? '待复盘' : dayNumber ? `第 ${dayNumber} 天` : '未开始',
   }
 }
 

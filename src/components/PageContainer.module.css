@@ -2,7 +2,7 @@
   width: 100%;
   height: 100%;
   margin: 0 auto;
-  padding: 0 var(--space-page) calc(108px + env(safe-area-inset-bottom));
+  padding: 0 var(--space-page) calc(136px + env(safe-area-inset-bottom));
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;

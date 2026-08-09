@@ -7,6 +7,7 @@ import { Card } from '../../components/Card'
 import { ConfirmDialog } from '../../components/ConfirmDialog'
 import { InlineError } from '../../components/InlineError'
 import { useLifeLab } from '../../app/LifeLabContext'
+import { todayLocalDate } from '../../domain/dates'
 import {
   selectCycleCounts,
   selectCyclesByItem,
@@ -64,6 +65,10 @@ export function ItemDetailPage() {
   const isTrackOccupiedByOther = Boolean(trackCycle && trackCycle.itemId !== item.id)
   const reviewsByCycleId = new Map(state.reviews.map((review) => [review.cycleId, review]))
   const canStartCycle = !openCycle && !isTrackOccupiedByOther && item.status !== 'archived'
+  const today = todayLocalDate()
+  const hasQuietActions = Boolean(
+    (openCycle && openCycle.status !== 'review_due') || (item.status !== 'archived' && !openCycle) || !openCycle,
+  )
 
   const handleRestore = () => {
     runAction(() => restoreArchivedItem(state, item.id, new Date()))
@@ -126,27 +131,39 @@ export function ItemDetailPage() {
                 恢复事项
               </Button>
             ) : null}
-            {openCycle && openCycle.status !== 'review_due' ? (
-              <Button onClick={() => setConfirmAction('end')} variant="secondary">
-                提前结束
-              </Button>
+            {openCycle?.status === 'active' ? (
+              <Link className={styles.linkButton} to={`/experiments/${openCycle.id}/check-in?date=${today}`}>
+                记录今日
+              </Link>
             ) : null}
             {openCycle?.status === 'review_due' ? (
               <Link className={styles.linkButton} to={`/experiments/${openCycle.id}/review`}>
                 去复盘
               </Link>
             ) : null}
-            {item.status !== 'archived' && !openCycle ? (
-              <Button onClick={() => setConfirmAction('archive')} variant="secondary">
-                归档
-              </Button>
-            ) : null}
-            {!openCycle ? (
-              <Button onClick={() => setConfirmAction('delete')} variant="danger">
-                删除事项
-              </Button>
-            ) : null}
           </div>
+          {hasQuietActions ? (
+            <details className={styles.moreActions}>
+              <summary>更多操作</summary>
+              <div className={styles.quietActions}>
+                {openCycle && openCycle.status !== 'review_due' ? (
+                  <Button onClick={() => setConfirmAction('end')} variant="secondary">
+                    提前结束本轮
+                  </Button>
+                ) : null}
+                {item.status !== 'archived' && !openCycle ? (
+                  <Button onClick={() => setConfirmAction('archive')} variant="secondary">
+                    归档事项
+                  </Button>
+                ) : null}
+                {!openCycle ? (
+                  <Button onClick={() => setConfirmAction('delete')} variant="danger">
+                    删除事项
+                  </Button>
+                ) : null}
+              </div>
+            </details>
+          ) : null}
         </Card>
 
         <Card className={styles.section}>
@@ -162,7 +179,7 @@ export function ItemDetailPage() {
               <span>
                 {openCycle.startDate} 至 {openCycle.endDate}
               </span>
-              <span>{openCycle.status}</span>
+              <span>{cycleStatusLabels[openCycle.status]}</span>
             </div>
           ) : (
             <p>{isTrackOccupiedByOther ? '同方向已有未完成周期。' : '当前没有未完成周期。'}</p>

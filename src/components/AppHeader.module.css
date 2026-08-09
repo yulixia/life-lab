@@ -47,6 +47,12 @@
   overflow-wrap: anywhere;
 }
 
+.headingText {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+}
+
 .side {
   display: grid;
   flex: 0 0 auto;

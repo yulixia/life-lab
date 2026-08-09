@@ -62,9 +62,42 @@
 }
 
 .itemCard {
+  position: relative;
   display: grid;
   gap: 13px;
   padding: 18px;
+  overflow: hidden;
+}
+
+.itemCard::before {
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  left: 0;
+  width: 4px;
+  border-radius: 0 999px 999px 0;
+  content: '';
+  background: rgba(139, 158, 184, 0.34);
+}
+
+.activeItem::before {
+  background: var(--color-primary);
+}
+
+.reviewDueItem::before {
+  background: var(--color-danger);
+}
+
+.exploringItem::before {
+  background: rgba(139, 158, 184, 0.34);
+}
+
+.longTermItem::before {
+  background: #40a76f;
+}
+
+.archivedItem {
+  opacity: 0.72;
 }
 
 .itemTop {

@@ -75,6 +75,34 @@
   outline-offset: 2px;
 }
 
+.moreActions {
+  border-top: 1px solid rgba(139, 158, 184, 0.12);
+  padding-top: 4px;
+}
+
+.moreActions summary {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  color: var(--color-label);
+  font-size: 0.8rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.moreActions summary:focus-visible {
+  border-radius: 8px;
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.quietActions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 8px;
+}
+
 .cycleSummary {
   display: grid;
   gap: 5px;
@@ -134,7 +162,8 @@
 }
 
 @media (max-width: 360px) {
-  .actions {
+  .actions,
+  .quietActions {
     grid-template-columns: 1fr;
   }
 }
