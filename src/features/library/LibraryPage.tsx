@@ -35,6 +35,14 @@ export function LibraryPage() {
     () => (state ? selectLibraryItems(state, trackFilter, statusFilter) : []),
     [state, statusFilter, trackFilter],
   )
+  const trackCounts = useMemo(
+    () => ({
+      all: state ? selectLibraryItems(state, 'all', statusFilter).length : 0,
+      ideal_self: state ? selectLibraryItems(state, 'ideal_self', statusFilter).length : 0,
+      side_hustle: state ? selectLibraryItems(state, 'side_hustle', statusFilter).length : 0,
+    }),
+    [state, statusFilter],
+  )
 
   return (
     <>
@@ -54,9 +62,9 @@ export function LibraryPage() {
             label="方向筛选"
             onChange={setTrackFilter}
             options={[
-              { label: '全部', value: 'all' },
-              { label: '理想自我', value: 'ideal_self' },
-              { label: '副业探索', value: 'side_hustle' },
+              { count: trackCounts.all, label: '全部', value: 'all' },
+              { count: trackCounts.ideal_self, label: '理想自我', value: 'ideal_self' },
+              { count: trackCounts.side_hustle, label: '副业探索', value: 'side_hustle' },
             ]}
             value={trackFilter}
           />

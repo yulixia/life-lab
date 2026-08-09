@@ -1,6 +1,7 @@
 import styles from './SegmentedControl.module.css'
 
 type SegmentedOption<T extends string> = {
+  count?: number
   label: string
   value: T
 }
@@ -29,7 +30,10 @@ export function SegmentedControl<T extends string>({
             onClick={() => onChange(option.value)}
             type="button"
           >
-            {option.label}
+            <span className={styles.label}>{option.label}</span>
+            {typeof option.count === 'number' ? (
+              <span className={styles.count}>{option.count > 99 ? '99+' : option.count}</span>
+            ) : null}
           </button>
         ))}
       </div>

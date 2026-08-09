@@ -1,4 +1,5 @@
 .container {
+  box-sizing: border-box;
   width: 100%;
   height: 106%;
   margin: 0 auto;
@@ -7,4 +8,10 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: thin;
+}
+
+.containedScroll {
+  height: 100%;
+  padding-bottom: 0;
+  overflow-y: hidden;
 }

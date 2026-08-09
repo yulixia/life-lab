@@ -22,10 +22,16 @@
 }
 
 .options button {
+  display: inline-flex;
   min-height: 36px;
+  min-width: 0;
   flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   border: 0;
   border-radius: 14px;
+  padding: 0 8px;
   color: var(--color-muted);
   background: transparent;
   font-size: 0.78rem;
@@ -35,6 +41,34 @@
 .options button[aria-pressed='true'] {
   color: var(--color-primary);
   background: var(--color-primary-soft);
+}
+
+.label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.count {
+  display: inline-flex;
+  min-width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0 5px;
+  color: var(--color-label);
+  background: rgba(255, 255, 255, 0.68);
+  font-size: 0.68rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.options button[aria-pressed='true'] .count {
+  color: var(--color-primary-strong);
+  background: rgba(255, 255, 255, 0.78);
 }
 
 .options button:focus-visible {
