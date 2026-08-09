@@ -97,6 +97,18 @@
   background: #40a76f;
 }
 
+.completedItem::before {
+  background: var(--summer-pastel-10-02);
+}
+
+.terminatedItem::before {
+  background: var(--summer-pastel-14-02);
+}
+
+.voidedItem::before {
+  background: var(--summer-pastel-04-03);
+}
+
 .archivedItem {
   opacity: 0.72;
 }

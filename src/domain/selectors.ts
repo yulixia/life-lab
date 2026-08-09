@@ -200,7 +200,10 @@ function sortLibraryItems(left: LifeItem, right: LifeItem): number {
     active: 1,
     exploring: 2,
     long_term: 3,
-    archived: 4,
+    completed: 4,
+    terminated: 5,
+    voided: 6,
+    archived: 7,
   }
 
   return statusRank[left.status] - statusRank[right.status] || right.updatedAt.localeCompare(left.updatedAt)

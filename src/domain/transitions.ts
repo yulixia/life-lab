@@ -295,6 +295,9 @@ export function createExperimentCycle(
   if (item.status === 'archived') {
     throw new DomainError('invalid_state', 'archived item must be restored before starting a cycle')
   }
+  if (isEndedItemStatus(item.status)) {
+    throw new DomainError('invalid_state', 'ended item cannot restart; create a new item instead')
+  }
   if (selectOpenCycleByTrack(state, item.track)) {
     throw new DomainError('track_occupied', 'track already has an open cycle')
   }
@@ -660,7 +663,7 @@ function createNextCycle(
   }
 }
 
-function nextItemStatus(decision: ReviewDecision): 'active' | 'exploring' | 'long_term' | 'archived' {
+function nextItemStatus(decision: ReviewDecision): ItemStatus {
   if (decision === 'continue' || decision === 'adjust_continue') {
     return 'active'
   }
@@ -670,7 +673,14 @@ function nextItemStatus(decision: ReviewDecision): 'active' | 'exploring' | 'lon
   if (decision === 'archive') {
     return 'archived'
   }
+  if (decision === 'voided' || decision === 'terminated' || decision === 'completed') {
+    return decision
+  }
   return 'exploring'
+}
+
+function isEndedItemStatus(status: ItemStatus): boolean {
+  return status === 'voided' || status === 'terminated' || status === 'completed'
 }
 
 function hasAdjustment(input: SubmitReviewInput): boolean {

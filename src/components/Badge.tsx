@@ -6,6 +6,9 @@ const statusLabels: Record<ItemStatus, string> = {
   active: '进行中',
   review_due: '待复盘',
   long_term: '长期进行',
+  voided: '作废',
+  terminated: '终止',
+  completed: '完结',
   archived: '已归档',
 }
 

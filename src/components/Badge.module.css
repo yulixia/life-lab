@@ -34,6 +34,21 @@
   background: color-mix(in srgb, var(--summer-pastel-12-01) 18%, #ffffff);
 }
 
+.voided {
+  color: var(--summer-pastel-04-03);
+  background: color-mix(in srgb, var(--summer-pastel-04-03) 46%, #ffffff);
+}
+
+.terminated {
+  color: var(--summer-pastel-14-02);
+  background: color-mix(in srgb, var(--summer-pastel-14-02) 16%, #ffffff);
+}
+
+.completed {
+  color: var(--summer-pastel-10-02);
+  background: color-mix(in srgb, var(--summer-pastel-10-02) 18%, #ffffff);
+}
+
 .archived {
   color: var(--summer-pastel-04-03);
   background: color-mix(in srgb, var(--summer-pastel-04-03) 46%, #ffffff);

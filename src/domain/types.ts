@@ -3,7 +3,15 @@ export type LocalDate = string
 export type UUID = string
 
 export type Track = 'ideal_self' | 'side_hustle'
-export type ItemStatus = 'exploring' | 'active' | 'review_due' | 'long_term' | 'archived'
+export type ItemStatus =
+  | 'exploring'
+  | 'active'
+  | 'review_due'
+  | 'long_term'
+  | 'voided'
+  | 'terminated'
+  | 'completed'
+  | 'archived'
 export type CycleStatus = 'scheduled' | 'active' | 'review_due' | 'reviewed'
 export type DailyEntryStatus = 'practiced' | 'not_practiced'
 export type EnergyCategory = 'energy' | 'drain'
@@ -16,7 +24,15 @@ export type MissReason =
   | 'unwell'
   | 'not_priority'
   | 'other'
-export type ReviewDecision = 'continue' | 'adjust_continue' | 'defer' | 'long_term' | 'archive'
+export type ReviewDecision =
+  | 'continue'
+  | 'adjust_continue'
+  | 'defer'
+  | 'long_term'
+  | 'archive'
+  | 'voided'
+  | 'terminated'
+  | 'completed'
 
 export type AppMeta = {
   createdAt: IsoInstant

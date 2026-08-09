@@ -21,9 +21,12 @@ import styles from './LibraryPage.module.css'
 const statusClassNames: Record<LifeItem['status'], string> = {
   active: styles.activeItem,
   archived: styles.archivedItem,
+  completed: styles.completedItem,
   exploring: styles.exploringItem,
   long_term: styles.longTermItem,
   review_due: styles.reviewDueItem,
+  terminated: styles.terminatedItem,
+  voided: styles.voidedItem,
 }
 
 export function LibraryPage() {
@@ -121,7 +124,8 @@ function LibraryItemCard({
 }) {
   const progress = getCycleProgress(cycle, today)
   const shouldShowProgress = Boolean(cycle && cycle.status !== 'scheduled')
-  const candidateText = item.status === 'archived' ? '已归档' : item.status === 'long_term' ? '长期进行' : '可开启 7 天实践'
+  const candidateText = item.status === 'exploring' ? '可开启 7 天实践' : statusLabels[item.status]
+  const candidateRow = getCandidateRowText(item)
 
   return (
     <Link className={styles.item} to={`/items/${item.id}`}>
@@ -145,13 +149,34 @@ function LibraryItemCard({
           </>
         ) : (
           <div className={styles.candidateRow}>
-            <span>{item.track === 'ideal_self' ? '理想自我候选' : '副业探索候选'}</span>
-            <span>点开后可开始</span>
+            <span>{candidateRow.left}</span>
+            <span>{candidateRow.right}</span>
           </div>
         )}
       </Card>
     </Link>
   )
+}
+
+function getCandidateRowText(item: LifeItem) {
+  if (item.status === 'exploring') {
+    return {
+      left: item.track === 'ideal_self' ? '理想自我候选' : '副业探索候选',
+      right: '点开后可开始',
+    }
+  }
+
+  if (item.status === 'voided' || item.status === 'terminated' || item.status === 'completed') {
+    return {
+      left: statusLabels[item.status],
+      right: '重新开始请新建',
+    }
+  }
+
+  return {
+    left: statusLabels[item.status],
+    right: '历史保留',
+  }
 }
 
 function getCycleProgress(cycle: ExperimentCycle | null, today: string) {

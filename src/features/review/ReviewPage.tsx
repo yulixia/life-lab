@@ -13,10 +13,9 @@ import { DomainError, type ReviewDecision } from '../../domain/types'
 import styles from './ReviewPage.module.css'
 
 const decisionOptions = [
-  { label: '继续下一轮', value: 'continue' },
-  { label: '重置', value: 'adjust_continue' },
-  { label: '转长期', value: 'long_term' },
-  { label: '完成并归档', value: 'archive' },
+  { label: '作废（还没开始）', value: 'voided' },
+  { label: '终止（进行到一半）', value: 'terminated' },
+  { label: '完结（完成了）', value: 'completed' },
 ] satisfies Array<{ label: string; value: ReviewDecision }>
 
 export function ReviewPage() {
@@ -33,10 +32,7 @@ export function ReviewPage() {
   const [evidenceAgainst, setEvidenceAgainst] = useState('')
   const [discovery, setDiscovery] = useState('')
   const [conclusion, setConclusion] = useState('')
-  const [decision, setDecision] = useState<ReviewDecision>('continue')
-  const [adjustActionPlan, setAdjustActionPlan] = useState('')
-  const [adjustMinimumStandard, setAdjustMinimumStandard] = useState('')
-  const [adjustIdealStandard, setAdjustIdealStandard] = useState('')
+  const [decision, setDecision] = useState<ReviewDecision>('terminated')
   const [error, setError] = useState<string | null>(null)
 
   if (!state || !cycleId) {
@@ -71,14 +67,6 @@ export function ReviewPage() {
           discovery,
           conclusion,
           decision,
-          adjustedPlan:
-            decision === 'adjust_continue'
-              ? {
-                  actionPlan: adjustActionPlan,
-                  minimumStandard: adjustMinimumStandard,
-                  idealStandard: adjustIdealStandard,
-                }
-              : undefined,
         },
         new Date(),
         () => crypto.randomUUID(),
@@ -173,7 +161,7 @@ export function ReviewPage() {
             </div>
           </details>
           <SelectField
-            label="决定"
+            label="结束状态"
             onChange={(event) => setDecision(event.target.value as ReviewDecision)}
             required
             value={decision}
@@ -184,31 +172,6 @@ export function ReviewPage() {
               </option>
             ))}
           </SelectField>
-          {decision === 'adjust_continue' ? (
-            <>
-              <TextArea
-                label="下一轮行动计划"
-                maxLength={500}
-                onChange={(event) => setAdjustActionPlan(event.target.value)}
-                placeholder="例如：每天只写一个具体场景，不要求成文"
-                value={adjustActionPlan}
-              />
-              <TextArea
-                label="下一轮最低标准"
-                maxLength={240}
-                onChange={(event) => setAdjustMinimumStandard(event.target.value)}
-                placeholder="例如：写一句具体观察就算有效"
-                value={adjustMinimumStandard}
-              />
-              <TextArea
-                label="下一轮理想标准"
-                maxLength={240}
-                onChange={(event) => setAdjustIdealStandard(event.target.value)}
-                placeholder="例如：写满 15 分钟并整理成一条素材"
-                value={adjustIdealStandard}
-              />
-            </>
-          ) : null}
           <TextArea
             label="本轮结论"
             maxLength={300}

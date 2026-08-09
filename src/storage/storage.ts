@@ -108,6 +108,9 @@ export function exportValidationSummary(state: LifeLabState): Blob {
     defer: 0,
     long_term: 0,
     archive: 0,
+    voided: 0,
+    terminated: 0,
+    completed: 0,
   }
   let practicedDays = 0
   let missedDays = 0

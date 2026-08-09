@@ -21,7 +21,7 @@ import {
   endCycleEarly,
   restoreArchivedItem,
 } from '../../domain/transitions'
-import { DomainError, type CycleStatus, type DailyEntry, type LifeLabState } from '../../domain/types'
+import { DomainError, type CycleStatus, type DailyEntry, type ItemStatus, type LifeLabState, type ReviewDecision } from '../../domain/types'
 import styles from './ItemDetailPage.module.css'
 
 const cycleStatusLabels: Record<CycleStatus, string> = {
@@ -29,6 +29,17 @@ const cycleStatusLabels: Record<CycleStatus, string> = {
   active: '进行中',
   review_due: '待复盘',
   reviewed: '已复盘',
+}
+
+const reviewDecisionLabels: Record<ReviewDecision, string> = {
+  continue: '继续下一轮',
+  adjust_continue: '重置',
+  defer: '暂缓',
+  long_term: '转长期',
+  archive: '归档',
+  voided: '作废',
+  terminated: '终止',
+  completed: '完结',
 }
 
 export function ItemDetailPage() {
@@ -64,7 +75,7 @@ export function ItemDetailPage() {
   const trackCycle = selectOpenCycleByTrack(state, item.track)
   const isTrackOccupiedByOther = Boolean(trackCycle && trackCycle.itemId !== item.id)
   const reviewsByCycleId = new Map(state.reviews.map((review) => [review.cycleId, review]))
-  const canStartCycle = !openCycle && !isTrackOccupiedByOther && item.status !== 'archived'
+  const canStartCycle = !openCycle && !isTrackOccupiedByOther && item.status !== 'archived' && !isEndedItemStatus(item.status)
   const today = todayLocalDate()
   const hasQuietActions = Boolean(
     (openCycle && openCycle.status !== 'review_due') || (item.status !== 'archived' && !openCycle) || !openCycle,
@@ -209,6 +220,7 @@ export function ItemDetailPage() {
                     {review ? (
                       <div className={styles.reviewEvidence}>
                         <p className={styles.reviewConclusion}>{review.conclusion}</p>
+                        <EvidenceLine label="结束决定" value={reviewDecisionLabels[review.decision]} />
                         <EvidenceLine label="事实" value={review.factSummary} />
                         <EvidenceLine label="有能量" value={review.energizing} />
                         <EvidenceLine label="被消耗" value={review.draining} />
@@ -237,6 +249,10 @@ export function ItemDetailPage() {
       </ConfirmDialog>
     </>
   )
+}
+
+function isEndedItemStatus(status: ItemStatus) {
+  return status === 'voided' || status === 'terminated' || status === 'completed'
 }
 
 function DailyEvidence({ entries }: { entries: DailyEntry[] }) {
