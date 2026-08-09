@@ -1,6 +1,6 @@
 .container {
   width: 100%;
-  height: 100%;
+  height: 106%;
   margin: 0 auto;
   padding: 0 var(--space-page) calc(136px + env(safe-area-inset-bottom));
   overflow-x: hidden;

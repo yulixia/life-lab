@@ -7,8 +7,8 @@
   justify-content: space-between;
   gap: 14px;
   padding: 24px 0 20px;
-  background: linear-gradient(rgba(247, 249, 255, 0.94), rgba(247, 249, 255, 0.82) 76%, rgba(247, 249, 255, 0));
-  backdrop-filter: blur(14px);
+  /* background: linear-gradient(rgba(247, 249, 255, 0.94), rgba(247, 249, 255, 0.82) 76%, rgba(247, 249, 255, 0));
+  backdrop-filter: blur(14px); */
 }
 
 .titleGroup {
