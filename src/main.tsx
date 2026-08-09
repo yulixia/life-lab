@@ -5,6 +5,7 @@ import { App } from './app/App'
 import { LifeLabProvider } from './app/LifeLabContext'
 import './styles/global.css'
 import './styles/tokens.css'
+import './styles/color-palette.css'
 
 createRoot(document.getElementById('root') as HTMLElement).render(
   <StrictMode>

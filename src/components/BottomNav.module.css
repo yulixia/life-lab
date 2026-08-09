@@ -33,17 +33,17 @@
 }
 
 .link[data-section='energy'] {
-  --nav-accent: #f6a1a6;
+  --nav-accent: var(--palette-energy);
   --nav-soft: rgba(255, 229, 231, 0.92);
 }
 
 .link[data-section='library'] {
-  --nav-accent: #8373d8;
+  --nav-accent: var(--palette-library);
   --nav-soft: rgba(232, 228, 255, 0.94);
 }
 
 .link[data-section='settings'] {
-  --nav-accent: #bcd6a6;
+  --nav-accent: var(--palette-data);
   --nav-soft: rgba(231, 242, 220, 0.94);
 }
 

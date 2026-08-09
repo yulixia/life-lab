@@ -34,14 +34,14 @@
 
 .options label[data-tone='energy'] {
   --scale-tone: #cf6f76;
-  --scale-soft: rgba(255, 229, 231, 0.86);
-  --scale-line: rgba(246, 161, 166, 0.2);
+  --scale-soft: color-mix(in srgb, var(--palette-energy) 28%, #ffffff);
+  --scale-line: color-mix(in srgb, var(--palette-energy) 52%, #ffffff);
 }
 
 .options label[data-tone='drain'] {
   --scale-tone: #6f8390;
-  --scale-soft: rgba(232, 239, 243, 0.88);
-  --scale-line: rgba(184, 200, 210, 0.22);
+  --scale-soft: color-mix(in srgb, var(--palette-drain) 42%, #ffffff);
+  --scale-line: color-mix(in srgb, var(--palette-drain) 64%, #ffffff);
 }
 
 .options label[data-tone='neutral'] {

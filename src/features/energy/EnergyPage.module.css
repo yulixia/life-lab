@@ -37,7 +37,7 @@
 }
 
 .energyTone {
-  --tone: #f6a1a6;
+  --tone: var(--palette-energy);
   --tone-strong: #e9868d;
   --tone-ink: #cf6f76;
   --tone-soft: rgba(255, 229, 231, 0.86);
@@ -46,7 +46,7 @@
 }
 
 .drainTone {
-  --tone: #d2dde4;
+  --tone: var(--palette-drain);
   --tone-strong: #b8c8d2;
   --tone-ink: #6f8390;
   --tone-soft: rgba(232, 239, 243, 0.88);

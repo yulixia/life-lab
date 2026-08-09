@@ -18,7 +18,7 @@
 }
 
 .shell[data-section='energy'] {
-  --section-accent: #f6a1a6;
+  --section-accent: var(--palette-energy);
   --section-accent-strong: #e9868d;
   --section-accent-soft: rgba(255, 229, 231, 0.92);
   --section-accent-wash: rgba(255, 231, 233, 0.72);
@@ -26,7 +26,7 @@
 }
 
 .shell[data-section='library'] {
-  --section-accent: #8373d8;
+  --section-accent: var(--palette-library);
   --section-accent-strong: #6f60c7;
   --section-accent-soft: rgba(232, 228, 255, 0.94);
   --section-accent-wash: rgba(234, 230, 255, 0.72);
@@ -34,7 +34,7 @@
 }
 
 .shell[data-section='settings'] {
-  --section-accent: #bcd6a6;
+  --section-accent: var(--palette-data);
   --section-accent-strong: #9fbe85;
   --section-accent-soft: rgba(231, 242, 220, 0.94);
   --section-accent-wash: rgba(231, 242, 220, 0.74);
