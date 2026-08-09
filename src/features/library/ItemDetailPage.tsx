@@ -132,7 +132,10 @@ export function ItemDetailPage() {
               </Button>
             ) : null}
             {openCycle?.status === 'active' ? (
-              <Link className={styles.linkButton} to={`/experiments/${openCycle.id}/check-in?date=${today}`}>
+              <Link
+                className={`${styles.linkButton} ${styles.rightAction}`}
+                to={`/experiments/${openCycle.id}/check-in?date=${today}`}
+              >
                 记录今日
               </Link>
             ) : null}

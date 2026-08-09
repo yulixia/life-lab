@@ -1,4 +1,5 @@
 import { useEffect, useRef, type ReactNode } from 'react'
+import { createPortal } from 'react-dom'
 import { Button } from './Button'
 import styles from './ConfirmDialog.module.css'
 
@@ -46,7 +47,7 @@ export function ConfirmDialog({
     return null
   }
 
-  return (
+  return createPortal(
     <div className={styles.backdrop}>
       <div aria-labelledby="local-notice-title" aria-modal="true" className={styles.dialog} role="dialog">
         <h2 id="local-notice-title">{title}</h2>
@@ -62,6 +63,7 @@ export function ConfirmDialog({
           </Button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }

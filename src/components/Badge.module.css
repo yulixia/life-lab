@@ -15,26 +15,26 @@
 }
 
 .exploring {
-  color: var(--color-label);
-  background: rgba(255, 255, 255, 0.56);
+  color: var(--summer-pastel-10-05);
+  background: color-mix(in srgb, var(--summer-pastel-10-05) 18%, #ffffff);
 }
 
 .active {
-  color: #1f6f4a;
-  background: #e5f5ee;
+  color: var(--summer-pastel-10-02);
+  background: color-mix(in srgb, var(--summer-pastel-10-02) 18%, #ffffff);
 }
 
 .review_due {
-  color: #8a4b0f;
-  background: #fff3dc;
+  color: var(--summer-pastel-14-03);
+  background: color-mix(in srgb, var(--summer-pastel-14-03) 22%, #ffffff);
 }
 
 .long_term {
-  color: #355a8f;
-  background: var(--color-primary-soft);
+  color: var(--summer-pastel-12-01);
+  background: color-mix(in srgb, var(--summer-pastel-12-01) 18%, #ffffff);
 }
 
 .archived {
-  color: var(--color-label);
-  background: rgba(255, 255, 255, 0.5);
+  color: var(--summer-pastel-04-03);
+  background: color-mix(in srgb, var(--summer-pastel-04-03) 46%, #ffffff);
 }
