@@ -10,19 +10,21 @@
 }
 
 .energyTone {
-  --tone: #16866f;
-  --tone-strong: #0f766e;
-  --tone-soft: rgba(218, 247, 239, 0.9);
-  --tone-wash: rgba(22, 134, 111, 0.14);
-  --tone-line: rgba(22, 134, 111, 0.26);
+  --tone: #8bd8cb;
+  --tone-strong: #63b8ad;
+  --tone-ink: #3f8b84;
+  --tone-soft: rgba(231, 249, 244, 0.94);
+  --tone-wash: rgba(170, 232, 219, 0.3);
+  --tone-line: rgba(139, 216, 203, 0.36);
 }
 
 .drainTone {
-  --tone: #c45a2b;
-  --tone-strong: #a74418;
-  --tone-soft: rgba(255, 232, 218, 0.92);
-  --tone-wash: rgba(196, 90, 43, 0.14);
-  --tone-line: rgba(196, 90, 43, 0.24);
+  --tone: #f5b19f;
+  --tone-strong: #e19582;
+  --tone-ink: #b77466;
+  --tone-soft: rgba(255, 240, 234, 0.94);
+  --tone-wash: rgba(255, 205, 190, 0.3);
+  --tone-line: rgba(245, 177, 159, 0.34);
 }
 
 .form {
@@ -37,7 +39,7 @@
 
 .sectionIntro h2 {
   margin: 0;
-  color: var(--tone-strong);
+  color: var(--tone-ink);
   font-size: 0.82rem;
   font-weight: 900;
 }
@@ -98,15 +100,15 @@
 }
 
 .energyChoice[aria-pressed='true'] {
-  color: #0f766e;
-  background: rgba(218, 247, 239, 0.94);
-  box-shadow: inset 0 0 0 1px rgba(22, 134, 111, 0.24);
+  color: #3f8b84;
+  background: rgba(231, 249, 244, 0.96);
+  box-shadow: inset 0 0 0 1px rgba(139, 216, 203, 0.42);
 }
 
 .drainChoice[aria-pressed='true'] {
-  color: #a74418;
-  background: rgba(255, 232, 218, 0.94);
-  box-shadow: inset 0 0 0 1px rgba(196, 90, 43, 0.24);
+  color: #b77466;
+  background: rgba(255, 240, 234, 0.96);
+  box-shadow: inset 0 0 0 1px rgba(245, 177, 159, 0.38);
 }
 
 .choiceGrid button:focus-visible {
@@ -133,7 +135,7 @@
   align-items: center;
   justify-content: center;
   padding: 0 8px;
-  color: var(--tone-strong);
+  color: var(--tone-ink);
   font-size: 0.84rem;
   font-weight: 900;
   cursor: pointer;

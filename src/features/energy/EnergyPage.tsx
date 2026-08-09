@@ -83,7 +83,7 @@ export function EnergyPage() {
           </div>
 
           <fieldset className={styles.mobileSwitch}>
-            <legend>手机列表</legend>
+            <legend>列表</legend>
             <div className={styles.switchOptions}>
               {(['energy', 'drain'] as const).map((value) => {
                 const { Icon, label, toneClass } = categoryMeta[value]

@@ -33,15 +33,15 @@
 }
 
 .options label[data-tone='energy'] {
-  --scale-tone: #16866f;
-  --scale-soft: rgba(218, 247, 239, 0.94);
-  --scale-line: rgba(22, 134, 111, 0.24);
+  --scale-tone: #3f8b84;
+  --scale-soft: rgba(231, 249, 244, 0.96);
+  --scale-line: rgba(139, 216, 203, 0.42);
 }
 
 .options label[data-tone='drain'] {
-  --scale-tone: #c45a2b;
-  --scale-soft: rgba(255, 232, 218, 0.94);
-  --scale-line: rgba(196, 90, 43, 0.24);
+  --scale-tone: #b77466;
+  --scale-soft: rgba(255, 240, 234, 0.96);
+  --scale-line: rgba(245, 177, 159, 0.38);
 }
 
 .options label[data-tone='neutral'] {
