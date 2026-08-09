@@ -4,7 +4,7 @@
   z-index: 100;
   display: grid;
   place-items: end center;
-  padding: 16px max(0px, calc((100vw - var(--app-max-width)) / 2)) calc(104px + env(safe-area-inset-bottom));
+  padding: 16px max(0px, calc((100vw - var(--app-max-width)) / 2)) 0;
   background: rgba(23, 50, 77, 0.36);
   backdrop-filter: blur(8px);
 }
@@ -14,7 +14,7 @@
   max-height: 86dvh;
   overflow-y: auto;
   border-radius: 28px 28px 0 0;
-  padding: 22px;
+  padding: 22px 22px calc(22px + env(safe-area-inset-bottom));
   background: rgba(255, 255, 255, 0.94);
   box-shadow: 0 -18px 60px rgba(102, 131, 160, 0.2);
   backdrop-filter: blur(18px);
