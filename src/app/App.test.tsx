@@ -30,7 +30,7 @@ describe('App routes', () => {
     ['/today', '今日'],
     ['/energy', '情绪'],
     ['/library', '总库'],
-    ['/settings', '设置与数据'],
+    ['/settings', '数据'],
   ])('renders %s', async (route, heading) => {
     renderAt(route)
 

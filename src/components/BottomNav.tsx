@@ -1,4 +1,4 @@
-import { Activity, BookOpen, CalendarDays, Settings } from 'lucide-react'
+import { Activity, BookOpen, CalendarDays, Database } from 'lucide-react'
 import { NavLink, useLocation } from 'react-router-dom'
 import styles from './BottomNav.module.css'
 
@@ -6,7 +6,7 @@ const navItems = [
   { to: '/today', label: '今日', Icon: CalendarDays, section: 'today' },
   { to: '/energy', label: '情绪', Icon: Activity, section: 'energy' },
   { to: '/library', label: '总库', Icon: BookOpen, section: 'library' },
-  { to: '/settings', label: '设置', Icon: Settings, section: 'settings' },
+  { to: '/settings', label: '数据', Icon: Database, section: 'settings' },
 ]
 
 export function BottomNav() {

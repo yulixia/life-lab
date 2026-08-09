@@ -33,18 +33,18 @@
 }
 
 .link[data-section='energy'] {
-  --nav-accent: #7daaf8;
-  --nav-soft: rgba(223, 238, 255, 0.9);
+  --nav-accent: #f6a1a6;
+  --nav-soft: rgba(255, 229, 231, 0.92);
 }
 
 .link[data-section='library'] {
-  --nav-accent: #4fb89c;
-  --nav-soft: rgba(216, 247, 237, 0.92);
+  --nav-accent: #8373d8;
+  --nav-soft: rgba(232, 228, 255, 0.94);
 }
 
 .link[data-section='settings'] {
-  --nav-accent: #9a8be8;
-  --nav-soft: rgba(235, 231, 255, 0.94);
+  --nav-accent: #bcd6a6;
+  --nav-soft: rgba(231, 242, 220, 0.94);
 }
 
 .link:focus-visible {

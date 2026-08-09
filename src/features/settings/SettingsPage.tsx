@@ -52,7 +52,7 @@ export function SettingsPage() {
 
   return (
     <>
-      <AppHeader title="设置与数据" eyebrow="本地保存" />
+      <AppHeader title="数据" eyebrow="本地保存" />
       <div className={styles.stack}>
         <Card className={styles.section}>
           <h2>极简总览</h2>
