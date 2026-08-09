@@ -1,11 +1,44 @@
 .shell {
   position: relative;
+  --section-accent: #5f8df7;
+  --section-accent-strong: #4f7bea;
+  --section-accent-soft: rgba(223, 238, 255, 0.9);
+  --section-accent-wash: rgba(220, 238, 255, 0.82);
+  --section-accent-focus: rgba(95, 141, 247, 0.34);
+  --color-primary: var(--section-accent);
+  --color-primary-strong: var(--section-accent-strong);
+  --color-primary-soft: var(--section-accent-soft);
+  --color-focus: var(--section-accent-focus);
   width: min(100%, var(--app-max-width));
   height: 100dvh;
   margin: 0 auto;
   overflow: hidden;
   background: var(--color-surface);
   box-shadow: 0 0 0 1px rgba(139, 158, 184, 0.08), 0 24px 80px rgba(102, 131, 160, 0.16);
+}
+
+.shell[data-section='energy'] {
+  --section-accent: #7daaf8;
+  --section-accent-strong: #668fe8;
+  --section-accent-soft: rgba(223, 238, 255, 0.9);
+  --section-accent-wash: rgba(222, 232, 255, 0.78);
+  --section-accent-focus: rgba(125, 170, 248, 0.34);
+}
+
+.shell[data-section='library'] {
+  --section-accent: #4fb89c;
+  --section-accent-strong: #36a587;
+  --section-accent-soft: rgba(216, 247, 237, 0.92);
+  --section-accent-wash: rgba(215, 248, 239, 0.78);
+  --section-accent-focus: rgba(79, 184, 156, 0.34);
+}
+
+.shell[data-section='settings'] {
+  --section-accent: #9a8be8;
+  --section-accent-strong: #8373d8;
+  --section-accent-soft: rgba(235, 231, 255, 0.94);
+  --section-accent-wash: rgba(236, 231, 255, 0.74);
+  --section-accent-focus: rgba(154, 139, 232, 0.34);
 }
 
 .shell::before {
@@ -15,7 +48,7 @@
   pointer-events: none;
   content: '';
   background:
-    radial-gradient(circle at -18% 16%, #dceeffd1 0 110px, transparent 111px), radial-gradient(circle at 112% 42%, #ebe2ffbd 0 98px, transparent 99px), radial-gradient(circle at 15% 88%, #dff6edad 0 116px, transparent 117px), #f7f9ff;
+    radial-gradient(circle at -18% 16%, var(--section-accent-wash) 0 110px, transparent 111px), radial-gradient(circle at 112% 42%, #ebe2ffbd 0 98px, transparent 99px), radial-gradient(circle at 15% 88%, #dff6edad 0 116px, transparent 117px), #f7f9ff;
 }
 
 .shell > main {

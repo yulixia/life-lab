@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
 import { BottomNav } from '../components/BottomNav'
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
@@ -9,11 +9,13 @@ import { useLifeLab } from './LifeLabContext'
 import styles from './AppShell.module.css'
 
 export function AppShell() {
+  const location = useLocation()
   const { loadResult, markLocalNoticeSeen, state, status } = useLifeLab()
+  const section = getSection(location.pathname)
 
   if (status === 'loading') {
     return (
-      <div className={styles.shell}>
+      <div className={styles.shell} data-section={section}>
         <PageContainer>
           <div className={styles.loading} role="status">
             正在准备人生实验室
@@ -26,7 +28,7 @@ export function AppShell() {
   if (status === 'load_error') {
     const loadError = loadResult && !loadResult.ok ? loadResult : null
     return (
-      <div className={styles.shell}>
+      <div className={styles.shell} data-section={section}>
         <PageContainer>
           <Card className={styles.recovery}>
             <h1>本地数据暂时无法读取</h1>
@@ -57,7 +59,7 @@ export function AppShell() {
   const shouldShowLocalNotice = Boolean(state && !state.meta.hasSeenLocalDataNotice)
 
   return (
-    <div className={styles.shell}>
+    <div className={styles.shell} data-section={section}>
       <PageContainer>
         <Outlet />
       </PageContainer>
@@ -72,4 +74,17 @@ export function AppShell() {
       </ConfirmDialog>
     </div>
   )
+}
+
+function getSection(pathname: string) {
+  if (pathname.startsWith('/energy')) {
+    return 'energy'
+  }
+  if (pathname.startsWith('/library') || pathname.startsWith('/items')) {
+    return 'library'
+  }
+  if (pathname.startsWith('/settings')) {
+    return 'settings'
+  }
+  return 'today'
 }
