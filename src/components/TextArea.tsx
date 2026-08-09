@@ -12,7 +12,10 @@ export function TextArea({ error, id, label, ...props }: TextAreaProps) {
   const errorId = error ? `${inputId}-error` : undefined
   return (
     <label className={styles.field} htmlFor={inputId}>
-      <span>{label}</span>
+      <span className={styles.labelRow}>
+        <span>{label}</span>
+        <small>{props.required ? '必填' : '选填'}</small>
+      </span>
       <textarea aria-describedby={errorId} aria-invalid={Boolean(error)} id={inputId} {...props} />
       {error ? <InlineError id={errorId}>{error}</InlineError> : null}
     </label>

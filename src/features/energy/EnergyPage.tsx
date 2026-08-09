@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
+import { Plus } from 'lucide-react'
 import { AppHeader } from '../../components/AppHeader'
 import { Card } from '../../components/Card'
 import { SegmentedControl } from '../../components/SegmentedControl'
@@ -30,6 +31,7 @@ export function EnergyPage() {
       <AppHeader
         action={
           <Link className={styles.headerAction} to="/energy/new">
+            <Plus aria-hidden="true" size={16} strokeWidth={2.8} />
             记录情绪
           </Link>
         }

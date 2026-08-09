@@ -12,7 +12,10 @@ export function SelectField({ children, error, id, label, ...props }: SelectFiel
   const errorId = error ? `${inputId}-error` : undefined
   return (
     <label className={styles.field} htmlFor={inputId}>
-      <span>{label}</span>
+      <span className={styles.labelRow}>
+        <span>{label}</span>
+        <small>{props.required ? '必填' : '选填'}</small>
+      </span>
       <select aria-describedby={errorId} aria-invalid={Boolean(error)} id={inputId} {...props}>
         {children}
       </select>

@@ -50,6 +50,7 @@ export function TagPicker({ label, max = 5, onChange, options, value }: TagPicke
           aria-label="自定义标签"
           maxLength={12}
           onChange={(event) => setCustomValue(event.target.value)}
+          placeholder="自定义标签"
           value={customValue}
         />
         <Button disabled={isFull} onClick={addCustom} variant="secondary">

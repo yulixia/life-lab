@@ -12,7 +12,10 @@ export function TextField({ error, id, label, ...props }: TextFieldProps) {
   const errorId = error ? `${inputId}-error` : undefined
   return (
     <label className={styles.field} htmlFor={inputId}>
-      <span>{label}</span>
+      <span className={styles.labelRow}>
+        <span>{label}</span>
+        <small>{props.required ? '必填' : '选填'}</small>
+      </span>
       <input aria-describedby={errorId} aria-invalid={Boolean(error)} id={inputId} {...props} />
       {error ? <InlineError id={errorId}>{error}</InlineError> : null}
     </label>

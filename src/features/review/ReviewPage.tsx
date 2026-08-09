@@ -126,6 +126,7 @@ export function ReviewPage() {
             label="事实摘要"
             maxLength={1000}
             onChange={(event) => setFactSummary(event.target.value)}
+            placeholder="例如：7 天里有效实践 4 天，主要完成了 3 个片段"
             required
             value={factSummary}
           />
@@ -133,30 +134,35 @@ export function ReviewPage() {
             label="带来能量的部分"
             maxLength={500}
             onChange={(event) => setEnergizing(event.target.value)}
+            placeholder="例如：写具体案例时最有劲，完成后更清醒"
             value={energizing}
           />
           <TextArea
             label="带来消耗的部分"
             maxLength={500}
             onChange={(event) => setDraining(event.target.value)}
+            placeholder="例如：空白页启动困难，晚上太晚做会拖延"
             value={draining}
           />
           <TextArea
             label="支持继续的证据"
             maxLength={800}
             onChange={(event) => setEvidenceFor(event.target.value)}
+            placeholder="例如：有效天数过半，且有两次明显能量补充"
             value={evidenceFor}
           />
           <TextArea
             label="支持停止的证据"
             maxLength={800}
             onChange={(event) => setEvidenceAgainst(event.target.value)}
+            placeholder="例如：连续三天需要硬撑，影响睡眠或主线任务"
             value={evidenceAgainst}
           />
           <TextArea
             label="本轮发现"
             maxLength={800}
             onChange={(event) => setDiscovery(event.target.value)}
+            placeholder="例如：我需要先有小题目，不能只写“随便写点”"
             value={discovery}
           />
           <SelectField
@@ -177,18 +183,21 @@ export function ReviewPage() {
                 label="下一轮行动计划"
                 maxLength={500}
                 onChange={(event) => setAdjustActionPlan(event.target.value)}
+                placeholder="例如：每天只写一个具体场景，不要求成文"
                 value={adjustActionPlan}
               />
               <TextArea
                 label="下一轮最低标准"
                 maxLength={240}
                 onChange={(event) => setAdjustMinimumStandard(event.target.value)}
+                placeholder="例如：写一句具体观察就算有效"
                 value={adjustMinimumStandard}
               />
               <TextArea
                 label="下一轮理想标准"
                 maxLength={240}
                 onChange={(event) => setAdjustIdealStandard(event.target.value)}
+                placeholder="例如：写满 15 分钟并整理成一条素材"
                 value={adjustIdealStandard}
               />
             </>
@@ -197,6 +206,7 @@ export function ReviewPage() {
             label="本轮结论"
             maxLength={300}
             onChange={(event) => setConclusion(event.target.value)}
+            placeholder="例如：值得继续，但标准要降到更容易启动"
             required
             value={conclusion}
           />

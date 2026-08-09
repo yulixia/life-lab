@@ -128,6 +128,7 @@ export function CheckInPage() {
                   label="行动摘要"
                   maxLength={500}
                   onChange={(event) => setActionSummary(event.target.value)}
+                  placeholder="例如：写了开头 120 字，记录了一个案例"
                   required
                   value={actionSummary}
                 />
@@ -136,6 +137,7 @@ export function CheckInPage() {
                   max="1440"
                   min="0"
                   onChange={(event) => setDurationMinutes(event.target.value)}
+                  placeholder="例如：15"
                   type="number"
                   value={durationMinutes}
                 />
@@ -145,6 +147,7 @@ export function CheckInPage() {
                   label="观察"
                   maxLength={500}
                   onChange={(event) => setObservation(event.target.value)}
+                  placeholder="例如：开始前很抗拒，但做 5 分钟后变顺了"
                   value={observation}
                 />
               </>
@@ -168,18 +171,21 @@ export function CheckInPage() {
               label="调整后的行动计划"
               maxLength={500}
               onChange={(event) => setAdjustActionPlan(event.target.value)}
+              placeholder="例如：改成早上通勤时先写一句"
               value={adjustActionPlan}
             />
             <TextArea
               label="调整后的最低标准"
               maxLength={240}
               onChange={(event) => setAdjustMinimumStandard(event.target.value)}
+              placeholder="例如：只要打开文档并写一句就算有效"
               value={adjustMinimumStandard}
             />
             <TextArea
               label="调整后的理想标准"
               maxLength={240}
               onChange={(event) => setAdjustIdealStandard(event.target.value)}
+              placeholder="例如：写满 15 分钟并标记一个可继续的点"
               value={adjustIdealStandard}
             />
             {error ? <InlineError>{error}</InlineError> : null}

@@ -99,6 +99,7 @@ export function ExperimentFormPage() {
               label="本轮唯一验证问题"
               maxLength={300}
               onChange={(event) => setQuestion(event.target.value)}
+              placeholder="例如：每天写 10 分钟是否能让我更稳定？"
               required
               value={question}
             />
@@ -106,18 +107,21 @@ export function ExperimentFormPage() {
               label="适合时希望看到什么"
               maxLength={500}
               onChange={(event) => setPositiveSignals(event.target.value)}
+              placeholder="例如：开始阻力变小，写完后更清醒，能积累素材"
               value={positiveSignals}
             />
             <TextArea
               label="不适合时可能出现什么"
               maxLength={500}
               onChange={(event) => setNegativeSignals(event.target.value)}
+              placeholder="例如：持续抗拒、明显消耗、挤占更重要的事"
               value={negativeSignals}
             />
             <TextArea
               label="每天／本周具体做什么"
               maxLength={500}
               onChange={(event) => setActionPlan(event.target.value)}
+              placeholder="例如：每天晚饭后打开文档，写一个 100 字片段"
               required
               value={actionPlan}
             />
@@ -125,6 +129,7 @@ export function ExperimentFormPage() {
               label="判断有效实践日的最低标准"
               maxLength={240}
               onChange={(event) => setMinimumStandard(event.target.value)}
+              placeholder="例如：打开文档并写满 5 分钟"
               required
               value={minimumStandard}
             />
@@ -132,6 +137,7 @@ export function ExperimentFormPage() {
               label="理想行动标准"
               maxLength={240}
               onChange={(event) => setIdealStandard(event.target.value)}
+              placeholder="例如：写满 20 分钟并整理一个可复用片段"
               value={idealStandard}
             />
             {error ? <InlineError>{error}</InlineError> : null}

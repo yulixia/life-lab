@@ -6,6 +6,19 @@
   font-weight: 850;
 }
 
+.labelRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.labelRow small {
+  color: var(--color-label);
+  font-size: 0.68rem;
+  font-weight: 900;
+}
+
 .field input,
 .field select,
 .field textarea {

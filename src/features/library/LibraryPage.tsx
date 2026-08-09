@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { Plus } from 'lucide-react'
 import { AppHeader } from '../../components/AppHeader'
 import { Card } from '../../components/Card'
 import { SegmentedControl } from '../../components/SegmentedControl'
@@ -40,6 +41,7 @@ export function LibraryPage() {
       <AppHeader
         action={
           <Link className={styles.linkButton} to="/items/new">
+            <Plus aria-hidden="true" size={16} strokeWidth={2.8} />
             新建事项
           </Link>
         }
