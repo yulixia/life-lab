@@ -120,6 +120,11 @@
   gap: 10px;
 }
 
+.actions > :only-child {
+  grid-column: 1 / -1;
+  justify-self: center;
+}
+
 .optional {
   border-radius: 16px;
   padding: 2px 0 0;

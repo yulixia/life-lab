@@ -70,6 +70,11 @@
   gap: 8px;
 }
 
+.primaryActions > :only-child {
+  grid-column: 1 / -1;
+  justify-self: center;
+}
+
 .primaryButton,
 .secondaryButton {
   display: inline-flex;

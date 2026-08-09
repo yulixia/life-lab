@@ -43,3 +43,7 @@
   justify-content: flex-end;
   gap: 10px;
 }
+
+.actions > :only-child {
+  margin-inline: auto;
+}

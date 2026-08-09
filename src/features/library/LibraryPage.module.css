@@ -24,6 +24,10 @@
   justify-content: flex-end;
 }
 
+.actions > :only-child {
+  margin-inline: auto;
+}
+
 .linkButton {
   display: inline-flex;
   min-height: 34px;
