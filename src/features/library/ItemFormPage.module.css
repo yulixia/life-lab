@@ -34,6 +34,7 @@
   color: var(--color-ink);
   font-size: 0.82rem;
   font-weight: 850;
+  margin-bottom: 6px;
 }
 
 .choiceGroup legend span {

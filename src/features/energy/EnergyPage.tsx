@@ -1,15 +1,34 @@
 import { useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { Plus } from 'lucide-react'
+import { CalendarDays, CloudRain, Plus, Sparkles } from 'lucide-react'
 import { AppHeader } from '../../components/AppHeader'
 import { Card } from '../../components/Card'
-import { SegmentedControl } from '../../components/SegmentedControl'
 import { useLifeLab } from '../../app/LifeLabContext'
 import { selectRecentEnergy, selectTopFeelingTags } from '../../domain/selectors'
 import type { EnergyCategory, EnergyEntry } from '../../domain/types'
 import styles from './EnergyPage.module.css'
 
 type ColumnMode = EnergyCategory
+
+const categoryMeta: Record<EnergyCategory, {
+  Icon: typeof Sparkles
+  action: string
+  label: string
+  toneClass: string
+}> = {
+  energy: {
+    Icon: Sparkles,
+    action: '补充感',
+    label: '有能量',
+    toneClass: styles.energyTone,
+  },
+  drain: {
+    Icon: CloudRain,
+    action: '消耗感',
+    label: '被消耗',
+    toneClass: styles.drainTone,
+  },
+}
 
 export function EnergyPage() {
   const { state } = useLifeLab()
@@ -41,40 +60,61 @@ export function EnergyPage() {
       <div className={styles.listPage}>
         <div className={styles.fixedContent}>
           <div className={styles.summary}>
-            <Card className={styles.summaryCard}>
-              <h2>有能量</h2>
+            <Card className={`${styles.summaryCard} ${styles.energyTone}`}>
+              <div className={styles.summaryHeader}>
+                <span className={styles.iconBadge}>
+                  <Sparkles aria-hidden="true" size={17} strokeWidth={2.6} />
+                </span>
+                <h2>有能量</h2>
+              </div>
               <strong>{energyEntries.length}</strong>
               <TagSummary tags={topEnergyTags} />
             </Card>
-            <Card className={styles.summaryCard}>
-              <h2>被消耗</h2>
+            <Card className={`${styles.summaryCard} ${styles.drainTone}`}>
+              <div className={styles.summaryHeader}>
+                <span className={styles.iconBadge}>
+                  <CloudRain aria-hidden="true" size={17} strokeWidth={2.6} />
+                </span>
+                <h2>被消耗</h2>
+              </div>
               <strong>{drainEntries.length}</strong>
               <TagSummary tags={topDrainTags} />
             </Card>
           </div>
 
-          <SegmentedControl
-            label="手机列表"
-            onChange={setColumnMode}
-            options={[
-              { label: '有能量', value: 'energy' },
-              { label: '被消耗', value: 'drain' },
-            ]}
-            value={columnMode}
-          />
+          <fieldset className={styles.mobileSwitch}>
+            <legend>手机列表</legend>
+            <div className={styles.switchOptions}>
+              {(['energy', 'drain'] as const).map((value) => {
+                const { Icon, label, toneClass } = categoryMeta[value]
+                return (
+                  <button
+                    aria-pressed={columnMode === value}
+                    className={toneClass}
+                    key={value}
+                    onClick={() => setColumnMode(value)}
+                    type="button"
+                  >
+                    <Icon aria-hidden="true" size={15} strokeWidth={2.7} />
+                    {label}
+                  </button>
+                )
+              })}
+            </div>
+          </fieldset>
         </div>
 
         <div className={styles.scrollArea}>
           <div className={styles.columns}>
             <EnergyColumn
+              category="energy"
               entries={energyEntries}
               isVisibleOnMobile={columnMode === 'energy'}
-              title="有能量"
             />
             <EnergyColumn
+              category="drain"
               entries={drainEntries}
               isVisibleOnMobile={columnMode === 'drain'}
-              title="被消耗"
             />
           </div>
         </div>
@@ -99,17 +139,22 @@ function TagSummary({ tags }: { tags: string[] }) {
 }
 
 function EnergyColumn({
+  category,
   entries,
   isVisibleOnMobile,
-  title,
 }: {
+  category: EnergyCategory
   entries: EnergyEntry[]
   isVisibleOnMobile: boolean
-  title: string
 }) {
+  const { Icon, action, label, toneClass } = categoryMeta[category]
   return (
-    <section className={`${styles.column} ${isVisibleOnMobile ? '' : styles.hideMobile}`}>
-      <h2>{title}</h2>
+    <section className={`${styles.column} ${toneClass} ${isVisibleOnMobile ? '' : styles.hideMobile}`}>
+      <h2>
+        <Icon aria-hidden="true" size={17} strokeWidth={2.7} />
+        {label}
+        <span>{action}</span>
+      </h2>
       {entries.length ? (
         entries.map((entry) => <EnergySummary entry={entry} key={entry.id} />)
       ) : (
@@ -123,21 +168,30 @@ function EnergyColumn({
 
 function EnergySummary({ entry }: { entry: EnergyEntry }) {
   const summary = entry.scene || entry.reason || entry.reflection || '没有补充说明。'
+  const { Icon, toneClass } = categoryMeta[entry.category]
   return (
     <Link className={styles.entryLink} to={`/energy/${entry.id}`}>
-      <Card className={styles.entry}>
+      <Card className={`${styles.entry} ${toneClass}`}>
         <div className={styles.entryHeader}>
+          <span className={styles.iconBadge}>
+            <Icon aria-hidden="true" size={16} strokeWidth={2.7} />
+          </span>
           <h3>{entry.event}</h3>
-          <span className={styles.tag}>{entry.energyDelta > 0 ? `+${entry.energyDelta}` : entry.energyDelta}</span>
+          <span className={styles.deltaTag}>{entry.energyDelta > 0 ? `+${entry.energyDelta}` : entry.energyDelta}</span>
         </div>
-        <p>{new Date(entry.occurredAt).toLocaleString()}</p>
         <p className={styles.summaryText}>{summary}</p>
-        <div className={styles.tagList}>
-          {entry.feelingTags.slice(0, 4).map((tag) => (
-            <span className={styles.tag} key={tag}>
-              {tag}
-            </span>
-          ))}
+        <div className={styles.entryFooter}>
+          <div className={styles.tagList}>
+            {entry.feelingTags.slice(0, 4).map((tag) => (
+              <span className={styles.tag} key={tag}>
+                {tag}
+              </span>
+            ))}
+          </div>
+          <span className={styles.time}>
+            <CalendarDays aria-hidden="true" size={13} strokeWidth={2.5} />
+            {new Date(entry.occurredAt).toLocaleDateString()}
+          </span>
         </div>
       </Card>
     </Link>

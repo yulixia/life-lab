@@ -23,7 +23,11 @@ export function EnergyScale({ label, name, onChange, value }: EnergyScaleProps) 
       <legend>{label}</legend>
       <div className={styles.options}>
         {values.map((option) => (
-          <label key={option} className={option === value ? styles.selected : undefined}>
+          <label
+            data-tone={option > 0 ? 'energy' : option < 0 ? 'drain' : 'neutral'}
+            key={option}
+            className={option === value ? styles.selected : undefined}
+          >
             <input
               checked={option === value}
               name={name}

@@ -89,9 +89,9 @@ export function LibraryPage() {
             <Card className={styles.empty}>
               <p>当前没有事项。可以先放入一个想探索的问题，暂时不需要开始实践。</p>
               <div className={styles.actions}>
-                <Link className={styles.linkButton} to="/items/new">
+                {/* <Link className={styles.linkButton} to="/items/new">
                   新建事项
-                </Link>
+                </Link> */}
               </div>
             </Card>
           )}

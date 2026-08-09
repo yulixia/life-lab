@@ -95,7 +95,7 @@ export function ItemFormPage({ mode }: ItemFormPageProps) {
             value={title}
           />
           <fieldset className={styles.choiceGroup} disabled={!canChangeTrack}>
-            <legend>方向<span>必填</span></legend>
+            <legend>方向</legend>
             <div className={styles.choiceGrid}>
               {Object.entries(trackLabels).map(([value, label]) => (
                 <button

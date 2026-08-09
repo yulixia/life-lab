@@ -14,8 +14,8 @@ import styles from './TodayPage.module.css'
 
 const tracks: Track[] = ['ideal_self', 'side_hustle']
 const trackEmptyText: Record<Track, string> = {
-  ideal_self: '理想自我当前没有重点实践。',
-  side_hustle: '副业探索当前没有重点实践。',
+  ideal_self: '理想自我',
+  side_hustle: '副业探索',
 }
 
 function formatHeaderDate(date = new Date()) {
@@ -110,12 +110,12 @@ export function TodayPage() {
           .map((track) => (
             <Card className={styles.card} key={track}>
               <div className={styles.cardTitleRow}>
-                <h2>当前没有重点实践</h2>
+                <h2>{trackEmptyText[track]}</h2>
                 <Link className={styles.linkButton} to="/library">
                   去总库
                 </Link>
               </div>
-              <p>{trackEmptyText[track]}</p>
+              <p>当前没有重点实践</p>
             </Card>
           ))}
       </div>

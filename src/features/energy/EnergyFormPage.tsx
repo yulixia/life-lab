@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
+import { CloudRain, Sparkles } from 'lucide-react'
 import { AppHeader } from '../../components/AppHeader'
 import { Button } from '../../components/Button'
 import { Card } from '../../components/Card'
@@ -80,31 +81,37 @@ export function EnergyFormPage({ mode }: EnergyFormPageProps) {
     }
   }
 
+  const toneClass = category === 'energy' ? styles.energyTone : styles.drainTone
+
   return (
     <>
       <AppHeader backTo="/energy" title={mode === 'edit' ? '编辑记录' : '记录一件事'} eyebrow="情绪能量" />
-      <Card>
+      <Card className={`${styles.formCard} ${toneClass}`}>
         <form className={styles.form} onSubmit={handleSubmit}>
           <div className={styles.sectionIntro}>
             <h2>快速记录</h2>
             <p>先抓住这件事本身，后面想补再补。</p>
           </div>
           <fieldset className={styles.choiceGroup}>
-            <legend>这件事主要属于哪一类？<span>必填</span></legend>
+            <legend>这件事主要属于哪一类？</legend>
             <div className={styles.choiceGrid}>
               <button
                 aria-pressed={category === 'energy'}
+                className={styles.energyChoice}
                 onClick={() => setCategory('energy')}
                 type="button"
               >
-                有能量
+                <Sparkles aria-hidden="true" size={18} strokeWidth={2.7} />
+                <span>有能量</span>
               </button>
               <button
                 aria-pressed={category === 'drain'}
+                className={styles.drainChoice}
                 onClick={() => setCategory('drain')}
                 type="button"
               >
-                被消耗
+                <CloudRain aria-hidden="true" size={18} strokeWidth={2.7} />
+                <span>被消耗</span>
               </button>
             </div>
           </fieldset>
