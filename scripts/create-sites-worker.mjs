@@ -6,8 +6,10 @@ const mimeTypes = {
   '.html': 'text/html; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
+  '.png': 'image/png',
   '.svg': 'image/svg+xml',
   '.txt': 'text/plain; charset=utf-8',
+  '.webmanifest': 'application/manifest+json; charset=utf-8',
 }
 
 async function collectFiles(directory) {
@@ -40,12 +42,16 @@ for (const file of distFiles) {
 const worker = `const INDEX_HTML = "/index.html";
 const ASSETS = ${JSON.stringify(assets)};
 
-function assetResponse(asset) {
+function assetResponse(asset, pathname) {
+  const shouldRevalidate = asset.contentType.includes("text/html")
+    || pathname === "/sw.js"
+    || pathname === "/manifest.webmanifest";
+
   return new Response(Uint8Array.from(atob(asset.body), (char) => char.charCodeAt(0)), {
     headers: {
       "Content-Type": asset.contentType,
       "X-Content-Type-Options": "nosniff",
-      "Cache-Control": asset.contentType.includes("text/html")
+      "Cache-Control": shouldRevalidate
         ? "no-cache"
         : "public, max-age=31536000, immutable",
     },
@@ -59,12 +65,12 @@ export default {
     const asset = ASSETS[pathname];
 
     if (asset) {
-      return assetResponse(asset);
+      return assetResponse(asset, pathname);
     }
 
     const acceptsHtml = request.headers.get("accept")?.includes("text/html");
     if (request.method === "GET" && acceptsHtml) {
-      return assetResponse(ASSETS[INDEX_HTML]);
+      return assetResponse(ASSETS[INDEX_HTML], INDEX_HTML);
     }
 
     return new Response("Not found", { status: 404 });
