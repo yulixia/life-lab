@@ -1,6 +1,27 @@
 import { useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { CalendarDays, CloudRain, Plus, Sparkles } from 'lucide-react'
+import {
+  BatteryCharging,
+  Brain,
+  CalendarDays,
+  CloudLightning,
+  CloudRain,
+  Coffee,
+  Flame,
+  Flower2,
+  Frown,
+  Heart,
+  Leaf,
+  Moon,
+  Music,
+  Plus,
+  Smile,
+  Sparkles,
+  Sun,
+  Umbrella,
+  Waves,
+  Zap,
+} from 'lucide-react'
 import { AppHeader } from '../../components/AppHeader'
 import { Card } from '../../components/Card'
 import { useLifeLab } from '../../app/LifeLabContext'
@@ -28,6 +49,11 @@ const categoryMeta: Record<EnergyCategory, {
     label: '被消耗',
     toneClass: styles.drainTone,
   },
+}
+
+const entryIcons: Record<EnergyCategory, Array<typeof Sparkles>> = {
+  energy: [Sparkles, Sun, Coffee, Flame, Zap, Music, Flower2, Smile, Heart, Leaf, BatteryCharging],
+  drain: [CloudRain, CloudLightning, Umbrella, Moon, Frown, Waves, Brain],
 }
 
 export function EnergyPage() {
@@ -168,7 +194,8 @@ function EnergyColumn({
 
 function EnergySummary({ entry }: { entry: EnergyEntry }) {
   const summary = entry.scene || entry.reason || entry.reflection || '没有补充说明。'
-  const { Icon, toneClass } = categoryMeta[entry.category]
+  const { toneClass } = categoryMeta[entry.category]
+  const Icon = pickEntryIcon(entry)
   return (
     <Link className={styles.entryLink} to={`/energy/${entry.id}`}>
       <Card className={`${styles.entry} ${toneClass}`}>
@@ -196,4 +223,14 @@ function EnergySummary({ entry }: { entry: EnergyEntry }) {
       </Card>
     </Link>
   )
+}
+
+function pickEntryIcon(entry: EnergyEntry) {
+  const icons = entryIcons[entry.category]
+  const seed = `${entry.id}-${entry.event}-${entry.occurredAt}`
+  let hash = 0
+  for (let index = 0; index < seed.length; index += 1) {
+    hash = (hash * 31 + seed.charCodeAt(index)) % 2147483647
+  }
+  return icons[hash % icons.length]
 }

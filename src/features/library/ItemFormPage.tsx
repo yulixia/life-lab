@@ -66,8 +66,7 @@ export function ItemFormPage({ mode }: ItemFormPageProps) {
         setError(saveResult.message)
         return
       }
-      const savedItem = isEdit && itemId ? itemId : next.items[next.items.length - 1]?.id
-      navigate(savedItem ? `/items/${savedItem}` : '/library', { replace: true })
+      navigate(isEdit && itemId ? `/items/${itemId}` : '/library', { replace: true })
     } catch (caught) {
       setError(caught instanceof DomainError ? caught.message : '保存失败')
     }

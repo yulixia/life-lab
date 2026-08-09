@@ -104,20 +104,6 @@ export function ExperimentFormPage() {
               value={question}
             />
             <TextArea
-              label="适合时希望看到什么"
-              maxLength={500}
-              onChange={(event) => setPositiveSignals(event.target.value)}
-              placeholder="例如：开始阻力变小，写完后更清醒，能积累素材"
-              value={positiveSignals}
-            />
-            <TextArea
-              label="不适合时可能出现什么"
-              maxLength={500}
-              onChange={(event) => setNegativeSignals(event.target.value)}
-              placeholder="例如：持续抗拒、明显消耗、挤占更重要的事"
-              value={negativeSignals}
-            />
-            <TextArea
               label="每天／本周具体做什么"
               maxLength={500}
               onChange={(event) => setActionPlan(event.target.value)}
@@ -133,13 +119,32 @@ export function ExperimentFormPage() {
               required
               value={minimumStandard}
             />
-            <TextArea
-              label="理想行动标准"
-              maxLength={240}
-              onChange={(event) => setIdealStandard(event.target.value)}
-              placeholder="例如：写满 20 分钟并整理一个可复用片段"
-              value={idealStandard}
-            />
+            <details className={styles.optional} open={Boolean(positiveSignals || negativeSignals || idealStandard)}>
+              <summary>补充更多</summary>
+              <div className={styles.optionalFields}>
+                <TextArea
+                  label="适合时希望看到什么"
+                  maxLength={500}
+                  onChange={(event) => setPositiveSignals(event.target.value)}
+                  placeholder="例如：开始阻力变小，写完后更清醒，能积累素材"
+                  value={positiveSignals}
+                />
+                <TextArea
+                  label="不适合时可能出现什么"
+                  maxLength={500}
+                  onChange={(event) => setNegativeSignals(event.target.value)}
+                  placeholder="例如：持续抗拒、明显消耗、挤占更重要的事"
+                  value={negativeSignals}
+                />
+                <TextArea
+                  label="理想行动标准"
+                  maxLength={240}
+                  onChange={(event) => setIdealStandard(event.target.value)}
+                  placeholder="例如：写满 20 分钟并整理一个可复用片段"
+                  value={idealStandard}
+                />
+              </div>
+            </details>
             {error ? <InlineError>{error}</InlineError> : null}
             <div className={styles.actions}>
               <Link className={styles.linkButton} to={`/items/${item.id}`}>

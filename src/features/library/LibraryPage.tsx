@@ -63,6 +63,7 @@ export function LibraryPage() {
           <SelectField
             label="状态筛选"
             onChange={(event) => setStatusFilter(event.target.value as LibraryStatusFilter)}
+            showRequirement={false}
             value={statusFilter}
           >
             <option value="all">全部状态</option>

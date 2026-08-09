@@ -14,6 +14,32 @@
   line-height: 1.55;
 }
 
+.optional summary {
+  display: flex;
+  width: fit-content;
+  min-height: 34px;
+  margin: 0 auto;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  color: var(--color-primary);
+  font-size: 0.84rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.optional summary:focus-visible {
+  border-radius: 8px;
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.optionalFields {
+  display: grid;
+  gap: 14px;
+  margin-top: 8px;
+}
+
 .actions {
   /* position: sticky; */
   bottom: calc(12px + env(safe-area-inset-bottom));
