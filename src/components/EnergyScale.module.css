@@ -27,21 +27,21 @@
   padding: 7px 4px;
   color: var(--color-muted);
   background: rgba(255, 255, 255, 0.62);
-  box-shadow: inset 0 0 0 1px rgba(139, 158, 184, 0.08);
+  box-shadow: none;
   font-weight: 850;
   text-align: center;
 }
 
 .options label[data-tone='energy'] {
-  --scale-tone: #3f8b84;
-  --scale-soft: rgba(231, 249, 244, 0.96);
-  --scale-line: rgba(139, 216, 203, 0.42);
+  --scale-tone: #577f86;
+  --scale-soft: rgba(234, 247, 248, 0.92);
+  --scale-line: rgba(159, 207, 210, 0.22);
 }
 
 .options label[data-tone='drain'] {
-  --scale-tone: #b77466;
-  --scale-soft: rgba(255, 240, 234, 0.96);
-  --scale-line: rgba(245, 177, 159, 0.38);
+  --scale-tone: #826572;
+  --scale-soft: rgba(249, 240, 244, 0.92);
+  --scale-line: rgba(216, 184, 195, 0.2);
 }
 
 .options label[data-tone='neutral'] {
@@ -64,7 +64,7 @@
   border-color: var(--scale-tone) !important;
   color: var(--scale-tone) !important;
   background: var(--scale-soft) !important;
-  box-shadow: inset 0 0 0 1px var(--scale-line) !important;
+  box-shadow: none !important;
 }
 
 .options small {
