@@ -1,0 +1,45 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: end center;
+  padding: 16px max(0px, calc((100vw - var(--app-max-width)) / 2)) calc(104px + env(safe-area-inset-bottom));
+  background: rgba(23, 50, 77, 0.36);
+  backdrop-filter: blur(8px);
+}
+
+.dialog {
+  width: min(100%, var(--app-max-width));
+  max-height: 86dvh;
+  overflow-y: auto;
+  border-radius: 28px 28px 0 0;
+  padding: 22px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 -18px 60px rgba(102, 131, 160, 0.2);
+  backdrop-filter: blur(18px);
+}
+
+.dialog h2 {
+  margin: 0 0 10px;
+  color: var(--color-heading);
+  font-size: 1.16rem;
+  font-weight: 900;
+  line-height: 1.35;
+}
+
+.body {
+  margin-bottom: 18px;
+  color: var(--color-muted);
+  line-height: 1.65;
+}
+
+.body p {
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}

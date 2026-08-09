@@ -1,0 +1,136 @@
+.listPage {
+  display: grid;
+  height: calc(100dvh - 186px - env(safe-area-inset-bottom));
+  min-height: 0;
+  gap: 14px;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.toolbar {
+  display: grid;
+  gap: 12px;
+}
+
+.scrollArea {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-bottom: 12px;
+  scrollbar-width: thin;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.linkButton {
+  display: inline-flex;
+  min-height: var(--tap-min);
+  align-items: center;
+  justify-content: center;
+  border-radius: 18px;
+  padding: 10px 16px;
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-strong));
+  box-shadow: 0 12px 22px rgba(95, 141, 247, 0.18);
+  font-size: 0.82rem;
+  font-weight: 900;
+  line-height: 1.3;
+  text-decoration: none;
+}
+
+.linkButton:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.list {
+  display: grid;
+  gap: 14px;
+}
+
+.item {
+  display: grid;
+  color: inherit;
+  text-decoration: none;
+}
+
+.item:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+.itemCard {
+  display: grid;
+  gap: 13px;
+  padding: 18px;
+}
+
+.itemTop {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 12px;
+}
+
+.item h2 {
+  margin: 0;
+  color: var(--color-ink);
+  font-size: 1.08rem;
+  font-weight: 900;
+  line-height: 1.42;
+}
+
+.item p,
+.empty p {
+  margin: 0;
+  color: var(--color-muted);
+  line-height: 1.72;
+}
+
+.item p {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.ratio {
+  border-radius: 999px;
+  padding: 6px 10px;
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
+  font-size: 0.78rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.progressTrack {
+  height: 7px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(223, 238, 255, 0.86);
+}
+
+.progressTrack span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-strong));
+}
+
+.dueRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--color-label);
+  font-size: 0.8rem;
+  font-weight: 850;
+  line-height: 1.35;
+}
+
+.empty {
+  display: grid;
+  gap: 14px;
+}

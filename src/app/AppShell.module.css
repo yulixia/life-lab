@@ -1,0 +1,56 @@
+.shell {
+  position: relative;
+  width: min(100%, var(--app-max-width));
+  height: 100dvh;
+  margin: 0 auto;
+  overflow: hidden;
+  background: var(--color-surface);
+  box-shadow: 0 0 0 1px rgba(139, 158, 184, 0.08), 0 24px 80px rgba(102, 131, 160, 0.16);
+}
+
+.shell::before {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  pointer-events: none;
+  content: '';
+  background:
+    radial-gradient(circle at -18% 16%, #dceeffd1 0 110px, transparent 111px), radial-gradient(circle at 112% 42%, #ebe2ffbd 0 98px, transparent 99px), radial-gradient(circle at 15% 88%, #dff6edad 0 116px, transparent 117px), #f7f9ff;
+}
+
+.shell > main {
+  position: relative;
+  z-index: 1;
+}
+
+.loading {
+  margin-top: 40px;
+  border-radius: var(--radius-card);
+  padding: 18px;
+  color: var(--color-muted);
+  background: var(--color-card);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(18px);
+}
+
+.recovery {
+  margin-top: 32px;
+}
+
+.recovery h1 {
+  margin: 0 0 10px;
+  color: var(--color-heading);
+  font-size: 1.55rem;
+  font-weight: 900;
+  line-height: 1.12;
+}
+
+.recovery p {
+  margin: 0;
+  color: var(--color-muted);
+  line-height: 1.65;
+}
+
+.recovery button {
+  margin-top: 18px;
+}

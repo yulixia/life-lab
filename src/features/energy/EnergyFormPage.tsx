@@ -1,0 +1,141 @@
+import { useState, type FormEvent } from 'react'
+import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
+import { AppHeader } from '../../components/AppHeader'
+import { Button } from '../../components/Button'
+import { Card } from '../../components/Card'
+import { EnergyScale } from '../../components/EnergyScale'
+import { InlineError } from '../../components/InlineError'
+import { SelectField } from '../../components/SelectField'
+import { TagPicker } from '../../components/TagPicker'
+import { TextArea } from '../../components/TextArea'
+import { TextField } from '../../components/TextField'
+import { useLifeLab } from '../../app/LifeLabContext'
+import { saveEnergyEntry } from '../../domain/transitions'
+import { DomainError, type EnergyCategory, type EnergyDelta } from '../../domain/types'
+import styles from './EnergyFormPage.module.css'
+
+const feelingOptions = ['轻松', '清醒', '稳定', '兴奋', '疲惫', '焦虑', '烦躁', '卡住']
+
+function toLocalInputValue(date = new Date()) {
+  const offset = date.getTimezoneOffset()
+  const local = new Date(date.getTime() - offset * 60_000)
+  return local.toISOString().slice(0, 16)
+}
+
+type EnergyFormPageProps = {
+  mode: 'new' | 'edit'
+}
+
+export function EnergyFormPage({ mode }: EnergyFormPageProps) {
+  const navigate = useNavigate()
+  const { entryId } = useParams()
+  const { replaceState, state } = useLifeLab()
+
+  const editing = mode === 'edit' ? state?.energyEntries.find((entry) => entry.id === entryId) : null
+  const [category, setCategory] = useState<EnergyCategory>(editing?.category ?? 'energy')
+  const [occurredAt, setOccurredAt] = useState(toLocalInputValue(editing ? new Date(editing.occurredAt) : undefined))
+  const [scene, setScene] = useState(editing?.scene ?? '')
+  const [event, setEvent] = useState(editing?.event ?? '')
+  const [feelingTags, setFeelingTags] = useState<string[]>(editing?.feelingTags ?? [])
+  const [energyDelta, setEnergyDelta] = useState<EnergyDelta>(editing?.energyDelta ?? 0)
+  const [reason, setReason] = useState(editing?.reason ?? '')
+  const [reflection, setReflection] = useState(editing?.reflection ?? '')
+  const [error, setError] = useState<string | null>(null)
+
+  if (!state) {
+    return null
+  }
+
+  if (mode === 'edit' && !editing) {
+    return <Navigate to="/energy" replace />
+  }
+
+  const handleSubmit = (submitEvent: FormEvent<HTMLFormElement>) => {
+    submitEvent.preventDefault()
+    setError(null)
+    try {
+      const next = saveEnergyEntry(
+        state,
+        {
+          id: editing?.id,
+          category,
+          occurredAt: new Date(occurredAt).toISOString(),
+          scene,
+          event,
+          feelingTags,
+          energyDelta,
+          reason,
+          reflection,
+        },
+        new Date(),
+        () => crypto.randomUUID(),
+      )
+      const saveResult = replaceState(next)
+      if (!saveResult.ok) {
+        setError(saveResult.message)
+        return
+      }
+      navigate(`/energy?type=${category}`, { replace: true })
+    } catch (caught) {
+      setError(caught instanceof DomainError ? caught.message : '保存情绪失败')
+    }
+  }
+
+  return (
+    <>
+      <AppHeader backTo="/energy" title={mode === 'edit' ? '编辑情绪' : '新增情绪'} eyebrow="情绪" />
+      <Card>
+        <form className={styles.form} onSubmit={handleSubmit}>
+          <div className={styles.formGrid}>
+            <SelectField
+              label="主要归类"
+              onChange={(changeEvent) => setCategory(changeEvent.target.value as EnergyCategory)}
+              required
+              value={category}
+            >
+              <option value="energy">有能量</option>
+              <option value="drain">被消耗</option>
+            </SelectField>
+            <TextField
+              label="发生时间"
+              max={toLocalInputValue()}
+              onChange={(changeEvent) => setOccurredAt(changeEvent.target.value)}
+              required
+              type="datetime-local"
+              value={occurredAt}
+            />
+          </div>
+          <TextField label="场景" maxLength={80} onChange={(changeEvent) => setScene(changeEvent.target.value)} value={scene} />
+          <TextArea
+            label="事件"
+            maxLength={240}
+            onChange={(changeEvent) => setEvent(changeEvent.target.value)}
+            required
+            value={event}
+          />
+          <TagPicker label="感受标签" onChange={setFeelingTags} options={feelingOptions} value={feelingTags} />
+          <EnergyScale label="情绪变化" name="energyDelta" onChange={setEnergyDelta} value={energyDelta} />
+          <TextArea
+            label="原因"
+            maxLength={240}
+            onChange={(changeEvent) => setReason(changeEvent.target.value)}
+            value={reason}
+          />
+          <TextArea
+            label="补充观察"
+            maxLength={500}
+            onChange={(changeEvent) => setReflection(changeEvent.target.value)}
+            value={reflection}
+          />
+          {error ? <InlineError>{error}</InlineError> : null}
+          <div className={styles.actions}>
+            <Link className={styles.cancelLink} to="/energy">
+              取消
+            </Link>
+            <Button type="submit">{mode === 'edit' ? '保存修改' : '保存记录'}</Button>
+          </div>
+        </form>
+      </Card>
+    </>
+  )
+}
