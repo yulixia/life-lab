@@ -3,18 +3,65 @@
   gap: 16px;
 }
 
-.grid {
+.overviewHero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.overviewHero h2 {
+  margin: 0;
+}
+
+.overviewHero p {
+  margin-top: 5px;
+  font-size: 0.84rem;
+}
+
+.heroBadge {
+  display: inline-flex;
+  min-height: 30px;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 5px;
+  border-radius: 999px;
+  padding: 5px 9px;
+  color: var(--color-primary-strong);
+  background: var(--color-primary-soft);
+  font-size: 0.78rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.metricGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
 }
 
 .metric {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
   border: 0;
   border-radius: 18px;
   padding: 12px;
   background: rgba(255, 255, 255, 0.58);
   box-shadow: inset 0 0 0 1px rgba(139, 158, 184, 0.08);
+}
+
+.metricIcon,
+.insightIcon {
+  display: inline-flex;
+  width: 32px;
+  height: 32px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 13px;
+  color: var(--color-primary-strong);
+  background: var(--color-primary-soft);
 }
 
 .metric strong {
@@ -26,9 +73,16 @@
 
 .metric span,
 .section p,
-.list li {
+.insight p {
   color: var(--color-muted);
   line-height: 1.55;
+}
+
+.metric div > span {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.78rem;
+  font-weight: 850;
 }
 
 .section {
@@ -47,11 +101,42 @@
   margin: 0;
 }
 
-.list {
+.insightList {
   display: grid;
   gap: 8px;
-  margin: 0;
-  padding-left: 20px;
+}
+
+.insight {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 10px;
+  border-radius: 18px;
+  padding: 11px;
+  background: rgba(255, 255, 255, 0.48);
+  box-shadow: inset 0 0 0 1px rgba(139, 158, 184, 0.08);
+}
+
+.insight span {
+  display: block;
+  color: var(--color-label);
+  font-size: 0.72rem;
+  font-weight: 900;
+  line-height: 1.3;
+}
+
+.insight strong {
+  display: block;
+  margin-top: 2px;
+  color: var(--color-ink);
+  font-size: 0.9rem;
+  font-weight: 900;
+  line-height: 1.35;
+}
+
+.insight p {
+  margin-top: 3px;
+  font-size: 0.8rem;
 }
 
 .actions {
@@ -65,7 +150,7 @@
 }
 
 @media (min-width: 640px) {
-  .grid {
+  .metricGrid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 

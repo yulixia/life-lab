@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Activity, Boxes, ChartNoAxesColumn, CircleCheck, ClipboardCheck, RotateCcw, Tags } from 'lucide-react'
 import { AppHeader } from '../../components/AppHeader'
 import { Button } from '../../components/Button'
 import { Card } from '../../components/Card'
@@ -27,6 +28,7 @@ export function SettingsPage() {
   const practicedDays = state.reviews.reduce((total, review) => total + review.effectiveDays, 0)
   const missedDays = state.reviews.reduce((total, review) => total + review.missedDays, 0)
   const blankDays = state.reviews.reduce((total, review) => total + review.blankDays, 0)
+  const totalPracticeDays = practicedDays + missedDays + blankDays
 
   const downloadBlob = (blob: Blob, filename: string) => {
     const url = URL.createObjectURL(blob)
@@ -55,25 +57,42 @@ export function SettingsPage() {
       <AppHeader title="数据" eyebrow="本地保存" />
       <div className={styles.stack}>
         <Card className={styles.section}>
-          <h2>极简总览</h2>
-          <div className={styles.grid}>
-            <Metric label="事项" value={state.items.length} />
-            <Metric label="周期" value={state.cycles.length} />
-            <Metric label="复盘" value={state.reviews.length} />
-            <Metric label="情绪记录" value={state.energyEntries.length} />
+          <div className={styles.overviewHero}>
+            <div>
+              <h2>极简总览</h2>
+              <p>当前浏览器里的实验数据概况</p>
+            </div>
+            <span className={styles.heroBadge}>
+              <ChartNoAxesColumn aria-hidden="true" size={17} strokeWidth={2.6} />
+              v{state.schemaVersion}
+            </span>
           </div>
-          <ul className={styles.list}>
-            <li>到达复盘的周期：{reviewedCycles.length}</li>
-            <li>有效实践 / 未实践 / 空白：{practicedDays} / {missedDays} / {blankDays}</li>
-            <li>有能量高频标签：{topEnergyTags.join('、') || '暂无'}</li>
-            <li>被消耗高频标签：{topDrainTags.join('、') || '暂无'}</li>
-            <li>
-              最近决定：
-              {latestDecision
-                ? `${latestDecision.item.title}：${latestDecision.review.conclusion}`
-                : '暂无'}
-            </li>
-          </ul>
+          <div className={styles.metricGrid}>
+            <Metric Icon={Boxes} label="事项" value={state.items.length} />
+            <Metric Icon={RotateCcw} label="周期" value={state.cycles.length} />
+            <Metric Icon={ClipboardCheck} label="复盘" value={state.reviews.length} />
+            <Metric Icon={Activity} label="情绪记录" value={state.energyEntries.length} />
+          </div>
+          <div className={styles.insightList}>
+            <Insight
+              Icon={CircleCheck}
+              label="实践记录"
+              value={`有效 ${practicedDays} / 未实践 ${missedDays} / 空白 ${blankDays}`}
+              note={`共 ${totalPracticeDays} 天记录，到达复盘 ${reviewedCycles.length} 个周期`}
+            />
+            <Insight
+              Icon={Tags}
+              label="高频标签"
+              value={`有能量：${topEnergyTags.join('、') || '暂无'}`}
+              note={`被消耗：${topDrainTags.join('、') || '暂无'}`}
+            />
+            <Insight
+              Icon={ClipboardCheck}
+              label="最近决定"
+              value={latestDecision ? latestDecision.item.title : '暂无'}
+              note={latestDecision?.review.conclusion ?? '完成复盘后会出现在这里'}
+            />
+          </div>
         </Card>
 
         <Card className={styles.section}>
@@ -117,11 +136,41 @@ export function SettingsPage() {
   )
 }
 
-function Metric({ label, value }: { label: string; value: number }) {
+function Metric({ Icon, label, value }: { Icon: typeof Boxes; label: string; value: number }) {
   return (
     <div className={styles.metric}>
-      <strong>{value}</strong>
-      <span>{label}</span>
+      <span className={styles.metricIcon}>
+        <Icon aria-hidden="true" size={16} strokeWidth={2.6} />
+      </span>
+      <div>
+        <strong>{value}</strong>
+        <span>{label}</span>
+      </div>
+    </div>
+  )
+}
+
+function Insight({
+  Icon,
+  label,
+  note,
+  value,
+}: {
+  Icon: typeof Boxes
+  label: string
+  note: string
+  value: string
+}) {
+  return (
+    <div className={styles.insight}>
+      <span className={styles.insightIcon}>
+        <Icon aria-hidden="true" size={16} strokeWidth={2.6} />
+      </span>
+      <div>
+        <span>{label}</span>
+        <strong>{value}</strong>
+        <p>{note}</p>
+      </div>
     </div>
   )
 }

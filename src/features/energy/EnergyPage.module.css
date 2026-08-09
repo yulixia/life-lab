@@ -81,12 +81,13 @@
 }
 
 .tag {
-  border-radius: 999px;
+  border-radius: 10px;
   padding: 4px 8px;
   color: var(--color-muted);
-  background: rgba(238, 244, 255, 0.72);
+  background: color-mix(in srgb, var(--tone-soft, rgba(238, 244, 255, 0.72)) 54%, #ffffff);
   font-size: 0.8125rem;
   font-weight: 850;
+  line-height: 1.25;
 }
 
 .iconBadge {
@@ -232,7 +233,7 @@
 .entryHeader {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: flex-start;
+  align-items: center;
   gap: 9px;
 }
 
