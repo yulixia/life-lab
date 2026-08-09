@@ -86,7 +86,7 @@ export function EnergyFormPage({ mode }: EnergyFormPageProps) {
       <Card>
         <form className={styles.form} onSubmit={handleSubmit}>
           <div className={styles.sectionIntro}>
-            <h2>必填</h2>
+            <h2>快速记录</h2>
             <p>先抓住这件事本身，后面想补再补。</p>
           </div>
           <fieldset className={styles.choiceGroup}>
@@ -119,7 +119,7 @@ export function EnergyFormPage({ mode }: EnergyFormPageProps) {
           <TagPicker label="感受标签" onChange={setFeelingTags} options={feelingOptions} value={feelingTags} />
           <EnergyScale label="这件事让你更有能量还是更消耗？" name="energyDelta" onChange={setEnergyDelta} value={energyDelta} />
           <details className={styles.optional} open={Boolean(scene || reason || reflection)}>
-            <summary>选填：补充更多</summary>
+            <summary>补充更多</summary>
             <div className={styles.optionalFields}>
               <TextField
                 label="发生时间"

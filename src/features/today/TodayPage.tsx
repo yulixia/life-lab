@@ -71,7 +71,6 @@ export function TodayPage() {
             <Card className={`${styles.card} ${styles.focusCard}`} key={cycle.id}>
               <div className={styles.focusHeader}>
                 <div>
-                  <span className={styles.kicker}>今天的实践</span>
                   <h2>{item?.title ?? '当前实践'}</h2>
                 </div>
                 <TrackBadge track={track} />

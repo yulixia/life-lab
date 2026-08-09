@@ -83,7 +83,7 @@ export function ItemFormPage({ mode }: ItemFormPageProps) {
       <Card>
         <form className={styles.form} onSubmit={handleSubmit}>
           <div className={styles.sectionIntro}>
-            <h2>必填</h2>
+            <h2>候选想法</h2>
             <p>先把想法收进总库，不必马上开始实践。</p>
           </div>
           <TextField
@@ -112,7 +112,7 @@ export function ItemFormPage({ mode }: ItemFormPageProps) {
           {!canChangeTrack ? <p className={styles.warning}>已有未完成周期时不能修改方向。</p> : null}
           {duplicate ? <p className={styles.warning}>同方向已有同名事项，仍可继续保存。</p> : null}
           <details className={styles.optional} open={Boolean(why || question)}>
-            <summary>选填：补充想法</summary>
+            <summary>补充想法</summary>
             <div className={styles.optionalFields}>
               <TextArea
                 label="为什么想做"

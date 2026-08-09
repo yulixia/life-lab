@@ -26,15 +26,15 @@
 
 .linkButton {
   display: inline-flex;
-  min-height: 38px;
+  min-height: 34px;
   align-items: center;
   justify-content: center;
-  gap: 5px;
-  border-radius: 999px;
-  padding: 8px 12px;
-  color: #ffffff;
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-strong));
-  box-shadow: 0 12px 22px rgba(95, 141, 247, 0.18);
+  gap: 4px;
+  border-radius: 10px;
+  padding: 4px 2px;
+  color: var(--color-primary);
+  background: transparent;
+  box-shadow: none;
   font-size: 0.82rem;
   font-weight: 900;
   line-height: 1.3;

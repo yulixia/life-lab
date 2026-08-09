@@ -28,14 +28,6 @@
   gap: 12px;
 }
 
-.kicker {
-  display: block;
-  margin-bottom: 4px;
-  color: var(--color-primary);
-  font-size: 0.74rem;
-  font-weight: 900;
-}
-
 .dayLine {
   display: flex;
   align-items: baseline;
