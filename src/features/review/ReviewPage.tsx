@@ -12,13 +12,12 @@ import { submitCycleReview } from '../../domain/transitions'
 import { DomainError, type ReviewDecision } from '../../domain/types'
 import styles from './ReviewPage.module.css'
 
-const decisionLabels: Record<ReviewDecision, string> = {
-  continue: '继续下一轮',
-  adjust_continue: '调整后继续',
-  defer: '暂缓',
-  long_term: '转长期',
-  archive: '归档',
-}
+const decisionOptions = [
+  { label: '继续下一轮', value: 'continue' },
+  { label: '重置', value: 'adjust_continue' },
+  { label: '转长期', value: 'long_term' },
+  { label: '完成并归档', value: 'archive' },
+] satisfies Array<{ label: string; value: ReviewDecision }>
 
 export function ReviewPage() {
   const { cycleId } = useParams()
@@ -130,48 +129,56 @@ export function ReviewPage() {
             required
             value={factSummary}
           />
-          <TextArea
-            label="带来能量的部分"
-            maxLength={500}
-            onChange={(event) => setEnergizing(event.target.value)}
-            placeholder="例如：写具体案例时最有劲，完成后更清醒"
-            value={energizing}
-          />
-          <TextArea
-            label="带来消耗的部分"
-            maxLength={500}
-            onChange={(event) => setDraining(event.target.value)}
-            placeholder="例如：空白页启动困难，晚上太晚做会拖延"
-            value={draining}
-          />
-          <TextArea
-            label="支持继续的证据"
-            maxLength={800}
-            onChange={(event) => setEvidenceFor(event.target.value)}
-            placeholder="例如：有效天数过半，且有两次明显能量补充"
-            value={evidenceFor}
-          />
-          <TextArea
-            label="支持停止的证据"
-            maxLength={800}
-            onChange={(event) => setEvidenceAgainst(event.target.value)}
-            placeholder="例如：连续三天需要硬撑，影响睡眠或主线任务"
-            value={evidenceAgainst}
-          />
-          <TextArea
-            label="本轮发现"
-            maxLength={800}
-            onChange={(event) => setDiscovery(event.target.value)}
-            placeholder="例如：我需要先有小题目，不能只写“随便写点”"
-            value={discovery}
-          />
+          <details
+            className={styles.optional}
+            open={Boolean(energizing || draining || evidenceFor || evidenceAgainst || discovery)}
+          >
+            <summary>补充更多</summary>
+            <div className={styles.optionalFields}>
+              <TextArea
+                label="带来能量的部分"
+                maxLength={500}
+                onChange={(event) => setEnergizing(event.target.value)}
+                placeholder="例如：写具体案例时最有劲，完成后更清醒"
+                value={energizing}
+              />
+              <TextArea
+                label="带来消耗的部分"
+                maxLength={500}
+                onChange={(event) => setDraining(event.target.value)}
+                placeholder="例如：空白页启动困难，晚上太晚做会拖延"
+                value={draining}
+              />
+              <TextArea
+                label="支持继续的证据"
+                maxLength={800}
+                onChange={(event) => setEvidenceFor(event.target.value)}
+                placeholder="例如：有效天数过半，且有两次明显能量补充"
+                value={evidenceFor}
+              />
+              <TextArea
+                label="支持停止的证据"
+                maxLength={800}
+                onChange={(event) => setEvidenceAgainst(event.target.value)}
+                placeholder="例如：连续三天需要硬撑，影响睡眠或主线任务"
+                value={evidenceAgainst}
+              />
+              <TextArea
+                label="本轮发现"
+                maxLength={800}
+                onChange={(event) => setDiscovery(event.target.value)}
+                placeholder="例如：我需要先有小题目，不能只写“随便写点”"
+                value={discovery}
+              />
+            </div>
+          </details>
           <SelectField
             label="决定"
             onChange={(event) => setDecision(event.target.value as ReviewDecision)}
             required
             value={decision}
           >
-            {Object.entries(decisionLabels).map(([value, label]) => (
+            {decisionOptions.map(({ label, value }) => (
               <option key={value} value={value}>
                 {label}
               </option>

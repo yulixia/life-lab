@@ -132,62 +132,85 @@ export function CheckInPage() {
                   required
                   value={actionSummary}
                 />
-                <TextField
-                  label="时长（分钟）"
-                  max="1440"
-                  min="0"
-                  onChange={(event) => setDurationMinutes(event.target.value)}
-                  placeholder="例如：15"
-                  type="number"
-                  value={durationMinutes}
-                />
-                <TagPicker label="感受标签" onChange={setFeelingTags} options={feelingOptions} value={feelingTags} />
-                <EnergyScale label="能量变化" name="energyDelta" onChange={setEnergyDelta} value={energyDelta} />
-                <TextArea
-                  label="观察"
-                  maxLength={500}
-                  onChange={(event) => setObservation(event.target.value)}
-                  placeholder="例如：开始前很抗拒，但做 5 分钟后变顺了"
-                  value={observation}
-                />
               </>
             ) : (
-              <SelectField
-                label="未实践原因"
-                onChange={(event) => setMissReason(event.target.value as MissReason | '')}
-                value={missReason}
-              >
-                <option value="">不填写</option>
-                <option value="busy">忙碌</option>
-                <option value="low_energy">低能量</option>
-                <option value="forgot">忘记</option>
-                <option value="blocked">被阻塞</option>
-                <option value="unwell">身体不适</option>
-                <option value="not_priority">不是优先级</option>
-                <option value="other">其他</option>
-              </SelectField>
+              <p className={styles.optionalHint}>可以直接保存，也可以在“补充更多”里记录原因。</p>
             )}
-            <TextArea
-              label="调整后的行动计划"
-              maxLength={500}
-              onChange={(event) => setAdjustActionPlan(event.target.value)}
-              placeholder="例如：改成早上通勤时先写一句"
-              value={adjustActionPlan}
-            />
-            <TextArea
-              label="调整后的最低标准"
-              maxLength={240}
-              onChange={(event) => setAdjustMinimumStandard(event.target.value)}
-              placeholder="例如：只要打开文档并写一句就算有效"
-              value={adjustMinimumStandard}
-            />
-            <TextArea
-              label="调整后的理想标准"
-              maxLength={240}
-              onChange={(event) => setAdjustIdealStandard(event.target.value)}
-              placeholder="例如：写满 15 分钟并标记一个可继续的点"
-              value={adjustIdealStandard}
-            />
+            <details
+              className={styles.optional}
+              open={Boolean(
+                durationMinutes ||
+                  feelingTags.length ||
+                  energyDelta ||
+                  observation ||
+                  missReason ||
+                  adjustActionPlan ||
+                  adjustMinimumStandard ||
+                  adjustIdealStandard,
+              )}
+            >
+              <summary>补充更多</summary>
+              <div className={styles.optionalFields}>
+                {status === 'practiced' ? (
+                  <>
+                    <TextField
+                      label="时长（分钟）"
+                      max="1440"
+                      min="0"
+                      onChange={(event) => setDurationMinutes(event.target.value)}
+                      placeholder="例如：15"
+                      type="number"
+                      value={durationMinutes}
+                    />
+                    <TagPicker label="感受标签" onChange={setFeelingTags} options={feelingOptions} value={feelingTags} />
+                    <EnergyScale label="能量变化" name="energyDelta" onChange={setEnergyDelta} value={energyDelta} />
+                    <TextArea
+                      label="观察"
+                      maxLength={500}
+                      onChange={(event) => setObservation(event.target.value)}
+                      placeholder="例如：开始前很抗拒，但做 5 分钟后变顺了"
+                      value={observation}
+                    />
+                  </>
+                ) : (
+                  <SelectField
+                    label="未实践原因"
+                    onChange={(event) => setMissReason(event.target.value as MissReason | '')}
+                    value={missReason}
+                  >
+                    <option value="">不填写</option>
+                    <option value="busy">忙碌</option>
+                    <option value="low_energy">低能量</option>
+                    <option value="forgot">忘记</option>
+                    <option value="blocked">被阻塞</option>
+                    <option value="unwell">身体不适</option>
+                    <option value="not_priority">不是优先级</option>
+                    <option value="other">其他</option>
+                  </SelectField>
+                )}
+                <TextArea
+                  label="调整后的行动计划"
+                  maxLength={500}
+                  onChange={(event) => setAdjustActionPlan(event.target.value)}
+                  placeholder="例如：改成早上通勤时先写一句"
+                  value={adjustActionPlan}
+                />
+                <TextArea
+                  label="调整后的最低标准"
+                  maxLength={240}
+                  onChange={(event) => setAdjustMinimumStandard(event.target.value)}
+                  placeholder="例如：只要打开文档并写一句就算有效"
+                  value={adjustMinimumStandard}
+                />
+                <TextArea
+                  label="调整后的理想标准"
+                  maxLength={240}
+                  onChange={(event) => setAdjustIdealStandard(event.target.value)}
+                  placeholder="例如：写满 15 分钟并标记一个可继续的点"
+                  value={adjustIdealStandard}
+                />
+              </div>
+            </details>
             {error ? <InlineError>{error}</InlineError> : null}
             <div className={styles.actions}>
               <Link className={styles.linkButton} to="/today">

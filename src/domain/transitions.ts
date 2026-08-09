@@ -558,7 +558,7 @@ export function submitCycleReview(
 
   const shouldContinue = input.decision === 'continue' || input.decision === 'adjust_continue'
   if (input.decision === 'adjust_continue' && !hasAdjustment(input)) {
-    throw new DomainError('invalid_input', 'adjust_continue requires at least one adjusted field')
+    throw new DomainError('invalid_input', '重置需要至少填写一个下一轮调整项')
   }
 
   const nextCycleId = shouldContinue ? createId() : undefined
