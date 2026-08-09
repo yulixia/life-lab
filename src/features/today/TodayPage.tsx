@@ -108,13 +108,10 @@ export function TodayPage() {
           .map((track) => (
             <Card className={styles.card} key={track}>
               <div className={styles.cardTitleRow}>
-                <h2>{track === 'ideal_self' ? '理想自我空着' : '副业探索空着'}</h2>
+                <h2>当前没有重点实践</h2>
                 <Link className={styles.linkButton} to="/library">
                   去总库
                 </Link>
-              </div>
-              <div className={styles.meta}>
-                <TrackBadge track={track} />
               </div>
               <p>{trackEmptyText[track]}</p>
             </Card>
