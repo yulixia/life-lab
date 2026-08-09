@@ -109,22 +109,35 @@ function LibraryItemCard({
   today: string
 }) {
   const progress = getCycleProgress(cycle, today)
+  const shouldShowProgress = Boolean(cycle && cycle.status !== 'scheduled')
+  const candidateText = item.status === 'archived' ? '已归档' : item.status === 'long_term' ? '长期进行' : '可开启 7 天实践'
 
   return (
     <Link className={styles.item} to={`/items/${item.id}`}>
       <Card className={`${styles.itemCard} ${statusClassNames[item.status]}`}>
         <div className={styles.itemTop}>
           <h2>{item.title}</h2>
-          <span className={styles.ratio}>{progress.ratio}</span>
+          <span className={shouldShowProgress ? styles.ratio : styles.candidateBadge}>
+            {shouldShowProgress ? progress.ratio : candidateText}
+          </span>
         </div>
         <p>{item.latestConclusion || item.question || item.why || '还没有记录最近结论。'}</p>
-        <div className={styles.progressTrack} aria-label={progress.label}>
-          <span style={{ width: `${progress.percent}%` }} />
-        </div>
-        <div className={styles.dueRow}>
-          <span>{progress.label}</span>
-          <span>{progress.dueText}</span>
-        </div>
+        {shouldShowProgress ? (
+          <>
+            <div className={styles.progressTrack} aria-label={progress.label}>
+              <span style={{ width: `${progress.percent}%` }} />
+            </div>
+            <div className={styles.dueRow}>
+              <span>{progress.label}</span>
+              <span>{progress.dueText}</span>
+            </div>
+          </>
+        ) : (
+          <div className={styles.candidateRow}>
+            <span>{item.track === 'ideal_self' ? '理想自我候选' : '副业探索候选'}</span>
+            <span>点开后可开始</span>
+          </div>
+        )}
       </Card>
     </Link>
   )
@@ -133,10 +146,10 @@ function LibraryItemCard({
 function getCycleProgress(cycle: ExperimentCycle | null, today: string) {
   if (!cycle) {
     return {
-      dueText: '未开始周期',
+      dueText: '',
       label: '探索中',
       percent: 0,
-      ratio: '0/7',
+      ratio: '',
     }
   }
 

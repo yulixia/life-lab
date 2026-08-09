@@ -139,6 +139,17 @@
   white-space: nowrap;
 }
 
+.candidateBadge {
+  border-radius: 999px;
+  padding: 6px 10px;
+  color: var(--color-label);
+  background: rgba(255, 255, 255, 0.68);
+  box-shadow: inset 0 0 0 1px rgba(139, 158, 184, 0.12);
+  font-size: 0.76rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
 .progressTrack {
   height: 7px;
   overflow: hidden;
@@ -157,6 +168,18 @@
   display: flex;
   justify-content: space-between;
   gap: 12px;
+  color: var(--color-label);
+  font-size: 0.8rem;
+  font-weight: 850;
+  line-height: 1.35;
+}
+
+.candidateRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  border-top: 1px solid rgba(139, 158, 184, 0.12);
+  padding-top: 10px;
   color: var(--color-label);
   font-size: 0.8rem;
   font-weight: 850;
