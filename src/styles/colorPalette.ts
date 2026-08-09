@@ -19,7 +19,7 @@ export const summerPastelPalettes = [
 export const colorPalette = {
   summerPastel: summerPastelPalettes,
   section: {
-    today: '#5f8df7',
+    today: '#68c8e8',
     energy: '#f6a1a6',
     drain: '#d2dde4',
     library: '#8373d8',

@@ -1,10 +1,10 @@
 .shell {
   position: relative;
-  --section-accent: #5f8df7;
-  --section-accent-strong: #4f7bea;
-  --section-accent-soft: rgba(223, 238, 255, 0.9);
-  --section-accent-wash: rgba(220, 238, 255, 0.82);
-  --section-accent-focus: rgba(95, 141, 247, 0.34);
+  --section-accent: var(--palette-today);
+  --section-accent-strong: #4eb5d8;
+  --section-accent-soft: rgba(220, 245, 253, 0.9);
+  --section-accent-wash: rgba(222, 247, 253, 0.82);
+  --section-accent-focus: rgba(104, 200, 232, 0.34);
   --color-primary: var(--section-accent);
   --color-primary-strong: var(--section-accent-strong);
   --color-primary-soft: var(--section-accent-soft);
