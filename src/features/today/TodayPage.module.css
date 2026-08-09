@@ -16,7 +16,7 @@
 }
 
 .focusCard {
-  gap: 16px;
+  gap: 14px;
   border: 1px solid rgba(71, 105, 181, 0.14);
   background: rgba(255, 255, 255, 0.86);
 }
@@ -42,36 +42,51 @@
   justify-content: space-between;
   gap: 12px;
   border-radius: 16px;
-  padding: 12px;
+  padding: 10px 12px;
   background: rgba(232, 241, 255, 0.78);
 }
 
 .dayLine strong {
   color: var(--color-heading);
-  font-size: 1.22rem;
+  font-size: 1.06rem;
   line-height: 1.2;
 }
 
-.dayLine span,
-.planText {
+.dayLine span {
   color: var(--color-muted);
+}
+
+.practiceBrief {
+  display: grid;
+  gap: 8px;
+}
+
+.practiceBrief p {
+  display: grid;
+  gap: 3px;
+}
+
+.practiceBrief span {
+  color: var(--color-label);
+  font-size: 0.72rem;
+  font-weight: 900;
 }
 
 .primaryActions {
   display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.95fr);
-  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
 }
 
 .primaryButton,
 .secondaryButton {
   display: inline-flex;
-  min-height: 46px;
+  min-height: 40px;
   align-items: center;
   justify-content: center;
-  border-radius: 16px;
-  padding: 10px 14px;
-  font-size: 0.86rem;
+  border-radius: 14px;
+  padding: 8px 12px;
+  font-size: 0.8rem;
   font-weight: 900;
   line-height: 1.3;
   text-align: center;
@@ -117,46 +132,10 @@
   gap: 8px;
 }
 
-.overview {
-  display: grid;
-  gap: 10px;
-}
-
-.sectionTitle {
-  margin: 8px 0 0;
-  color: var(--color-label);
-  font-size: 0.82rem;
-  font-weight: 900;
-}
-
-.tagList {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.tagList span {
-  border-radius: 999px;
-  padding: 4px 9px;
-  color: var(--color-muted);
-  background: rgba(255, 255, 255, 0.58);
-  font-size: 0.76rem;
-  font-weight: 800;
-}
-
-.evidenceList {
-  display: grid;
-  gap: 6px;
-  margin: 0;
-  padding-left: 18px;
-  color: var(--color-muted);
-  line-height: 1.55;
-}
-
 .linkButton,
 .disabledAction {
   display: inline-flex;
-  min-height: var(--tap-min);
+  min-height: 34px;
   align-items: center;
   justify-content: center;
   border-radius:999px;
