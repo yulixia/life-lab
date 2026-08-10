@@ -4,12 +4,13 @@ import { expect, test } from '@playwright/test'
 function makeState(overrides: Record<string, unknown> = {}) {
   const instant = new Date().toISOString()
   return {
-    schemaVersion: 1,
+    schemaVersion: 2,
     meta: { createdAt: instant, updatedAt: instant, hasSeenLocalDataNotice: true },
     items: [],
     cycles: [],
     dailyEntries: [],
     reviews: [],
+    longTermEntries: [],
     energyEntries: [],
     ...overrides,
   }
@@ -52,7 +53,7 @@ test.describe('cross-browser smoke and accessibility', () => {
       id: `item-${index}`,
       title: `边界事项 ${index}`,
       track: index % 2 === 0 ? 'ideal_self' : 'side_hustle',
-      status: index % 5 === 0 ? 'long_term' : 'exploring',
+      status: index === 0 ? 'active' : index % 5 === 0 ? 'long_term' : 'exploring',
       createdAt: instant,
       updatedAt: new Date(Date.now() - index * 1000).toISOString(),
     }))

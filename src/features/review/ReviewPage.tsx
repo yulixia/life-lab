@@ -4,19 +4,12 @@ import { AppHeader } from '../../components/AppHeader'
 import { Button } from '../../components/Button'
 import { Card } from '../../components/Card'
 import { InlineError } from '../../components/InlineError'
-import { SelectField } from '../../components/SelectField'
 import { TextArea } from '../../components/TextArea'
 import { useLifeLab } from '../../app/LifeLabContext'
 import { selectCycleCounts } from '../../domain/selectors'
 import { submitCycleReview } from '../../domain/transitions'
-import { DomainError, type ReviewDecision } from '../../domain/types'
+import { DomainError } from '../../domain/types'
 import styles from './ReviewPage.module.css'
-
-const decisionOptions = [
-  { label: '作废（还没开始）', value: 'voided' },
-  { label: '终止（进行到一半）', value: 'terminated' },
-  { label: '完结（完成了）', value: 'completed' },
-] satisfies Array<{ label: string; value: ReviewDecision }>
 
 export function ReviewPage() {
   const { cycleId } = useParams()
@@ -32,7 +25,6 @@ export function ReviewPage() {
   const [evidenceAgainst, setEvidenceAgainst] = useState('')
   const [discovery, setDiscovery] = useState('')
   const [conclusion, setConclusion] = useState('')
-  const [decision, setDecision] = useState<ReviewDecision>('terminated')
   const [error, setError] = useState<string | null>(null)
 
   if (!state || !cycleId) {
@@ -47,7 +39,7 @@ export function ReviewPage() {
     return <Navigate to="/today" replace />
   }
 
-  if (cycle.status !== 'review_due') {
+  if (cycle.status !== 'terminated' && cycle.status !== 'completed' && cycle.status !== 'concluded') {
     return <Navigate to={`/items/${cycle.itemId}`} replace />
   }
 
@@ -66,7 +58,6 @@ export function ReviewPage() {
           evidenceAgainst,
           discovery,
           conclusion,
-          decision,
         },
         new Date(),
         () => crypto.randomUUID(),
@@ -160,18 +151,9 @@ export function ReviewPage() {
               />
             </div>
           </details>
-          <SelectField
-            label="结束状态"
-            onChange={(event) => setDecision(event.target.value as ReviewDecision)}
-            required
-            value={decision}
-          >
-            {decisionOptions.map(({ label, value }) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </SelectField>
+          <div className={styles.summary}>
+            <p>本轮已{cycle.status === 'completed' ? '完成' : cycle.status === 'concluded' ? '完结' : '终止'}，复盘会保留这一结算结果。</p>
+          </div>
           <TextArea
             label="本轮结论"
             maxLength={300}

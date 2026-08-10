@@ -3,7 +3,7 @@ import type { ExperimentCycle, LifeItem, LifeLabState, LocalDate, UUID } from '.
 export function makeState(overrides: Partial<LifeLabState> = {}): LifeLabState {
   const now = '2026-08-09T04:00:00.000Z'
   return {
-    schemaVersion: 1,
+    schemaVersion: 2,
     meta: {
       createdAt: now,
       updatedAt: now,
@@ -13,6 +13,7 @@ export function makeState(overrides: Partial<LifeLabState> = {}): LifeLabState {
     cycles: [],
     dailyEntries: [],
     reviews: [],
+    longTermEntries: [],
     energyEntries: [],
     ...overrides,
   }

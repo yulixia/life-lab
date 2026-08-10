@@ -8,7 +8,7 @@ type EnergyScaleProps = {
   value: EnergyDelta
 }
 
-const values: EnergyDelta[] = [-2, -1, 0, 1, 2]
+const neutralValues: EnergyDelta[] = [-2, -1, 0, 1, 2]
 const labels: Record<EnergyDelta, string> = {
   '-2': '明显消耗',
   '-1': '有些消耗',
@@ -22,8 +22,9 @@ export function EnergyScale({ label, name, onChange, value }: EnergyScaleProps) 
     <fieldset className={styles.scale}>
       <legend>{label}</legend>
       <div className={styles.options}>
-        {values.map((option) => (
+        {neutralValues.map((option) => (
           <label
+            data-intensity={Math.abs(option)}
             data-tone={option > 0 ? 'energy' : option < 0 ? 'drain' : 'neutral'}
             key={option}
             className={option === value ? styles.selected : undefined}

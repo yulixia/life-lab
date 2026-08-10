@@ -50,10 +50,12 @@ export function EnergyDetailPage() {
     <>
       <AppHeader backTo="/energy" title="情绪详情" eyebrow={categoryLabels[entry.category]} />
       <div className={styles.stack}>
-        <Card className={styles.section}>
+        <Card className={`${styles.section} ${entry.category === 'energy' ? styles.energyTone : styles.drainTone}`}>
           <div className={styles.meta}>
             <span className={styles.tag}>{categoryLabels[entry.category]}</span>
-            <span className={styles.tag}>{entry.energyDelta > 0 ? `+${entry.energyDelta}` : entry.energyDelta}</span>
+            <span className={styles.deltaTag} data-intensity={Math.abs(entry.energyDelta)}>
+              {entry.energyDelta > 0 ? `+${entry.energyDelta}` : entry.energyDelta}
+            </span>
           </div>
           <h2>{entry.event}</h2>
           <p>{new Date(entry.occurredAt).toLocaleString()}</p>

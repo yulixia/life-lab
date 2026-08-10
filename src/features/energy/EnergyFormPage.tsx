@@ -16,6 +16,10 @@ import styles from './EnergyFormPage.module.css'
 
 const feelingOptions = ['轻松', '清醒', '稳定', '兴奋', '疲惫', '焦虑', '烦躁', '卡住']
 
+function initialEnergyDelta(entry?: { category: EnergyCategory; energyDelta: EnergyDelta } | null): EnergyDelta {
+  return entry?.energyDelta ?? (entry?.category === 'drain' ? -1 : 1)
+}
+
 function toLocalInputValue(date = new Date()) {
   const offset = date.getTimezoneOffset()
   const local = new Date(date.getTime() - offset * 60_000)
@@ -37,9 +41,10 @@ export function EnergyFormPage({ mode }: EnergyFormPageProps) {
   const [scene, setScene] = useState(editing?.scene ?? '')
   const [event, setEvent] = useState(editing?.event ?? '')
   const [feelingTags, setFeelingTags] = useState<string[]>(editing?.feelingTags ?? [])
-  const [energyDelta, setEnergyDelta] = useState<EnergyDelta>(editing?.energyDelta ?? 0)
+  const [energyDelta, setEnergyDelta] = useState<EnergyDelta>(initialEnergyDelta(editing))
   const [reason, setReason] = useState(editing?.reason ?? '')
   const [reflection, setReflection] = useState(editing?.reflection ?? '')
+  const [additionalOpen, setAdditionalOpen] = useState(Boolean(editing?.scene || editing?.reason || editing?.reflection))
   const [error, setError] = useState<string | null>(null)
 
   if (!state) {
@@ -81,6 +86,26 @@ export function EnergyFormPage({ mode }: EnergyFormPageProps) {
     }
   }
 
+  const selectCategory = (nextCategory: EnergyCategory) => {
+    setCategory(nextCategory)
+    setEnergyDelta((current) => {
+      if (nextCategory === 'energy') {
+        return current > 0 ? current : 1
+      }
+      return current < 0 ? current : -1
+    })
+  }
+
+  const handleEnergyDeltaChange = (nextDelta: EnergyDelta) => {
+    setEnergyDelta(nextDelta)
+    if (nextDelta > 0) {
+      setCategory('energy')
+    }
+    if (nextDelta < 0) {
+      setCategory('drain')
+    }
+  }
+
   const toneClass = category === 'energy' ? styles.energyTone : styles.drainTone
 
   return (
@@ -98,7 +123,7 @@ export function EnergyFormPage({ mode }: EnergyFormPageProps) {
               <button
                 aria-pressed={category === 'energy'}
                 className={styles.energyChoice}
-                onClick={() => setCategory('energy')}
+                onClick={() => selectCategory('energy')}
                 type="button"
               >
                 <Sparkles aria-hidden="true" size={18} strokeWidth={2.7} />
@@ -107,7 +132,7 @@ export function EnergyFormPage({ mode }: EnergyFormPageProps) {
               <button
                 aria-pressed={category === 'drain'}
                 className={styles.drainChoice}
-                onClick={() => setCategory('drain')}
+                onClick={() => selectCategory('drain')}
                 type="button"
               >
                 <CloudRain aria-hidden="true" size={18} strokeWidth={2.7} />
@@ -124,8 +149,13 @@ export function EnergyFormPage({ mode }: EnergyFormPageProps) {
             value={event}
           />
           <TagPicker label="感受标签" onChange={setFeelingTags} options={feelingOptions} value={feelingTags} />
-          <EnergyScale label="这件事让你更有能量还是更消耗？" name="energyDelta" onChange={setEnergyDelta} value={energyDelta} />
-          <details className={styles.optional} open={Boolean(scene || reason || reflection)}>
+          <EnergyScale
+            label="这件事让你更有能量还是更消耗？"
+            name="energyDelta"
+            onChange={handleEnergyDeltaChange}
+            value={energyDelta}
+          />
+          <details className={styles.optional} onToggle={(event) => setAdditionalOpen(event.currentTarget.open)} open={additionalOpen}>
             <summary>补充更多</summary>
             <div className={styles.optionalFields}>
               <TextField

@@ -7,7 +7,9 @@ import { todayLocalDate } from '../../domain/dates'
 import {
   selectCycleDay,
   selectDailyEntry,
+  selectLongTermEntry,
   selectOpenCycleByTrack,
+  isCyclePendingReview,
 } from '../../domain/selectors'
 import type { Track } from '../../domain/types'
 import styles from './TodayPage.module.css'
@@ -35,8 +37,9 @@ export function TodayPage() {
   const openCycles = tracks
     .map((track) => ({ track, cycle: selectOpenCycleByTrack(state, track) }))
     .filter((entry): entry is { track: Track; cycle: NonNullable<typeof entry.cycle> } => Boolean(entry.cycle))
-  const reviewDue = openCycles.filter(({ cycle }) => cycle.status === 'review_due')
-  const activeOrScheduled = openCycles.filter(({ cycle }) => cycle.status !== 'review_due')
+  const reviewDue = openCycles.filter(({ cycle }) => isCyclePendingReview(cycle))
+  const activeOrScheduled = openCycles.filter(({ cycle }) => !isCyclePendingReview(cycle))
+  const longTermItems = state.items.filter((item) => item.status === 'long_term' || item.status === 'long_term_terminated')
 
   return (
     <>
@@ -54,7 +57,7 @@ export function TodayPage() {
               </div>
               <div className={styles.meta}>
                 <TrackBadge track={track} />
-                <StatusBadge status="review_due" />
+                <StatusBadge status={item?.status ?? 'terminated'} />
               </div>
               <p>第 {cycle.cycleNumber} 轮已结束，需要先复盘后才能继续这个方向。</p>
             </Card>
@@ -76,8 +79,8 @@ export function TodayPage() {
                 <TrackBadge track={track} />
               </div>
               <div className={styles.dayLine}>
-                <strong>{day === 'scheduled' ? '明天开始' : `第 ${day} 天`}</strong>
-                <span>{day === 'scheduled' ? `${cycle.startDate} 开始` : `还剩 ${daysLeft} 天`}</span>
+                <strong>{day === 'scheduled' ? '明天开始' : day === 'ended' ? '本轮已结束' : `第 ${day} 天`}</strong>
+                <span>{day === 'scheduled' ? `${cycle.startDate} 开始` : day === 'ended' ? '等待系统结算' : `还剩 ${daysLeft} 天`}</span>
               </div>
               <div className={styles.practiceBrief}>
                 <p>
@@ -90,14 +93,20 @@ export function TodayPage() {
                 </p>
               </div>
               {isRecordable ? (
-                <div className={styles.primaryActions}>
-                  <Link className={styles.secondaryButton} to={`/experiments/${cycle.id}/check-in?date=${today}&status=not_practiced`}>
-                    标记未实践
-                  </Link>
+                entry ? (
                   <Link className={styles.primaryButton} to={`/experiments/${cycle.id}/check-in?date=${today}`}>
-                    {entry ? '查看今日记录' : '记录今日'}
+                    查看今日记录
                   </Link>
-                </div>
+                ) : (
+                  <div className={styles.primaryActions}>
+                    <Link className={styles.secondaryButton} to={`/experiments/${cycle.id}/check-in?date=${today}&status=not_practiced`}>
+                      标记未实践
+                    </Link>
+                    <Link className={styles.primaryButton} to={`/experiments/${cycle.id}/check-in?date=${today}`}>
+                      记录今日
+                    </Link>
+                  </div>
+                )
               ) : (
                 <span className={styles.disabledAction}>开始前先保留精力</span>
               )}
@@ -118,6 +127,34 @@ export function TodayPage() {
               <p>当前没有重点实践</p>
             </Card>
           ))}
+
+        {longTermItems.length ? (
+          <section className={styles.longTermSection}>
+            <div className={styles.cardTitleRow}>
+              <h2>长期事项</h2>
+            </div>
+            <div className={styles.stack}>
+              {longTermItems.map((item) => {
+                const entry = selectLongTermEntry(state, item.id, today)
+                return (
+                  <Card className={styles.card} key={item.id}>
+                    <div className={styles.cardTitleRow}>
+                      <h2>{item.title}</h2>
+                      <StatusBadge status={item.status} />
+                    </div>
+                    {item.status === 'long_term' ? (
+                      <Link className={styles.primaryButton} to={`/items/${item.id}/long-term/check-in`}>
+                        {entry ? '更新今日备注' : '完成今天'}
+                      </Link>
+                    ) : (
+                      <p>已停止记录，可在事项详情中重启。</p>
+                    )}
+                  </Card>
+                )
+              })}
+            </div>
+          </section>
+        ) : null}
       </div>
     </>
   )

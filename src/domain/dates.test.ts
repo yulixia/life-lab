@@ -38,13 +38,16 @@ describe('domain dates', () => {
     expect(nextLocalDate('2026-12-31')).toBe('2027-01-01')
   })
 
-  it('allows records through the cycle end date but not the future or reviewed cycles', () => {
+  it('allows a record only for today while the cycle is active', () => {
     const cycle = makeCycle({ startDate: '2026-08-09', endDate: '2026-08-15', status: 'active' })
 
     expect(canRecordCycleDate(cycle, '2026-08-15', '2026-08-15')).toBe(true)
+    expect(canRecordCycleDate(cycle, '2026-08-14', '2026-08-15')).toBe(false)
     expect(canRecordCycleDate(cycle, '2026-08-16', '2026-08-16')).toBe(false)
-    expect(canRecordCycleDate(cycle, '2026-08-12', '2026-08-11')).toBe(false)
     expect(canRecordCycleDate({ ...cycle, status: 'reviewed' }, '2026-08-12', '2026-08-20')).toBe(
+      false,
+    )
+    expect(canRecordCycleDate({ ...cycle, status: 'concluded' }, '2026-08-12', '2026-08-20')).toBe(
       false,
     )
   })

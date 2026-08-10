@@ -24,17 +24,12 @@
   background: color-mix(in srgb, var(--summer-pastel-10-02) 18%, #ffffff);
 }
 
-.review_due {
-  color: var(--summer-pastel-14-03);
-  background: color-mix(in srgb, var(--summer-pastel-14-03) 22%, #ffffff);
-}
-
 .long_term {
   color: var(--summer-pastel-12-01);
   background: color-mix(in srgb, var(--summer-pastel-12-01) 18%, #ffffff);
 }
 
-.voided {
+.long_term_terminated {
   color: var(--summer-pastel-04-03);
   background: color-mix(in srgb, var(--summer-pastel-04-03) 46%, #ffffff);
 }
@@ -47,6 +42,11 @@
 .completed {
   color: var(--summer-pastel-10-02);
   background: color-mix(in srgb, var(--summer-pastel-10-02) 18%, #ffffff);
+}
+
+.concluded {
+  color: var(--summer-pastel-14-03);
+  background: color-mix(in srgb, var(--summer-pastel-14-03) 22%, #ffffff);
 }
 
 .archived {

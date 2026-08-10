@@ -8,10 +8,10 @@ export const trackLabels: Record<Track, string> = {
 export const statusLabels: Record<ItemStatus, string> = {
   exploring: '待探索',
   active: '进行中',
-  review_due: '待复盘',
   long_term: '长期进行',
-  voided: '作废',
-  terminated: '终止',
-  completed: '完结',
+  long_term_terminated: '长期已终止',
+  terminated: '已终止',
+  completed: '已完成',
+  concluded: '已完结',
   archived: '已归档',
 }

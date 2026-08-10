@@ -1,11 +1,11 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Plus } from 'lucide-react'
+import { ChevronDown, Plus } from 'lucide-react'
 import { AppHeader } from '../../components/AppHeader'
 import { Card } from '../../components/Card'
 import { SegmentedControl } from '../../components/SegmentedControl'
-import { SelectField } from '../../components/SelectField'
 import {
+  isCyclePendingReview,
   selectCycleDay,
   selectLibraryItems,
   selectOpenCycleForItem,
@@ -24,27 +24,38 @@ const statusClassNames: Record<LifeItem['status'], string> = {
   completed: styles.completedItem,
   exploring: styles.exploringItem,
   long_term: styles.longTermItem,
-  review_due: styles.reviewDueItem,
+  long_term_terminated: styles.longTermTerminatedItem,
   terminated: styles.terminatedItem,
-  voided: styles.voidedItem,
+  concluded: styles.concludedItem,
 }
+
+const statusFilterOptions = [
+  { label: '待探索', value: 'exploring' },
+  { label: '进行中', value: 'active' },
+  { label: '已终止', value: 'terminated' },
+  { label: '已完成', value: 'completed' },
+  { label: '已完结', value: 'concluded' },
+  { label: '已归档', value: 'archived' },
+  { label: '长期', value: 'long_term' },
+] satisfies Array<{ label: string; value: LibraryStatusFilter }>
 
 export function LibraryPage() {
   const { state } = useLifeLab()
   const [trackFilter, setTrackFilter] = useState<LibraryTrackFilter>('all')
-  const [statusFilter, setStatusFilter] = useState<LibraryStatusFilter>('all')
+  const [statusFilters, setStatusFilters] = useState<LibraryStatusFilter[]>(['exploring','active'])
+  const [statusFiltersExpanded, setStatusFiltersExpanded] = useState(false)
   const today = todayLocalDate()
   const items = useMemo(
-    () => (state ? selectLibraryItems(state, trackFilter, statusFilter) : []),
-    [state, statusFilter, trackFilter],
+    () => (state ? selectLibraryItems(state, trackFilter, statusFilters) : []),
+    [state, statusFilters, trackFilter],
   )
   const trackCounts = useMemo(
     () => ({
-      all: state ? selectLibraryItems(state, 'all', statusFilter).length : 0,
-      ideal_self: state ? selectLibraryItems(state, 'ideal_self', statusFilter).length : 0,
-      side_hustle: state ? selectLibraryItems(state, 'side_hustle', statusFilter).length : 0,
+      all: state ? selectLibraryItems(state, 'all', statusFilters).length : 0,
+      ideal_self: state ? selectLibraryItems(state, 'ideal_self', statusFilters).length : 0,
+      side_hustle: state ? selectLibraryItems(state, 'side_hustle', statusFilters).length : 0,
     }),
-    [state, statusFilter],
+    [state, statusFilters],
   )
 
   return (
@@ -62,7 +73,7 @@ export function LibraryPage() {
       <div className={styles.listPage}>
         <div className={styles.toolbar}>
           <SegmentedControl
-            label="方向筛选"
+            label=""
             onChange={setTrackFilter}
             options={[
               { count: trackCounts.all, label: '全部', value: 'all' },
@@ -71,19 +82,35 @@ export function LibraryPage() {
             ]}
             value={trackFilter}
           />
-          <SelectField
-            label="状态筛选"
-            onChange={(event) => setStatusFilter(event.target.value as LibraryStatusFilter)}
-            showRequirement={false}
-            value={statusFilter}
-          >
-            <option value="all">全部状态</option>
-            {Object.entries(statusLabels).map(([value, label]) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </SelectField>
+          <fieldset aria-label="状态筛选" className={styles.statusFilters}>
+            <div className={styles.statusFiltersHeading}>
+              <span>状态筛选</span>
+              <button
+                aria-expanded={statusFiltersExpanded}
+                aria-label={statusFiltersExpanded ? '收起状态筛选' : '展开状态筛选'}
+                className={`${styles.statusFiltersToggle} ${statusFiltersExpanded ? styles.statusFiltersToggleExpanded : ''}`}
+                onClick={() => setStatusFiltersExpanded((expanded) => !expanded)}
+                title={statusFiltersExpanded ? '收起状态筛选' : '展开状态筛选'}
+                type="button"
+              >
+                <ChevronDown aria-hidden="true" size={18} strokeWidth={2.6} />
+              </button>
+            </div>
+            {statusFiltersExpanded ? (
+              <div className={styles.statusFiltersOptions}>
+                {statusFilterOptions.map(({ value, label }) => (
+                  <label key={value}>
+                    <input
+                      checked={statusFilters.includes(value)}
+                      onChange={() => setStatusFilters((current) => current.includes(value) ? current.filter((status) => status !== value) : [...current, value])}
+                      type="checkbox"
+                    />
+                    <span>{label}</span>
+                  </label>
+                ))}
+              </div>
+            ) : null}
+          </fieldset>
         </div>
         <div className={styles.scrollArea}>
           {items.length ? (
@@ -166,10 +193,10 @@ function getCandidateRowText(item: LifeItem) {
     }
   }
 
-  if (item.status === 'voided' || item.status === 'terminated' || item.status === 'completed') {
+  if (item.status === 'terminated' || item.status === 'completed' || item.status === 'concluded') {
     return {
       left: statusLabels[item.status],
-      right: '重新开始请新建',
+      right: '查看本轮结果',
     }
   }
 
@@ -190,13 +217,14 @@ function getCycleProgress(cycle: ExperimentCycle | null, today: string) {
   }
 
   const day = selectCycleDay(cycle, today)
-  const dayNumber = day === 'scheduled' ? 0 : day === 'review_due' ? 7 : day
+  const dayNumber = day === 'scheduled' ? 0 : day === 'ended' ? 7 : day
+  const pendingReview = isCyclePendingReview(cycle)
 
   return {
     dueText: `到期 ${formatShortDate(cycle.endDate)}`,
-    label: cycle.status === 'review_due' ? '待复盘' : cycle.status === 'scheduled' ? '未开始' : '当前周期',
+    label: pendingReview ? '等待复盘' : cycle.status === 'scheduled' ? '未开始' : '当前周期',
     percent: Math.min(100, Math.max(0, (dayNumber / 7) * 100)),
-    ratio: cycle.status === 'review_due' ? '待复盘' : dayNumber ? `第 ${dayNumber} 天` : '未开始',
+    ratio: pendingReview ? '待复盘' : dayNumber ? `第 ${dayNumber} 天` : '未开始',
   }
 }
 

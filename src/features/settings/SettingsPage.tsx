@@ -24,7 +24,7 @@ export function SettingsPage() {
     return null
   }
 
-  const reviewedCycles = state.cycles.filter((cycle) => cycle.status === 'review_due' || cycle.status === 'reviewed')
+  const reviewedCycles = state.cycles.filter((cycle) => cycle.status === 'reviewed')
   const practicedDays = state.reviews.reduce((total, review) => total + review.effectiveDays, 0)
   const missedDays = state.reviews.reduce((total, review) => total + review.missedDays, 0)
   const blankDays = state.reviews.reduce((total, review) => total + review.blankDays, 0)

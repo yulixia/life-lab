@@ -1,14 +1,14 @@
 import {
-  addCalendarDays,
   canRecordCycleDate,
   compareLocalDate,
   getCycleEndDate,
   todayLocalDate,
 } from './dates'
-import { isOpenCycle, selectCycleCounts, selectOpenCycleByTrack } from './selectors'
+import { isCyclePendingReview, isOpenCycle, selectCycleCounts, selectOpenCycleByTrack } from './selectors'
 import {
   DomainError,
   type CycleReview,
+  type CycleOutcome,
   type DailyEntry,
   type EnergyCategory,
   type EnergyDelta,
@@ -18,7 +18,7 @@ import {
   type LifeItem,
   type LifeLabState,
   type LocalDate,
-  type ReviewDecision,
+  type LongTermEntry,
   type Track,
   type UUID,
 } from './types'
@@ -54,6 +54,7 @@ export type SaveDailyEntryInput = {
   energyDelta?: number
   observation?: string
   missReason?: DailyEntry['missReason']
+  missReasonTags?: string[]
   missReasonOther?: string
 }
 
@@ -66,12 +67,6 @@ export type SubmitReviewInput = {
   evidenceAgainst?: string
   discovery?: string
   conclusion: string
-  decision: ReviewDecision
-  adjustedPlan?: {
-    actionPlan?: string
-    minimumStandard?: string
-    idealStandard?: string
-  }
 }
 
 export type SaveItemInput = {
@@ -102,22 +97,28 @@ export type SaveEnergyEntryInput = {
   reflection?: string
 }
 
+export type SaveLongTermEntryInput = {
+  itemId: UUID
+  date: LocalDate
+  note?: string
+}
+
 export function refreshTemporalState(state: LifeLabState, now = new Date()): LifeLabState {
   const today = todayLocalDate(now)
   let changed = false
 
   const cycles = state.cycles.map((cycle) => {
-    if (cycle.status === 'scheduled' && compareLocalDate(today, cycle.endDate) > 0) {
+    if ((cycle.status === 'scheduled' || cycle.status === 'active') && compareLocalDate(today, cycle.endDate) > 0) {
       changed = true
-      return { ...cycle, status: 'review_due' as const, updatedAt: now.toISOString() }
+      return {
+        ...cycle,
+        status: getNaturalCycleOutcome(cycle, state) as CycleOutcome,
+        updatedAt: now.toISOString(),
+      }
     }
     if (cycle.status === 'scheduled' && compareLocalDate(today, cycle.startDate) >= 0) {
       changed = true
       return { ...cycle, status: 'active' as const, updatedAt: now.toISOString() }
-    }
-    if (cycle.status === 'active' && compareLocalDate(today, cycle.endDate) > 0) {
-      changed = true
-      return { ...cycle, status: 'review_due' as const, updatedAt: now.toISOString() }
     }
     return cycle
   })
@@ -131,7 +132,12 @@ export function refreshTemporalState(state: LifeLabState, now = new Date()): Lif
     if (!openCycle) {
       return item
     }
-    const status: ItemStatus = openCycle.status === 'review_due' ? 'review_due' : 'active'
+    const status: ItemStatus =
+      openCycle.status === 'scheduled' || openCycle.status === 'active'
+        ? 'active'
+        : openCycle.status === 'terminated' || openCycle.status === 'completed' || openCycle.status === 'concluded'
+          ? openCycle.status
+          : item.status
     return item.status === status ? item : { ...item, status, updatedAt: now.toISOString() }
   })
 
@@ -217,7 +223,13 @@ export function restoreArchivedItem(state: LifeLabState, itemId: UUID, now: Date
     meta: { ...state.meta, updatedAt: now.toISOString() },
     items: state.items.map((candidate) =>
       candidate.id === item.id
-        ? { ...candidate, status: 'exploring', archivedAt: undefined, updatedAt: now.toISOString() }
+        ? {
+            ...candidate,
+            status: candidate.archivedFromStatus ?? 'exploring',
+            archivedAt: undefined,
+            archivedFromStatus: undefined,
+            updatedAt: now.toISOString(),
+          }
         : candidate,
     ),
   }
@@ -228,19 +240,29 @@ export function archiveLifeItem(state: LifeLabState, itemId: UUID, now: Date): L
   if (!item) {
     throw new DomainError('not_found', 'item does not exist')
   }
-  if (item.status === 'archived') {
-    return state
+  if (item.status !== 'completed' && item.status !== 'concluded') {
+    throw new DomainError('invalid_state', 'only completed or concluded items can be archived')
   }
-  if (state.cycles.some((cycle) => cycle.itemId === item.id && isOpenCycle(cycle))) {
-    throw new DomainError('invalid_state', 'open cycle must be reviewed before archiving')
+  const latestCycle = state.cycles
+    .filter((cycle) => cycle.itemId === item.id)
+    .sort((left, right) => right.cycleNumber - left.cycleNumber)[0]
+  if (!latestCycle || latestCycle.status !== 'reviewed') {
+    throw new DomainError('invalid_state', 'the latest cycle must be reviewed before archiving')
   }
+  const archivedFromStatus = item.status
 
   return {
     ...state,
     meta: { ...state.meta, updatedAt: now.toISOString() },
     items: state.items.map((candidate) =>
       candidate.id === item.id
-        ? { ...candidate, status: 'archived', archivedAt: now.toISOString(), updatedAt: now.toISOString() }
+        ? {
+            ...candidate,
+            status: 'archived',
+            archivedAt: now.toISOString(),
+            archivedFromStatus,
+            updatedAt: now.toISOString(),
+          }
         : candidate,
     ),
   }
@@ -254,6 +276,9 @@ export function deleteLifeItem(state: LifeLabState, itemId: UUID, now: Date): Li
   const cycleIds = new Set(
     state.cycles.filter((cycle) => cycle.itemId === itemId).map((cycle) => cycle.id),
   )
+  if (state.dailyEntries.some((entry) => cycleIds.has(entry.cycleId))) {
+    throw new DomainError('invalid_state', 'items with practice records cannot be deleted')
+  }
 
   return {
     ...state,
@@ -262,6 +287,7 @@ export function deleteLifeItem(state: LifeLabState, itemId: UUID, now: Date): Li
     cycles: state.cycles.filter((cycle) => cycle.itemId !== itemId),
     dailyEntries: state.dailyEntries.filter((entry) => !cycleIds.has(entry.cycleId)),
     reviews: state.reviews.filter((review) => !cycleIds.has(review.cycleId)),
+    longTermEntries: state.longTermEntries.filter((entry) => entry.itemId !== itemId),
   }
 }
 
@@ -292,11 +318,11 @@ export function createExperimentCycle(
   if (!item) {
     throw new DomainError('not_found', 'item does not exist')
   }
-  if (item.status === 'archived') {
-    throw new DomainError('invalid_state', 'archived item must be restored before starting a cycle')
+  if (!['exploring', 'terminated', 'completed', 'concluded'].includes(item.status)) {
+    throw new DomainError('invalid_state', 'item status cannot start a cycle')
   }
-  if (isEndedItemStatus(item.status)) {
-    throw new DomainError('invalid_state', 'ended item cannot restart; create a new item instead')
+  if (item.status !== 'exploring' && !hasReviewedLatestCycle(state, item.id)) {
+    throw new DomainError('invalid_state', 'the latest cycle must be reviewed before starting another round')
   }
   if (selectOpenCycleByTrack(state, item.track)) {
     throw new DomainError('track_occupied', 'track already has an open cycle')
@@ -328,8 +354,7 @@ export function createExperimentCycle(
       if (candidate.id !== item.id) {
         return candidate
       }
-      const status: ItemStatus = cycle.status === 'review_due' ? 'review_due' : 'active'
-      return { ...candidate, status, updatedAt: now.toISOString() }
+      return { ...candidate, status: 'active', updatedAt: now.toISOString() }
     }),
     cycles: [...state.cycles, cycle],
   }
@@ -440,6 +465,9 @@ export function endCycleEarly(state: LifeLabState, cycleId: UUID, now: Date): Li
   if (cycle.status !== 'active' && cycle.status !== 'scheduled') {
     throw new DomainError('invalid_state', 'only active or scheduled cycles can end early')
   }
+  if (!itemHasPracticeRecords(state, cycle.itemId)) {
+    throw new DomainError('invalid_state', 'items without practice records should be deleted instead')
+  }
 
   return {
     ...state,
@@ -448,7 +476,7 @@ export function endCycleEarly(state: LifeLabState, cycleId: UUID, now: Date): Li
       candidate.id === cycle.id
         ? {
             ...candidate,
-            status: 'review_due',
+            status: 'terminated',
             endedEarlyAt: now.toISOString(),
             updatedAt: now.toISOString(),
           }
@@ -456,8 +484,96 @@ export function endCycleEarly(state: LifeLabState, cycleId: UUID, now: Date): Li
     ),
     items: state.items.map((item) =>
       item.id === cycle.itemId
-        ? { ...item, status: 'review_due', updatedAt: now.toISOString() }
+        ? { ...item, status: 'terminated', updatedAt: now.toISOString() }
         : item,
+    ),
+  }
+}
+
+export function convertArchivedItemToLongTerm(state: LifeLabState, itemId: UUID, now: Date): LifeLabState {
+  const item = state.items.find((candidate) => candidate.id === itemId)
+  if (!item) {
+    throw new DomainError('not_found', 'item does not exist')
+  }
+  if (item.status !== 'archived' || !item.archivedFromStatus) {
+    throw new DomainError('invalid_state', 'only archived successful items can become long term')
+  }
+
+  return {
+    ...state,
+    meta: { ...state.meta, updatedAt: now.toISOString() },
+    items: state.items.map((candidate) =>
+      candidate.id === item.id
+        ? { ...candidate, status: 'long_term', archivedAt: undefined, updatedAt: now.toISOString() }
+        : candidate,
+    ),
+  }
+}
+
+export function terminateLongTermItem(state: LifeLabState, itemId: UUID, now: Date): LifeLabState {
+  return updateLongTermStatus(state, itemId, 'long_term', 'long_term_terminated', now)
+}
+
+export function restartLongTermItem(state: LifeLabState, itemId: UUID, now: Date): LifeLabState {
+  return updateLongTermStatus(state, itemId, 'long_term_terminated', 'long_term', now)
+}
+
+export function saveLongTermEntry(
+  state: LifeLabState,
+  input: SaveLongTermEntryInput,
+  now: Date,
+  createId: IdFactory,
+): LifeLabState {
+  validateLocalDate(input.date, 'date')
+  if (input.date !== todayLocalDate(now)) {
+    throw new DomainError('invalid_input', 'long-term entries can only be recorded for today')
+  }
+  const item = state.items.find((candidate) => candidate.id === input.itemId)
+  if (!item) {
+    throw new DomainError('not_found', 'item does not exist')
+  }
+  if (item.status !== 'long_term') {
+    throw new DomainError('invalid_state', 'only active long-term items can be recorded')
+  }
+
+  const existing = state.longTermEntries.find((entry) => entry.itemId === item.id && entry.date === input.date)
+  const entry: LongTermEntry = {
+    id: existing?.id ?? createId(),
+    itemId: item.id,
+    date: input.date,
+    note: normalizeOptionalText(input.note, 500),
+    createdAt: existing?.createdAt ?? now.toISOString(),
+    updatedAt: now.toISOString(),
+  }
+
+  return {
+    ...state,
+    meta: { ...state.meta, updatedAt: now.toISOString() },
+    longTermEntries: existing
+      ? state.longTermEntries.map((candidate) => (candidate.id === existing.id ? entry : candidate))
+      : [...state.longTermEntries, entry],
+  }
+}
+
+function updateLongTermStatus(
+  state: LifeLabState,
+  itemId: UUID,
+  currentStatus: Extract<ItemStatus, 'long_term' | 'long_term_terminated'>,
+  nextStatus: Extract<ItemStatus, 'long_term' | 'long_term_terminated'>,
+  now: Date,
+): LifeLabState {
+  const item = state.items.find((candidate) => candidate.id === itemId)
+  if (!item) {
+    throw new DomainError('not_found', 'item does not exist')
+  }
+  if (item.status !== currentStatus) {
+    throw new DomainError('invalid_state', 'long-term item is not in the required status')
+  }
+  return {
+    ...state,
+    meta: { ...state.meta, updatedAt: now.toISOString() },
+    items: state.items.map((candidate) =>
+      candidate.id === item.id ? { ...candidate, status: nextStatus, updatedAt: now.toISOString() } : candidate,
     ),
   }
 }
@@ -479,13 +595,14 @@ export function saveEnergyEntry(
     throw new DomainError('invalid_input', 'occurredAt cannot be in the future')
   }
   validateEnergyDelta(input.energyDelta)
+  const category = input.energyDelta > 0 ? 'energy' : input.energyDelta < 0 ? 'drain' : input.category
 
   const existing = input.id
     ? state.energyEntries.find((entry) => entry.id === input.id)
     : undefined
   const entry: EnergyEntry = {
     id: existing?.id ?? createId(),
-    category: input.category,
+    category,
     occurredAt: occurredAt.toISOString(),
     scene: normalizeOptionalText(input.scene, 80),
     event: normalizeRequiredText(input.event, 'event', 240),
@@ -528,8 +645,8 @@ export function submitCycleReview(
   if (!cycle) {
     throw new DomainError('not_found', 'cycle does not exist')
   }
-  if (cycle.status !== 'review_due') {
-    throw new DomainError('invalid_state', 'cycle must be review_due')
+  if (!isCyclePendingReview(cycle)) {
+    throw new DomainError('invalid_state', 'cycle must be terminated, completed, or concluded before review')
   }
   if (state.reviews.some((review) => review.cycleId === cycle.id)) {
     throw new DomainError('duplicate_review', 'cycle already has a review')
@@ -555,19 +672,9 @@ export function submitCycleReview(
     evidenceAgainst: normalizeOptionalText(input.evidenceAgainst, 800),
     discovery: normalizeOptionalText(input.discovery, 800),
     conclusion: normalizeRequiredText(input.conclusion, 'conclusion', 300),
-    decision: input.decision,
+    decision: getCycleOutcome(cycle),
     submittedAt: now.toISOString(),
   }
-
-  const shouldContinue = input.decision === 'continue' || input.decision === 'adjust_continue'
-  if (input.decision === 'adjust_continue' && !hasAdjustment(input)) {
-    throw new DomainError('invalid_input', '重置需要至少填写一个下一轮调整项')
-  }
-
-  const nextCycleId = shouldContinue ? createId() : undefined
-  const nextCycle = nextCycleId
-    ? createNextCycle(cycle, input, nextCycleId, addCalendarDays(todayLocalDate(now), 1), now)
-    : undefined
 
   return {
     ...state,
@@ -575,10 +682,9 @@ export function submitCycleReview(
     cycles: [
       ...state.cycles.map((candidate) =>
         candidate.id === cycle.id
-          ? { ...candidate, status: 'reviewed' as const, reviewId, nextCycleId, updatedAt: now.toISOString() }
+          ? { ...candidate, status: 'reviewed' as const, reviewId, nextCycleId: undefined, updatedAt: now.toISOString() }
           : candidate,
       ),
-      ...(nextCycle ? [nextCycle] : []),
     ],
     reviews: [...state.reviews, review],
     items: state.items.map((candidate) => {
@@ -587,9 +693,8 @@ export function submitCycleReview(
       }
       return {
         ...candidate,
-        status: nextItemStatus(input.decision),
+        status: getCycleOutcome(cycle),
         latestConclusion: review.conclusion,
-        archivedAt: input.decision === 'archive' ? now.toISOString() : undefined,
         updatedAt: now.toISOString(),
       }
     }),
@@ -629,6 +734,7 @@ function normalizeDailyEntry(
     energyDelta: input.energyDelta,
     observation: normalizeOptionalText(input.observation, 500),
     missReason: input.status === 'not_practiced' ? input.missReason : undefined,
+    missReasonTags: input.status === 'not_practiced' ? normalizeTags(input.missReasonTags) : undefined,
     missReasonOther:
       input.status === 'not_practiced' ? normalizeOptionalText(input.missReasonOther, 120) : undefined,
     createdAt: existing?.createdAt ?? now.toISOString(),
@@ -636,57 +742,25 @@ function normalizeDailyEntry(
   }
 }
 
-function createNextCycle(
-  cycle: ExperimentCycle,
-  input: SubmitReviewInput,
-  id: UUID,
-  startDate: LocalDate,
-  now: Date,
-): ExperimentCycle {
-  const adjusted = input.adjustedPlan
-  return {
-    ...cycle,
-    id,
-    cycleNumber: cycle.cycleNumber + 1,
-    startDate,
-    endDate: getCycleEndDate(startDate),
-    status: 'scheduled',
-    actionPlan: adjusted?.actionPlan?.trim() || cycle.actionPlan,
-    minimumStandard: adjusted?.minimumStandard?.trim() || cycle.minimumStandard,
-    idealStandard: adjusted?.idealStandard?.trim() || cycle.idealStandard,
-    adjustments: [],
-    endedEarlyAt: undefined,
-    reviewId: undefined,
-    nextCycleId: undefined,
-    createdAt: now.toISOString(),
-    updatedAt: now.toISOString(),
-  }
+function getNaturalCycleOutcome(cycle: ExperimentCycle, state: LifeLabState): CycleOutcome {
+  return selectCycleCounts(cycle, state.dailyEntries).recorded === 7 ? 'completed' : 'concluded'
 }
 
-function nextItemStatus(decision: ReviewDecision): ItemStatus {
-  if (decision === 'continue' || decision === 'adjust_continue') {
-    return 'active'
+function getCycleOutcome(cycle: ExperimentCycle): CycleOutcome {
+  if (cycle.status === 'terminated' || cycle.status === 'completed' || cycle.status === 'concluded') {
+    return cycle.status
   }
-  if (decision === 'long_term') {
-    return 'long_term'
-  }
-  if (decision === 'archive') {
-    return 'archived'
-  }
-  if (decision === 'voided' || decision === 'terminated' || decision === 'completed') {
-    return decision
-  }
-  return 'exploring'
+  throw new DomainError('invalid_state', 'cycle has no reviewable outcome')
 }
 
-function isEndedItemStatus(status: ItemStatus): boolean {
-  return status === 'voided' || status === 'terminated' || status === 'completed'
+function itemHasPracticeRecords(state: LifeLabState, itemId: UUID): boolean {
+  const cycleIds = new Set(state.cycles.filter((cycle) => cycle.itemId === itemId).map((cycle) => cycle.id))
+  return state.dailyEntries.some((entry) => cycleIds.has(entry.cycleId))
 }
 
-function hasAdjustment(input: SubmitReviewInput): boolean {
-  return Boolean(
-    input.adjustedPlan?.actionPlan?.trim() ||
-      input.adjustedPlan?.minimumStandard?.trim() ||
-      input.adjustedPlan?.idealStandard?.trim(),
-  )
+function hasReviewedLatestCycle(state: LifeLabState, itemId: UUID): boolean {
+  const latestCycle = state.cycles
+    .filter((cycle) => cycle.itemId === itemId)
+    .sort((left, right) => right.cycleNumber - left.cycleNumber)[0]
+  return latestCycle?.status === 'reviewed' && Boolean(latestCycle.reviewId)
 }

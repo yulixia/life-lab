@@ -6,13 +6,14 @@ export type Track = 'ideal_self' | 'side_hustle'
 export type ItemStatus =
   | 'exploring'
   | 'active'
-  | 'review_due'
-  | 'long_term'
-  | 'voided'
   | 'terminated'
   | 'completed'
+  | 'concluded'
   | 'archived'
-export type CycleStatus = 'scheduled' | 'active' | 'review_due' | 'reviewed'
+  | 'long_term'
+  | 'long_term_terminated'
+export type CycleStatus = 'scheduled' | 'active' | 'terminated' | 'completed' | 'concluded' | 'reviewed'
+export type CycleOutcome = Extract<CycleStatus, 'terminated' | 'completed' | 'concluded'>
 export type DailyEntryStatus = 'practiced' | 'not_practiced'
 export type EnergyCategory = 'energy' | 'drain'
 export type EnergyDelta = -2 | -1 | 0 | 1 | 2
@@ -24,15 +25,7 @@ export type MissReason =
   | 'unwell'
   | 'not_priority'
   | 'other'
-export type ReviewDecision =
-  | 'continue'
-  | 'adjust_continue'
-  | 'defer'
-  | 'long_term'
-  | 'archive'
-  | 'voided'
-  | 'terminated'
-  | 'completed'
+export type ReviewDecision = CycleOutcome
 
 export type AppMeta = {
   createdAt: IsoInstant
@@ -41,12 +34,13 @@ export type AppMeta = {
 }
 
 export type LifeLabState = {
-  schemaVersion: 1
+  schemaVersion: 2
   meta: AppMeta
   items: LifeItem[]
   cycles: ExperimentCycle[]
   dailyEntries: DailyEntry[]
   reviews: CycleReview[]
+  longTermEntries: LongTermEntry[]
   energyEntries: EnergyEntry[]
 }
 
@@ -61,6 +55,7 @@ export type LifeItem = {
   createdAt: IsoInstant
   updatedAt: IsoInstant
   archivedAt?: IsoInstant
+  archivedFromStatus?: Extract<ItemStatus, 'completed' | 'concluded'>
 }
 
 export type ExperimentCycle = {
@@ -95,6 +90,7 @@ export type DailyEntry = {
   energyDelta?: EnergyDelta
   observation?: string
   missReason?: MissReason
+  missReasonTags?: string[]
   missReasonOther?: string
   createdAt: IsoInstant
   updatedAt: IsoInstant
@@ -115,6 +111,15 @@ export type CycleReview = {
   conclusion: string
   decision: ReviewDecision
   submittedAt: IsoInstant
+}
+
+export type LongTermEntry = {
+  id: UUID
+  itemId: UUID
+  date: LocalDate
+  note?: string
+  createdAt: IsoInstant
+  updatedAt: IsoInstant
 }
 
 export type EnergyEntry = {

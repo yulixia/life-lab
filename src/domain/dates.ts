@@ -71,7 +71,7 @@ export function getRecordableDateRange(
   cycle: ExperimentCycle,
   today: LocalDate,
 ): { startDate: LocalDate; endDate: LocalDate } | null {
-  if (cycle.status === 'reviewed') {
+  if (cycle.status !== 'active') {
     return null
   }
 
@@ -87,7 +87,7 @@ export function getRecordableDateRange(
 
 export function canRecordCycleDate(cycle: ExperimentCycle, date: LocalDate, today: LocalDate): boolean {
   const range = getRecordableDateRange(cycle, today)
-  return Boolean(range && isWithinInclusive(date, range.startDate, range.endDate))
+  return Boolean(range && date === today && isWithinInclusive(date, range.startDate, range.endDate))
 }
 
 function parseLocalDateParts(value: LocalDate | string): [number, number, number] {

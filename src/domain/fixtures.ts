@@ -3,7 +3,7 @@ import type { LifeLabState } from './types'
 export function createEmptyState(now = new Date()): LifeLabState {
   const instant = now.toISOString()
   return {
-    schemaVersion: 1,
+    schemaVersion: 2,
     meta: {
       createdAt: instant,
       updatedAt: instant,
@@ -13,6 +13,7 @@ export function createEmptyState(now = new Date()): LifeLabState {
     cycles: [],
     dailyEntries: [],
     reviews: [],
+    longTermEntries: [],
     energyEntries: [],
   }
 }

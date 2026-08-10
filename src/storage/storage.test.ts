@@ -34,17 +34,18 @@ class MemoryStorage implements BrowserStorage {
 }
 
 describe('storage', () => {
-  it('loads an empty v1 state when no local data exists', () => {
+  it('loads an empty v2 state when no local data exists', () => {
     const result = loadState(new MemoryStorage(), new Date('2026-08-09T04:00:00.000Z'))
 
     expect(result.ok).toBe(true)
     expect(result.ok && result.source).toBe('empty')
     expect(result.ok && result.state).toMatchObject({
-      schemaVersion: 1,
+      schemaVersion: 2,
       items: [],
       cycles: [],
       dailyEntries: [],
       reviews: [],
+      longTermEntries: [],
       energyEntries: [],
     })
   })
@@ -71,7 +72,7 @@ describe('storage', () => {
     })
   })
 
-  it('round-trips a valid state and can delete all data into a fresh v1 state', () => {
+  it('round-trips a valid state and can delete all data into a fresh v2 state', () => {
     const storage = new MemoryStorage()
     const state = makeState({ items: [makeItem()] })
 
@@ -82,6 +83,22 @@ describe('storage', () => {
     expect(storage.getItem(storageKey)).toBeNull()
     expect(fresh.items).toEqual([])
     expect(fresh.meta.createdAt).toBe('2026-08-10T04:00:00.000Z')
+  })
+
+  it('migrates v1 review_due and voided states into the v2 model', () => {
+    const legacy = {
+      schemaVersion: 1,
+      meta: { createdAt: '2026-08-09T04:00:00.000Z', updatedAt: '2026-08-09T04:00:00.000Z', hasSeenLocalDataNotice: true },
+      items: [makeItem({ status: 'review_due' as never }), makeItem({ id: 'void', status: 'voided' as never })],
+      cycles: [makeCycle({ status: 'review_due' as never })],
+      dailyEntries: [],
+      reviews: [],
+      energyEntries: [],
+    }
+    const result = migrateState(JSON.stringify(legacy))
+    expect(result).toMatchObject({ ok: true, state: { schemaVersion: 2 } })
+    expect(result.ok && result.state.items.map((item) => item.status)).toEqual(['concluded', 'exploring'])
+    expect(result.ok && result.state.cycles[0].status).toBe('concluded')
   })
 
   it('exports full backup and anonymous validation summary without text content', async () => {
@@ -97,7 +114,7 @@ describe('storage', () => {
           blankDays: 4,
           factSummary: '很私密的事实',
           conclusion: '不要泄露',
-          decision: 'archive',
+          decision: 'completed',
           submittedAt: '2026-08-20T04:00:00.000Z',
         },
       ],

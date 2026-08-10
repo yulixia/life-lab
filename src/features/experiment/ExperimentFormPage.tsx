@@ -42,7 +42,7 @@ export function ExperimentFormPage() {
     return <Navigate to="/library" replace />
   }
 
-  if (item.status === 'archived' || item.status === 'voided' || item.status === 'terminated' || item.status === 'completed') {
+  if (item.status === 'archived' || item.status === 'long_term' || item.status === 'long_term_terminated') {
     return <Navigate to={`/items/${item.id}`} replace />
   }
 

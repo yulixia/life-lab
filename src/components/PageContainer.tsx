@@ -12,7 +12,7 @@ export function PageContainer({ children }: PageContainerProps) {
   const usesContainedScroll = location.pathname === '/energy' || location.pathname === '/library'
 
   useLayoutEffect(() => {
-    containerRef.current?.scrollTo({ top: 0, left: 0 })
+    containerRef.current?.scrollTo?.({ top: 0, left: 0 })
   }, [location.pathname])
 
   return (

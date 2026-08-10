@@ -3,6 +3,11 @@
   gap: 14px;
 }
 
+.longTermSection {
+  display: grid;
+  gap: 10px;
+}
+
 .headerDate {
   color: var(--color-label);
   font-size: 0.86rem;

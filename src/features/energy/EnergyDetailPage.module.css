@@ -4,13 +4,34 @@
 }
 
 .section {
+  --detail-tone: var(--color-primary);
+  --detail-tone-strong: var(--color-primary-strong);
+  --detail-tone-soft: var(--color-primary-soft);
+  --detail-tone-wash: rgba(95, 141, 247, 0.08);
   display: grid;
   gap: 12px;
+  background:
+    linear-gradient(135deg, var(--detail-tone-wash), rgba(255, 255, 255, 0.86) 46%),
+    rgba(255, 255, 255, 0.86);
+}
+
+.energyTone {
+  --detail-tone: #cf6f76;
+  --detail-tone-strong: #b95561;
+  --detail-tone-soft: color-mix(in srgb, var(--palette-energy) 34%, #ffffff);
+  --detail-tone-wash: rgba(246, 161, 166, 0.2);
+}
+
+.drainTone {
+  --detail-tone: #6f8390;
+  --detail-tone-strong: #4f6878;
+  --detail-tone-soft: color-mix(in srgb, var(--palette-drain) 48%, #ffffff);
+  --detail-tone-wash: rgba(184, 200, 210, 0.24);
 }
 
 .section h2 {
   margin: 0;
-  color: var(--color-ink);
+  color: color-mix(in srgb, var(--detail-tone-strong) 44%, var(--color-ink));
   font-size: 1.1rem;
   font-weight: 900;
   line-height: 1.35;
@@ -32,10 +53,24 @@
 .tag {
   border-radius: 999px;
   padding: 4px 8px;
-  color: var(--color-primary);
-  background: var(--color-primary-soft);
+  color: var(--detail-tone);
+  background: var(--detail-tone-soft);
   font-size: 0.8125rem;
   font-weight: 850;
+}
+
+.deltaTag {
+  border-radius: 999px;
+  padding: 4px 9px;
+  color: var(--detail-tone);
+  background: var(--detail-tone-soft);
+  font-size: 0.8125rem;
+  font-weight: 900;
+}
+
+.deltaTag[data-intensity='2'] {
+  color: var(--detail-tone-strong);
+  background: color-mix(in srgb, var(--detail-tone-soft) 74%, var(--detail-tone) 26%);
 }
 
 .detailBlock {

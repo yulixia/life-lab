@@ -22,8 +22,8 @@ describe('lifeLabReducer', () => {
     )
 
     expect(next.status).toBe('ready')
-    expect(next.state?.cycles[0].status).toBe('review_due')
-    expect(next.state?.items[0].status).toBe('review_due')
+    expect(next.state?.cycles[0].status).toBe('concluded')
+    expect(next.state?.items[0].status).toBe('concluded')
   })
 
   it('keeps corrupt load results out of app state', () => {

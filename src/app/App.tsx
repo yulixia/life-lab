@@ -5,6 +5,7 @@ import { EnergyFormPage } from '../features/energy/EnergyFormPage'
 import { EnergyPage } from '../features/energy/EnergyPage'
 import { CheckInPage } from '../features/experiment/CheckInPage'
 import { ExperimentFormPage } from '../features/experiment/ExperimentFormPage'
+import { LongTermCheckInPage } from '../features/long-term/LongTermCheckInPage'
 import { ReviewPage } from '../features/review/ReviewPage'
 import { SettingsPage } from '../features/settings/SettingsPage'
 import { ItemDetailPage } from '../features/library/ItemDetailPage'
@@ -28,6 +29,7 @@ export function App() {
         <Route path="items/:itemId" element={<ItemDetailPage />} />
         <Route path="items/:itemId/edit" element={<ItemFormPage mode="edit" />} />
         <Route path="items/:itemId/experiments/new" element={<ExperimentFormPage />} />
+        <Route path="items/:itemId/long-term/check-in" element={<LongTermCheckInPage />} />
         <Route path="experiments/:cycleId/check-in" element={<CheckInPage />} />
         <Route path="experiments/:cycleId/review" element={<ReviewPage />} />
         <Route path="*" element={<Navigate to="/today" replace />} />
