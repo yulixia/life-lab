@@ -145,6 +145,16 @@
   gap: 10px;
 }
 
+.fileInput {
+  display: none;
+}
+
+.imported {
+  color: var(--color-primary-strong) !important;
+  font-size: 0.82rem;
+  font-weight: 850;
+}
+
 .dangerZone {
   background: rgba(255, 255, 255, 0.78);
 }

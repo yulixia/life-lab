@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState, type ChangeEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Activity, Boxes, ChartNoAxesColumn, CircleCheck, ClipboardCheck, RotateCcw, Tags } from 'lucide-react'
 import { AppHeader } from '../../components/AppHeader'
@@ -8,14 +8,16 @@ import { ConfirmDialog } from '../../components/ConfirmDialog'
 import { InlineError } from '../../components/InlineError'
 import { useLifeLab } from '../../app/LifeLabContext'
 import { selectLatestDecision, selectTopFeelingTags } from '../../domain/selectors'
-import { exportFullBackup, exportValidationSummary } from '../../storage'
+import { exportFullBackup, mergeImportedState, migrateState } from '../../storage'
 import styles from './SettingsPage.module.css'
 
 export function SettingsPage() {
   const navigate = useNavigate()
-  const { deleteAll, state } = useLifeLab()
+  const { deleteAll, replaceState, state } = useLifeLab()
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [imported, setImported] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const latestDecision = state ? selectLatestDecision(state) : null
   const topEnergyTags = useMemo(() => (state ? selectTopFeelingTags(state, 'energy', 5) : []), [state])
   const topDrainTags = useMemo(() => (state ? selectTopFeelingTags(state, 'drain', 5) : []), [state])
@@ -50,6 +52,30 @@ export function SettingsPage() {
     }
     setConfirmOpen(false)
     navigate('/today', { replace: true })
+  }
+
+  const handleImport = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    event.target.value = ''
+    if (!file) return
+
+    setError(null)
+    setImported(false)
+    try {
+      const result = migrateState(await file.text())
+      if (!result.ok) {
+        setError('无法识别这个备份文件，请选择从人生实验室导出的完整 JSON。')
+        return
+      }
+      const saveResult = replaceState(mergeImportedState(state, result.state))
+      if (!saveResult.ok) {
+        setError(saveResult.message)
+        return
+      }
+      setImported(true)
+    } catch {
+      setError('导入失败，请确认文件未损坏后重试。')
+    }
   }
 
   return (
@@ -99,18 +125,16 @@ export function SettingsPage() {
           <h2>本地数据</h2>
           <p>schemaVersion: {state.schemaVersion}</p>
           <p>数据只保存在当前浏览器。完整备份可能包含隐私内容，下载后请自行保管。</p>
+          <p>导入完整 JSON 会与当前数据合并；同一记录保留更新时间较新的版本。</p>
           <div className={styles.actions}>
-         
-            <Button
-              onClick={() => downloadBlob(exportValidationSummary(state), `life-lab-validation-summary-${today}.json`)}
-              variant="secondary"
-            >
-              导出匿名摘要
-            </Button>
-               <Button onClick={() => downloadBlob(exportFullBackup(state), `life-lab-backup-${today}.json`)}>
+            <Button onClick={() => downloadBlob(exportFullBackup(state), `life-lab-backup-${today}.json`)} variant="secondary">
               导出完整 JSON
             </Button>
+            <input accept="application/json,.json" className={styles.fileInput} onChange={handleImport} ref={fileInputRef} type="file" />
+            <Button onClick={() => fileInputRef.current?.click()}>导入并合并</Button>
           </div>
+          {imported ? <p className={styles.imported}>已合并导入的数据。</p> : null}
+          {error ? <InlineError>{error}</InlineError> : null}
         </Card>
 
         <Card className={`${styles.section} ${styles.dangerZone}`}>
@@ -119,7 +143,6 @@ export function SettingsPage() {
           <Button onClick={() => setConfirmOpen(true)} variant="danger">
             删除全部数据
           </Button>
-          {error ? <InlineError>{error}</InlineError> : null}
         </Card>
       </div>
 

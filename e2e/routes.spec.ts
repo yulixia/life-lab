@@ -462,7 +462,7 @@ test.describe('settings data flow', () => {
     await page.getByRole('button', { name: '开始使用' }).press('Enter')
   })
 
-  test('exports full backup, anonymous summary, and deletes all data', async ({ page }) => {
+  test('exports a full backup, merges imported data, and deletes all data', async ({ page }) => {
     await page.getByRole('link', { name: '总库', exact: true }).click()
     await createItem(page, '隐私事项标题', 'ideal_self')
     await page.goto('/energy')
@@ -486,16 +486,23 @@ test.describe('settings data flow', () => {
     expect(fullContent).toContain('隐私事项标题')
     expect(fullContent).toContain('非常私密的事件')
 
-    const summaryDownloadPromise = page.waitForEvent('download')
-    await page.getByRole('button', { name: '导出匿名摘要' }).click()
-    const summaryDownload = await summaryDownloadPromise
-    const summaryPath = await summaryDownload.path()
-    const summaryContent = await readFile(String(summaryPath), 'utf8')
-    expect(summaryContent).toContain('"itemsCreated": 1')
-    expect(summaryContent).toContain('"energyEntryCount": 1')
-    expect(summaryContent).not.toContain('隐私事项标题')
-    expect(summaryContent).not.toContain('非常私密的事件')
-    expect(summaryContent).not.toContain('焦虑')
+    const importedBackup = JSON.stringify({
+      schemaVersion: 2,
+      meta: { createdAt: '2026-08-09T04:00:00.000Z', updatedAt: '2026-08-10T04:00:00.000Z', hasSeenLocalDataNotice: true },
+      items: [{ id: 'imported-item', title: '导入事项', track: 'side_hustle', status: 'exploring', createdAt: '2026-08-09T04:00:00.000Z', updatedAt: '2026-08-10T04:00:00.000Z' }],
+      cycles: [],
+      dailyEntries: [],
+      reviews: [],
+      longTermEntries: [],
+      energyEntries: [],
+    })
+    await page.locator('input[type="file"]').setInputFiles({ name: 'life-lab-backup.json', mimeType: 'application/json', buffer: Buffer.from(importedBackup) })
+    await expect(page.getByText('已合并导入的数据。')).toBeVisible()
+    await page.getByRole('link', { name: '总库', exact: true }).click()
+    await page.getByRole('button', { name: '展开状态筛选' }).click()
+    await page.getByRole('checkbox', { name: '待探索' }).check()
+    await expect(page.getByRole('heading', { name: '导入事项', level: 2 })).toBeVisible()
+    await page.getByRole('link', { name: '数据' }).click()
 
     await page.getByRole('button', { name: '删除全部数据' }).click()
     const dialog = page.getByRole('dialog', { name: '确认删除全部数据？' })

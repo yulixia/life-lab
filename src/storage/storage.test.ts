@@ -4,8 +4,8 @@ import { makeCycle, makeItem, makeState } from '../domain/testUtils'
 import {
   deleteAllData,
   exportFullBackup,
-  exportValidationSummary,
   loadState,
+  mergeImportedState,
   migrateState,
   saveState,
   storageKey,
@@ -101,48 +101,25 @@ describe('storage', () => {
     expect(result.ok && result.state.cycles[0].status).toBe('concluded')
   })
 
-  it('exports full backup and anonymous validation summary without text content', async () => {
+  it('exports a full backup and merges imported data without duplicating daily records', async () => {
     const state = makeState({
       items: [makeItem({ title: '秘密标题' })],
-      cycles: [makeCycle({ status: 'reviewed' })],
-      reviews: [
-        {
-          id: 'review-1',
-          cycleId: 'cycle-1',
-          effectiveDays: 2,
-          missedDays: 1,
-          blankDays: 4,
-          factSummary: '很私密的事实',
-          conclusion: '不要泄露',
-          decision: 'completed',
-          submittedAt: '2026-08-20T04:00:00.000Z',
-        },
-      ],
-      energyEntries: [
-        {
-          id: 'energy-1',
-          category: 'energy',
-          occurredAt: '2026-08-09T04:00:00.000Z',
-          event: '私密事件',
-          feelingTags: ['私密标签'],
-          energyDelta: 1,
-          createdAt: '2026-08-09T04:00:00.000Z',
-          updatedAt: '2026-08-09T04:00:00.000Z',
-        },
-      ],
+      cycles: [makeCycle()],
+      dailyEntries: [{ id: 'entry-old', cycleId: 'cycle-1', date: '2026-08-09', status: 'practiced', actionSummary: '旧记录', feelingTags: [], createdAt: '2026-08-09T04:00:00.000Z', updatedAt: '2026-08-09T04:00:00.000Z' }],
     })
 
     await expect(exportFullBackup(state).text()).resolves.toContain('秘密标题')
 
-    const summary = await exportValidationSummary(state).text()
-    expect(summary).toContain('"itemsCreated": 1')
-    expect(summary).toContain('"energyEntryCount": 1')
-    expect(summary).toContain('"practicedDays": 2')
-    expect(summary).toContain('"missedDays": 1')
-    expect(summary).toContain('"blankDays": 4')
-    expect(summary).not.toContain('秘密标题')
-    expect(summary).not.toContain('私密事件')
-    expect(summary).not.toContain('私密标签')
-    expect(summary).not.toContain('很私密的事实')
+    const imported = makeState({
+      items: [makeItem({ id: 'item-1', title: '导入后更新的标题', updatedAt: '2026-08-10T04:00:00.000Z' }), makeItem({ id: 'item-2', title: '导入事项' })],
+      cycles: [makeCycle()],
+      dailyEntries: [{ id: 'entry-new', cycleId: 'cycle-1', date: '2026-08-09', status: 'practiced', actionSummary: '新记录', feelingTags: [], createdAt: '2026-08-09T04:00:00.000Z', updatedAt: '2026-08-10T04:00:00.000Z' }],
+    })
+    const merged = mergeImportedState(state, imported, new Date('2026-08-11T04:00:00.000Z'))
+
+    expect(merged.items).toHaveLength(2)
+    expect(merged.items.find((item) => item.id === 'item-1')?.title).toBe('导入后更新的标题')
+    expect(merged.dailyEntries).toEqual([expect.objectContaining({ id: 'entry-new', actionSummary: '新记录' })])
+    expect(merged.meta.updatedAt).toBe('2026-08-11T04:00:00.000Z')
   })
 })

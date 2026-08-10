@@ -76,29 +76,54 @@ export function exportFullBackup(state: LifeLabState): Blob {
   return new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' })
 }
 
-export function exportValidationSummary(state: LifeLabState): Blob {
-  const decisions: Record<ReviewDecision, number> = { terminated: 0, completed: 0, concluded: 0 }
-  let practicedDays = 0
-  let missedDays = 0
-  for (const review of state.reviews) {
-    decisions[review.decision] += 1
-    practicedDays += review.effectiveDays
-    missedDays += review.missedDays
-  }
-  const summary = {
+export function mergeImportedState(current: LifeLabState, imported: LifeLabState, now = new Date()): LifeLabState {
+  return {
     schemaVersion: currentSchemaVersion,
-    itemsCreated: state.items.length,
-    cyclesStarted: state.cycles.length,
-    cyclesReachedReview: state.cycles.filter((cycle) => cycle.status === 'reviewed').length,
-    reviewsSubmitted: state.reviews.length,
-    decisions,
-    practicedDays,
-    missedDays,
-    blankDays: state.reviews.reduce((total, review) => total + review.blankDays, 0),
-    longTermEntryCount: state.longTermEntries.length,
-    energyEntryCount: state.energyEntries.length,
+    meta: {
+      createdAt: current.meta.createdAt.localeCompare(imported.meta.createdAt) <= 0 ? current.meta.createdAt : imported.meta.createdAt,
+      updatedAt: now.toISOString(),
+      hasSeenLocalDataNotice: current.meta.hasSeenLocalDataNotice || imported.meta.hasSeenLocalDataNotice,
+    },
+    items: mergeRecords(current.items, imported.items, (item) => item.updatedAt),
+    cycles: mergeRecords(current.cycles, imported.cycles, (cycle) => cycle.updatedAt),
+    dailyEntries: mergeRecords(current.dailyEntries, imported.dailyEntries, (entry) => entry.updatedAt, (entry) => `${entry.cycleId}:${entry.date}`),
+    reviews: mergeRecords(current.reviews, imported.reviews, (review) => review.submittedAt, (review) => review.cycleId),
+    longTermEntries: mergeRecords(current.longTermEntries, imported.longTermEntries, (entry) => entry.updatedAt, (entry) => `${entry.itemId}:${entry.date}`),
+    energyEntries: mergeRecords(current.energyEntries, imported.energyEntries, (entry) => entry.updatedAt),
   }
-  return new Blob([JSON.stringify(summary, null, 2)], { type: 'application/json' })
+}
+
+type IdentifiedRecord = { id: string }
+
+function mergeRecords<T extends IdentifiedRecord>(
+  current: T[],
+  imported: T[],
+  getUpdatedAt: (record: T) => string,
+  getNaturalKey?: (record: T) => string,
+): T[] {
+  const merged = [...current]
+  const byId = new Map(merged.map((record, index) => [record.id, index]))
+  const byNaturalKey = getNaturalKey ? new Map(merged.map((record, index) => [getNaturalKey(record), index])) : null
+
+  for (const incoming of imported) {
+    const existingIndex = byId.get(incoming.id) ?? (getNaturalKey ? byNaturalKey?.get(getNaturalKey(incoming)) : undefined)
+    if (existingIndex === undefined) {
+      byId.set(incoming.id, merged.length)
+      if (getNaturalKey) byNaturalKey?.set(getNaturalKey(incoming), merged.length)
+      merged.push(incoming)
+      continue
+    }
+
+    const existing = merged[existingIndex]
+    if (getUpdatedAt(incoming).localeCompare(getUpdatedAt(existing)) > 0) {
+      byId.delete(existing.id)
+      byId.set(incoming.id, existingIndex)
+      if (getNaturalKey) byNaturalKey?.set(getNaturalKey(incoming), existingIndex)
+      merged[existingIndex] = incoming
+    }
+  }
+
+  return merged
 }
 
 function migrateV1State(value: Record<string, unknown>): LifeLabState {
