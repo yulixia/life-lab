@@ -26,7 +26,7 @@ export function BottomNav() {
           data-section={item.section}
           className={({ isActive }) => (isActive ? `${styles.link} ${styles.active}` : styles.link)}
         >
-          <Icon aria-hidden="true" size={24} strokeWidth={2} />
+          <Icon aria-hidden="true" className={styles.icon} />
           <span>{item.label}</span>
         </NavLink>
       ))}

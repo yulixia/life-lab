@@ -10,6 +10,12 @@
   scrollbar-width: thin;
 }
 
+.container[data-page='today'] {
+  padding-bottom: calc(var(--layout-page-bottom) + env(safe-area-inset-bottom));
+  padding-right: var(--layout-page-gutter);
+  padding-left: var(--layout-page-gutter);
+}
+
 .containedScroll {
   height: 100%;
   padding-bottom: 0;

@@ -1,10 +1,10 @@
 .shell {
   position: relative;
-  --section-accent: var(--palette-today);
-  --section-accent-strong: #4eb5d8;
-  --section-accent-soft: rgba(220, 245, 253, 0.9);
-  --section-accent-wash: rgba(222, 247, 253, 0.82);
-  --section-accent-focus: rgba(104, 200, 232, 0.34);
+  --section-accent: var(--theme-today-primary);
+  --section-accent-strong: var(--theme-today-strong);
+  --section-accent-soft: var(--theme-today-soft);
+  --section-accent-wash: var(--theme-today-wash);
+  --section-accent-focus: var(--theme-today-focus);
   --color-primary: var(--section-accent);
   --color-primary-strong: var(--section-accent-strong);
   --color-primary-soft: var(--section-accent-soft);
@@ -14,31 +14,31 @@
   margin: 0 auto;
   overflow: hidden;
   background: var(--color-surface);
-  box-shadow: 0 0 0 1px rgba(139, 158, 184, 0.08), 0 24px 80px rgba(102, 131, 160, 0.16);
+  box-shadow: var(--shadow-shell);
 }
 
 .shell[data-section='energy'] {
-  --section-accent: var(--palette-energy);
-  --section-accent-strong: #e9868d;
-  --section-accent-soft: rgba(255, 229, 231, 0.92);
-  --section-accent-wash: rgba(255, 231, 233, 0.72);
-  --section-accent-focus: rgba(246, 161, 166, 0.36);
+  --section-accent: var(--theme-energy-primary);
+  --section-accent-strong: var(--theme-energy-strong);
+  --section-accent-soft: var(--theme-energy-soft);
+  --section-accent-wash: var(--theme-energy-wash);
+  --section-accent-focus: var(--theme-energy-focus);
 }
 
 .shell[data-section='library'] {
-  --section-accent: var(--palette-library);
-  --section-accent-strong: #6f60c7;
-  --section-accent-soft: rgba(232, 228, 255, 0.94);
-  --section-accent-wash: rgba(234, 230, 255, 0.72);
-  --section-accent-focus: rgba(131, 115, 216, 0.34);
+  --section-accent: var(--theme-library-primary);
+  --section-accent-strong: var(--theme-library-strong);
+  --section-accent-soft: var(--theme-library-soft);
+  --section-accent-wash: var(--theme-library-wash);
+  --section-accent-focus: var(--theme-library-focus);
 }
 
 .shell[data-section='settings'] {
-  --section-accent: var(--palette-data);
-  --section-accent-strong: #9fbe85;
-  --section-accent-soft: rgba(231, 242, 220, 0.94);
-  --section-accent-wash: rgba(231, 242, 220, 0.74);
-  --section-accent-focus: rgba(188, 214, 166, 0.42);
+  --section-accent: var(--theme-data-primary);
+  --section-accent-strong: var(--theme-data-strong);
+  --section-accent-soft: var(--theme-data-soft);
+  --section-accent-wash: var(--theme-data-wash);
+  --section-accent-focus: var(--theme-data-focus);
 }
 
 .shell::before {
@@ -48,7 +48,7 @@
   pointer-events: none;
   content: '';
   background:
-    radial-gradient(circle at -18% 16%, var(--section-accent-wash) 0 110px, transparent 111px), radial-gradient(circle at 112% 42%, #ebe2ffbd 0 98px, transparent 99px), radial-gradient(circle at 15% 88%, #dff6edad 0 116px, transparent 117px), #f7f9ff;
+    radial-gradient(circle at -18% 16%, var(--section-accent-wash) 0 110px, transparent 111px), radial-gradient(circle at 112% 42%, var(--decor-purple-wash) 0 98px, transparent 99px), radial-gradient(circle at 15% 88%, var(--decor-mint-wash) 0 116px, transparent 117px), var(--color-surface);
 }
 
 .shell > main {

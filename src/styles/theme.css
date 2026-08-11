@@ -1,0 +1,267 @@
+:root {
+  /* Base semantic colors */
+  --color-heading: #202b3b;
+  --color-ink: #253142;
+  --color-muted: #69778a;
+  --color-label: #8391a5;
+  --color-link: #476ba6;
+  --color-energy: #2f855a;
+  --color-drain: #b45309;
+  --color-danger: #b42318;
+  --color-white: #ffffff;
+  --color-shell: #edf2fb;
+  --color-surface: #f7f9ff;
+  --color-field: #eef4ff;
+
+  /* Summer Pastel palette: the approved decorative and category colors. */
+  --summer-pastel-01-01: #f8a68d;
+  --summer-pastel-01-02: #f6a1a6;
+  --summer-pastel-01-03: #f284b2;
+  --summer-pastel-01-04: #cc69a7;
+  --summer-pastel-01-05: #ec7079;
+  --summer-pastel-02-01: #8869a6;
+  --summer-pastel-02-02: #b88bbe;
+  --summer-pastel-02-03: #b2bee1;
+  --summer-pastel-02-04: #91c4e8;
+  --summer-pastel-02-05: #8095cc;
+  --summer-pastel-03-01: #d1a5cc;
+  --summer-pastel-03-02: #f6dd6e;
+  --summer-pastel-03-03: #e9bebc;
+  --summer-pastel-03-04: #75cbe8;
+  --summer-pastel-03-05: #a9dde4;
+  --summer-pastel-04-01: #80bfb0;
+  --summer-pastel-04-02: #b3ddd2;
+  --summer-pastel-04-03: #d2dde4;
+  --summer-pastel-04-04: #f5bd93;
+  --summer-pastel-04-05: #ef9d6a;
+  --summer-pastel-05-01: #fff7ee;
+  --summer-pastel-05-02: #ffe6c2;
+  --summer-pastel-05-03: #ead4e2;
+  --summer-pastel-05-04: #ecb4d0;
+  --summer-pastel-05-05: #c7a9d1;
+  --summer-pastel-06-01: #ef4a5f;
+  --summer-pastel-06-02: #f9b296;
+  --summer-pastel-06-03: #fbccc0;
+  --summer-pastel-06-04: #aed5d7;
+  --summer-pastel-06-05: #face88;
+  --summer-pastel-07-01: #f5cfc7;
+  --summer-pastel-07-02: #e89897;
+  --summer-pastel-07-03: #f9b184;
+  --summer-pastel-07-04: #fecc8b;
+  --summer-pastel-07-05: #c5bf9b;
+  --summer-pastel-08-01: #889f45;
+  --summer-pastel-08-02: #bcd6a6;
+  --summer-pastel-08-03: #f8ceb9;
+  --summer-pastel-08-04: #fcbb3c;
+  --summer-pastel-08-05: #e57b87;
+  --summer-pastel-09-01: #fac4c8;
+  --summer-pastel-09-02: #ef5585;
+  --summer-pastel-09-03: #fdd053;
+  --summer-pastel-09-04: #f9b15f;
+  --summer-pastel-09-05: #68c8e8;
+  --summer-pastel-10-01: #f492ac;
+  --summer-pastel-10-02: #9ac867;
+  --summer-pastel-10-03: #f9c7d5;
+  --summer-pastel-10-04: #fcd849;
+  --summer-pastel-10-05: #bb9ecb;
+  --summer-pastel-11-01: #f2bcd4;
+  --summer-pastel-11-02: #ffdf92;
+  --summer-pastel-11-03: #c1e3f8;
+  --summer-pastel-11-04: #d7b4dc;
+  --summer-pastel-11-05: #c4c4e1;
+  --summer-pastel-12-01: #7fcdc9;
+  --summer-pastel-12-02: #c3e5de;
+  --summer-pastel-12-03: #c6e5f1;
+  --summer-pastel-12-04: #7bccec;
+  --summer-pastel-12-05: #708aa3;
+  --summer-pastel-13-01: #708aa3;
+  --summer-pastel-13-02: #fbc88d;
+  --summer-pastel-13-03: #fae3ae;
+  --summer-pastel-13-04: #a9dddf;
+  --summer-pastel-13-05: #85cbcd;
+  --summer-pastel-14-01: #e35d44;
+  --summer-pastel-14-02: #f48259;
+  --summer-pastel-14-03: #f8c071;
+  --summer-pastel-14-04: #8bd1c8;
+  --summer-pastel-14-05: #adca63;
+  --summer-pastel-15-01: #d2a8b3;
+  --summer-pastel-15-02: #d2a8b3;
+  --summer-pastel-15-03: #dae6e4;
+  --summer-pastel-15-04: #eecf64;
+  --summer-pastel-15-05: #db9f27;
+
+  /* Module themes */
+  --theme-today-primary: #68c8e8;
+  --theme-today-strong: #4eb5d8;
+  --theme-today-soft: rgba(220, 245, 253, 0.9);
+  --theme-today-wash: rgba(222, 247, 253, 0.82);
+  --theme-today-focus: rgba(104, 200, 232, 0.34);
+  --theme-today-shadow: rgba(104, 200, 232, 0.14);
+  --theme-today-ink: color-mix(in srgb, var(--theme-today-primary) 60%, var(--color-ink));
+
+  --theme-energy-primary: var(--summer-pastel-01-02);
+  --theme-energy-strong: #e9868d;
+  --theme-energy-ink: #cf6f76;
+  --theme-energy-soft: rgba(255, 229, 231, 0.92);
+  --theme-energy-wash: rgba(255, 231, 233, 0.72);
+  --theme-energy-focus: rgba(246, 161, 166, 0.36);
+  --theme-energy-line: rgba(246, 161, 166, 0.2);
+
+  --theme-drain-primary: var(--summer-pastel-04-03);
+  --theme-drain-strong: #b8c8d2;
+  --theme-drain-ink: #6f8390;
+  --theme-drain-soft: rgba(232, 239, 243, 0.88);
+  --theme-drain-wash: rgba(210, 221, 228, 0.24);
+  --theme-drain-line: rgba(184, 200, 210, 0.22);
+
+  --theme-library-primary: #8373d8;
+  --theme-library-strong: #6f60c7;
+  --theme-library-soft: rgba(232, 228, 255, 0.94);
+  --theme-library-wash: rgba(234, 230, 255, 0.72);
+  --theme-library-focus: rgba(131, 115, 216, 0.34);
+
+  --theme-data-primary: var(--summer-pastel-08-02);
+  --theme-data-strong: #9fbe85;
+  --theme-data-soft: rgba(231, 242, 220, 0.94);
+  --theme-data-wash: rgba(231, 242, 220, 0.74);
+  --theme-data-focus: rgba(188, 214, 166, 0.42);
+
+  /* Compatibility aliases used by pages that have not migrated yet. */
+  --palette-today: var(--theme-today-primary);
+  --palette-energy: var(--theme-energy-primary);
+  --palette-drain: var(--theme-drain-primary);
+  --palette-library: var(--theme-library-primary);
+  --palette-data: var(--theme-data-primary);
+  --color-primary: var(--theme-today-primary);
+  --color-primary-strong: var(--theme-today-strong);
+  --color-primary-soft: var(--theme-today-soft);
+  --color-focus: var(--theme-today-focus);
+
+  /* Surfaces and lines */
+  --surface-card: rgba(255, 255, 255, 0.74);
+  --surface-card-standard: rgba(255, 255, 255, 0.92);
+  --surface-card-strong: rgba(255, 255, 255, 0.94);
+  --surface-glass: rgba(255, 255, 255, 0.76);
+  --surface-control: rgba(255, 255, 255, 0.62);
+  --surface-control-strong: rgba(255, 255, 255, 0.78);
+  --surface-info-panel: rgba(247, 249, 255, 0.82);
+  --surface-progress: rgba(232, 241, 255, 0.78);
+  --surface-mint-panel: rgba(223, 246, 237, 0.78);
+  --surface-overlay: rgba(23, 50, 77, 0.36);
+  --color-card: var(--surface-card);
+  --color-card-strong: rgba(255, 255, 255, 0.9);
+  --color-border: rgba(139, 158, 184, 0.16);
+  --line-faint: rgba(139, 158, 184, 0.08);
+  --line-subtle: rgba(139, 158, 184, 0.1);
+  --line-soft: rgba(139, 158, 184, 0.12);
+  --line-danger: rgba(180, 35, 24, 0.14);
+  --decor-purple-wash: rgba(235, 226, 255, 0.74);
+  --decor-mint-wash: rgba(223, 246, 237, 0.68);
+
+  /* Spacing */
+  --space-4: 4px;
+  --space-6: 6px;
+  --space-7: 7px;
+  --space-8: 8px;
+  --space-10: 10px;
+  --space-12: 12px;
+  --space-14: 14px;
+  --space-16: 16px;
+  --space-18: 18px;
+  --space-20: 20px;
+  --space-22: 22px;
+  --space-24: 24px;
+  --space-28: 28px;
+  --space-32: 32px;
+  --space-page: var(--space-22);
+  --layout-page-gutter: var(--space-18);
+  --layout-page-top: var(--space-24);
+  --layout-header-bottom: var(--space-16);
+  --layout-section-gap: var(--space-24);
+  --layout-card-gap: var(--space-18);
+  --layout-page-bottom: 112px;
+
+  /* Typography */
+  --font-family-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-size-page: 28px;
+  --font-size-card-title: 20px;
+  --font-size-data: 16px;
+  --font-size-body: 14px;
+  --font-size-meta: 13px;
+  --font-size-caption: 12px;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 750;
+  --font-weight-heavy: 800;
+  --line-height-tight: 1.25;
+  --line-height-title: 1.35;
+  --line-height-body: 1.5;
+  --line-height-copy: 1.6;
+
+  /* Radius */
+  --radius-8: 8px;
+  --radius-12: 12px;
+  --radius-13: 13px;
+  --radius-14: 14px;
+  --radius-16: 16px;
+  --radius-18: 18px;
+  --radius-20: 20px;
+  --radius-22: 22px;
+  --radius-26: 26px;
+  --radius-28: 28px;
+  --radius-pill: 999px;
+  --radius-card: var(--radius-22);
+  --radius-control: var(--radius-16);
+  --radius-card-large: var(--radius-28);
+  --radius-panel: var(--radius-18);
+  --radius-button: var(--radius-18);
+  --radius-icon: var(--radius-12);
+
+  /* Shadows */
+  --shadow-card: 0 12px 26px rgba(102, 131, 160, 0.08);
+  --shadow-card-soft: 0 12px 30px rgba(102, 131, 160, 0.07);
+  --shadow-float: 0 12px 32px rgba(102, 131, 160, 0.12);
+  --shadow-shell: 0 0 0 1px var(--line-faint), 0 24px 80px rgba(102, 131, 160, 0.16);
+  --shadow-inset: inset 0 0 0 1px var(--line-soft);
+  --shadow-inset-faint: inset 0 0 0 1px var(--line-faint);
+  --shadow-primary-button: 0 8px 18px var(--theme-today-shadow);
+
+  /* Stable dimensions */
+  --app-max-width: 430px;
+  --tap-min: 44px;
+  --button-height: 48px;
+  --icon-size-small: 16px;
+  --icon-size-regular: 18px;
+  --icon-size-nav: 20px;
+  --icon-base-size: 36px;
+  --nav-height: 68px;
+  --nav-item-height: 50px;
+  --progress-height: 4px;
+  --line-width: 1px;
+  --focus-ring-width: 3px;
+  --focus-ring-offset: 2px;
+  --nav-side-offset: var(--space-18);
+  --nav-bottom-offset: var(--space-14);
+  --nav-layer: 20;
+  --nav-blur: 20px;
+
+  /* Component contracts */
+  --card-padding: var(--space-20);
+  --card-content-gap: var(--space-16);
+  --panel-padding-block: var(--space-14);
+  --panel-padding-inline: var(--space-16);
+  --panel-content-gap: var(--space-10);
+  --button-padding-inline: var(--space-16);
+  --button-content-gap: var(--space-8);
+  --badge-height: 28px;
+  --badge-padding-inline: 11px;
+  --progress-segment-gap: var(--space-7);
+  --action-grid-columns: minmax(0, 0.82fr) minmax(0, 1fr);
+  --primary-gradient: linear-gradient(135deg, var(--color-primary), var(--color-primary-strong));
+  --primary-button-shadow: 0 8px 18px color-mix(in srgb, var(--color-primary) 14%, transparent);
+  --progress-complete-background: color-mix(in srgb, var(--color-primary) 66%, transparent);
+  --progress-current-shadow: 0 4px 10px color-mix(in srgb, var(--color-primary) 28%, transparent);
+  --progress-panel-line: color-mix(in srgb, var(--color-primary) 8%, transparent);
+  --completed-foreground: color-mix(in srgb, var(--color-primary) 60%, var(--color-ink));
+}

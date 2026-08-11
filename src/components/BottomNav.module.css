@@ -1,58 +1,63 @@
 .nav {
   position: fixed;
-  z-index: 20;
-  right: max(18px, calc((100vw - var(--app-max-width)) / 2 + 18px));
-  bottom: calc(14px + env(safe-area-inset-bottom));
-  left: max(18px, calc((100vw - var(--app-max-width)) / 2 + 18px));
+  z-index: var(--nav-layer);
+  right: max(var(--nav-side-offset), calc((100vw - var(--app-max-width)) / 2 + var(--nav-side-offset)));
+  bottom: calc(var(--nav-bottom-offset) + env(safe-area-inset-bottom));
+  left: max(var(--nav-side-offset), calc((100vw - var(--app-max-width)) / 2 + var(--nav-side-offset)));
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 6px;
-  min-height: 70px;
+  gap: var(--space-6);
+  min-height: var(--nav-height);
   margin: 0 auto;
-  padding: 8px;
-  background: rgba(255, 255, 255, 0.76);
-  border-radius: 28px;
+  padding: var(--space-7);
+  background: var(--surface-glass);
+  border-radius: var(--radius-26);
   box-shadow: var(--shadow-float);
-  backdrop-filter: blur(20px);
+  backdrop-filter: blur(var(--nav-blur));
 }
 
 .link {
   display: flex;
-  --nav-accent: var(--palette-today);
-  --nav-soft: rgba(220, 245, 253, 0.9);
-  min-height: 54px;
+  --nav-accent: var(--theme-today-primary);
+  --nav-soft: var(--theme-today-soft);
+  min-height: var(--nav-item-height);
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 3px;
-  border-radius: 20px;
+  gap: var(--space-4);
+  border-radius: var(--radius-18);
   color: var(--color-label);
-  font-size: 0.68rem;
-  font-weight: 850;
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-medium);
   text-decoration: none;
 }
 
 .link[data-section='energy'] {
-  --nav-accent: var(--palette-energy);
-  --nav-soft: rgba(255, 229, 231, 0.92);
+  --nav-accent: var(--theme-energy-primary);
+  --nav-soft: var(--theme-energy-soft);
 }
 
 .link[data-section='library'] {
-  --nav-accent: var(--palette-library);
-  --nav-soft: rgba(232, 228, 255, 0.94);
+  --nav-accent: var(--theme-library-primary);
+  --nav-soft: var(--theme-library-soft);
 }
 
 .link[data-section='settings'] {
-  --nav-accent: var(--palette-data);
-  --nav-soft: rgba(231, 242, 220, 0.94);
+  --nav-accent: var(--theme-data-primary);
+  --nav-soft: var(--theme-data-soft);
 }
 
 .link:focus-visible {
-  outline: 3px solid var(--color-focus);
-  outline-offset: 2px;
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: var(--focus-ring-offset);
 }
 
 .active {
   color: var(--nav-accent);
   background: var(--nav-soft);
+}
+
+.icon {
+  width: var(--icon-size-nav);
+  height: var(--icon-size-nav);
 }

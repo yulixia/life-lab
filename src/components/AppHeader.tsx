@@ -9,11 +9,12 @@ type AppHeaderProps = {
   action?: ReactNode
   backTo?: string
   backLabel?: string
+  className?: string
 }
 
-export function AppHeader({ title, action, backLabel = '返回', backTo, eyebrow }: AppHeaderProps) {
+export function AppHeader({ title, action, backLabel = '返回', backTo, className, eyebrow }: AppHeaderProps) {
   return (
-    <header className={styles.header}>
+    <header className={className ? `${styles.header} ${className}` : styles.header}>
       <div className={styles.titleGroup}>
         {backTo ? (
           <Link aria-label={backLabel} className={styles.backLink} to={backTo}>
