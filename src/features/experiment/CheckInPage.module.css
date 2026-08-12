@@ -12,14 +12,6 @@
   display: grid;
 }
 
-.headerDate {
-  color: var(--color-label);
-  font-size: var(--font-size-meta);
-  font-weight: var(--font-weight-medium);
-  line-height: var(--line-height-title);
-  white-space: nowrap;
-}
-
 .titleRow {
   display: flex;
   min-width: 0;
@@ -33,7 +25,7 @@
   margin: 0;
   overflow: hidden;
   color: var(--color-muted);
-  font-size: var(--font-size-card-title);
+  font-size: var(--font-size-meta);
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-title);
   text-overflow: ellipsis;

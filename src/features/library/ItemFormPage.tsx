@@ -1,6 +1,6 @@
 import { useMemo, useState, type FormEvent } from 'react'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
-import { AppHeader } from '../../components/AppHeader'
+import { SubpageHeader } from '../../components/SubpageHeader'
 import { Button } from '../../components/Button'
 import { Card } from '../../components/Card'
 import { InlineError } from '../../components/InlineError'
@@ -74,8 +74,9 @@ export function ItemFormPage({ mode }: ItemFormPageProps) {
 
   return (
     <>
-      <AppHeader
+      <SubpageHeader
         backTo={isEdit && itemId ? `/items/${itemId}` : '/library'}
+        context={trackLabels[track]}
         title={isEdit ? '编辑事项' : '新建事项'}
       />
       <Card>

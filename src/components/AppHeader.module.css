@@ -82,3 +82,11 @@
   justify-content: flex-end;
   min-width: var(--tap-min);
 }
+
+.meta {
+  color: var(--color-label);
+  font-size: var(--font-size-meta);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-title);
+  white-space: nowrap;
+}

@@ -1,6 +1,6 @@
 import { useMemo, useState, type FormEvent } from 'react'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
-import { AppHeader } from '../../components/AppHeader'
+import { SubpageHeader } from '../../components/SubpageHeader'
 import { Button } from '../../components/Button'
 import { Card } from '../../components/Card'
 import { InlineError } from '../../components/InlineError'
@@ -80,7 +80,11 @@ export function ExperimentFormPage() {
 
   return (
     <>
-      <AppHeader backTo={`/items/${item.id}`} title="创建实践" />
+      <SubpageHeader
+        backTo={`/items/${item.id}`}
+        context={item.track === 'ideal_self' ? '理想自我' : '副业探索'}
+        title="创建实践"
+      />
       <Card>
         {occupiedCycle ? (
           <div className={styles.summary}>

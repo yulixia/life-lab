@@ -10,19 +10,17 @@ export function PageContainer({ children }: PageContainerProps) {
   const location = useLocation()
   const containerRef = useRef<HTMLElement>(null)
   const usesContainedScroll = location.pathname === '/energy' || location.pathname === '/library'
-  const page = location.pathname === '/today' ? 'today' : undefined
+  const hasBottomNav = ['/today', '/energy', '/library', '/settings'].includes(location.pathname)
+  const className = [
+    styles.container,
+    location.pathname === '/today' ? styles.today : '',
+    hasBottomNav ? styles.withBottomNav : '',
+    usesContainedScroll ? styles.containedScroll : '',
+  ].filter(Boolean).join(' ')
 
   useLayoutEffect(() => {
     containerRef.current?.scrollTo?.({ top: 0, left: 0 })
   }, [location.pathname])
 
-  return (
-    <main
-      className={usesContainedScroll ? `${styles.container} ${styles.containedScroll}` : styles.container}
-      data-page={page}
-      ref={containerRef}
-    >
-      {children}
-    </main>
-  )
+  return <main className={className} ref={containerRef}>{children}</main>
 }

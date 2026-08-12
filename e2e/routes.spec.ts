@@ -1,5 +1,51 @@
-import { expect, test } from '@playwright/test'
+import { expect, test, type Page } from '@playwright/test'
 import { readFile } from 'node:fs/promises'
+
+async function expectMainPageBottomSpacing(page: Page, containedScroll = false) {
+  const layout = await page.evaluate((usesContainedScroll) => {
+    const shell = document.querySelector('[class*="shell"]')?.getBoundingClientRect()
+    const main = document.querySelector('main')
+    const nav = document.querySelector('nav')?.getBoundingClientRect()
+    if (!shell || !main || !nav) {
+      return null
+    }
+
+    if (usesContainedScroll) {
+      const scrollArea = document.querySelector('[class*="scrollArea"]')
+      const scrollRect = scrollArea?.getBoundingClientRect()
+      return {
+        mainMatchesShell: Math.abs(main.getBoundingClientRect().height - shell.height) < 1,
+        visibleClearance: scrollRect ? nav.top - scrollRect.bottom : -1,
+        trailingSpace: scrollArea ? Number.parseFloat(getComputedStyle(scrollArea).paddingBottom) : -1,
+      }
+    }
+
+    const bottomPadding = Number.parseFloat(getComputedStyle(main).paddingBottom)
+    return {
+      mainMatchesShell: Math.abs(main.getBoundingClientRect().height - shell.height) < 1,
+      visibleClearance: bottomPadding - (shell.bottom - nav.top),
+      trailingSpace: bottomPadding,
+    }
+  }, containedScroll)
+
+  expect(layout?.mainMatchesShell).toBe(true)
+  expect(layout?.visibleClearance).toBeGreaterThanOrEqual(containedScroll ? 0 : 20)
+  expect(layout?.trailingSpace).toBeGreaterThanOrEqual(20)
+}
+
+async function expectDetailPageBottomSpacing(page: Page) {
+  const layout = await page.evaluate(() => {
+    const main = document.querySelector('main')
+    return {
+      hasBottomNav: Boolean(document.querySelector('nav')),
+      bottomPadding: main ? Number.parseFloat(getComputedStyle(main).paddingBottom) : -1,
+    }
+  })
+
+  expect(layout.hasBottomNav).toBe(false)
+  expect(layout.bottomPadding).toBeGreaterThanOrEqual(20)
+  expect(layout.bottomPadding).toBeLessThanOrEqual(40)
+}
 
 async function createItem(page: import('@playwright/test').Page, title: string, track: 'ideal_self' | 'side_hustle') {
   await page.getByRole('link', { name: '新建事项' }).first().click()
@@ -112,6 +158,7 @@ test.describe('primary routes', () => {
     await expect(page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).resolves.toBe(
       true,
     )
+    await expectMainPageBottomSpacing(page)
     await expect(page.getByRole('link', { name: '去总库' }).first()).toHaveCSS('color', 'rgb(78, 181, 216)')
 
     await page.goto('/energy')
@@ -120,6 +167,7 @@ test.describe('primary routes', () => {
     await expect(page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).resolves.toBe(
       true,
     )
+    await expectMainPageBottomSpacing(page, true)
 
     await page.getByRole('link', { name: '总库', exact: true }).click()
     await expect(page).toHaveURL(/\/library$/)
@@ -127,6 +175,14 @@ test.describe('primary routes', () => {
     await expect(page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).resolves.toBe(
       true,
     )
+    await expectMainPageBottomSpacing(page, true)
+
+    await page.getByRole('link', { name: '数据', exact: true }).click()
+    await expect(page.getByRole('heading', { name: '数据', level: 1 })).toBeVisible()
+    await expectMainPageBottomSpacing(page)
+
+    await page.goto('/items/new')
+    await expectDetailPageBottomSpacing(page)
   })
 })
 
@@ -142,9 +198,11 @@ test.describe('library item flow', () => {
     await page.getByRole('link', { name: '新建事项' }).first().click()
     await expect(page).toHaveURL(/\/items\/new$/)
     await expect(page.getByRole('navigation', { name: '主要导航' })).toBeHidden()
+    await expect(page.locator('header').getByText('理想自我', { exact: true })).toBeVisible()
 
     await page.getByLabel('标题').fill('晨间写作')
     await page.getByRole('button', { name: '副业探索' }).click()
+    await expect(page.locator('header').getByText('副业探索', { exact: true })).toBeVisible()
     await page.getByText('补充想法').click()
     await page.getByLabel('为什么想做').fill('想验证写作是否能带来副业线索')
     await page.getByLabel('长期想验证的问题').fill('我能否稳定输出有价值的内容？')
@@ -156,8 +214,9 @@ test.describe('library item flow', () => {
     await expect(page.getByRole('heading', { name: '晨间写作', level: 2 })).toBeVisible()
     await page.getByRole('link', { name: /晨间写作/ }).click()
     await expect(page.getByRole('heading', { name: '事项详情', level: 1 })).toBeVisible()
+    await expect(page.locator('header').getByText('副业探索', { exact: true })).toBeVisible()
     await expect(page.getByRole('heading', { name: '晨间写作', level: 2 })).toBeVisible()
-    await expect(page.getByText('副业探索')).toBeVisible()
+    await expect(page.locator('[class*="badge"]').getByText('副业探索', { exact: true })).toBeVisible()
     await expect(page.getByRole('link', { name: '开启 7 天实践' })).toBeHidden()
     const startAction = page.getByRole('link', { name: '开启实践' })
     await expect(startAction).toBeVisible()
@@ -175,6 +234,7 @@ test.describe('library item flow', () => {
     await expect(page.getByRole('navigation', { name: '主要导航' })).toBeHidden()
 
     await page.getByRole('link', { name: '编辑' }).click()
+    await expect(page.locator('header').getByText('副业探索', { exact: true })).toBeVisible()
     await page.getByLabel('标题').fill('晨间写作实验')
     await page.getByRole('button', { name: '保存修改' }).click()
 
@@ -211,6 +271,7 @@ test.describe('experiment creation and daily check-in', () => {
     const itemId = await createItem(page, '晨间写作', 'ideal_self')
     await page.goto(`/items/${itemId}/experiments/new`)
     await expect(page.getByRole('heading', { name: '创建实践', level: 1 })).toBeVisible()
+    await expect(page.locator('header').getByText('理想自我', { exact: true })).toBeVisible()
     await page.getByLabel('本轮唯一验证问题').fill('写作是否让我更稳定？')
     await page.getByLabel('每天／本周具体做什么').fill('每天写 20 分钟')
     await page.getByLabel('判断有效实践日的最低标准').fill('至少写 10 分钟')
@@ -236,8 +297,11 @@ test.describe('experiment creation and daily check-in', () => {
     await recordToday.click()
 
     await expect(page.getByRole('heading', { name: '每日记录', level: 1 })).toBeVisible()
+    await expect(page.locator('header').getByText('理想自我', { exact: true })).toBeVisible()
+    await expect(page.getByRole('heading', { name: /月 \d+ 日 · 今日记录/, level: 2 })).toBeVisible()
+    await expect(page.getByRole('heading', { name: '晨间写作', level: 2 })).toBeHidden()
     await expect(page.getByLabel('今天达到最低标准了吗？')).toBeHidden()
-    await page.getByLabel('今天完成了什么？').fill('写了 15 分钟')
+    await page.getByLabel('行动摘要').fill('写了 15 分钟')
     await expect(page.getByLabel('时长（分钟）')).toBeHidden()
     await expect(page.getByLabel('调整后的行动计划')).toBeHidden()
     await page.getByText('补充感受与观察').click()
@@ -253,8 +317,8 @@ test.describe('experiment creation and daily check-in', () => {
     await expect(recordedToday).toHaveCSS('justify-content', 'space-between')
     await expect(recordedToday).toHaveCSS('color', 'rgb(78, 181, 216)')
     await recordedToday.click()
-    await expect(page.getByLabel('今天完成了什么？')).toHaveValue('写了 15 分钟')
-    await page.getByLabel('今天完成了什么？').fill('写了 18 分钟')
+    await expect(page.getByLabel('行动摘要')).toHaveValue('写了 15 分钟')
+    await page.getByLabel('行动摘要').fill('写了 18 分钟')
     await page.getByRole('button', { name: '保存记录' }).click()
 
     await page.getByRole('link', { name: '总库', exact: true }).click()
@@ -276,7 +340,7 @@ test.describe('experiment creation and daily check-in', () => {
 
     await page.getByRole('link', { name: '标记未实践' }).click()
     await expect(page.getByRole('heading', { name: '标记未实践', level: 1 })).toBeVisible()
-    await expect(page.getByLabel('今天完成了什么？')).toBeHidden()
+    await expect(page.getByLabel('行动摘要')).toBeHidden()
     await page.getByRole('button', { name: '忙碌' }).click()
     await page.getByLabel('自定义标签').fill('临时安排')
     await page.getByRole('button', { name: '添加' }).click()
@@ -303,6 +367,7 @@ test.describe('cycle review flow', () => {
     await page.getByRole('link', { name: '去复盘' }).click()
 
     await expect(page.getByRole('heading', { name: '周期复盘', level: 1 })).toBeVisible()
+    await expect(page.locator('header').getByText('第 1 轮', { exact: true })).toBeVisible()
     await expect(page.getByText('有效实践')).toBeVisible()
     await expect(page.getByText('未实践')).toBeVisible()
     await expect(page.getByText('空白')).toBeVisible()
@@ -375,6 +440,7 @@ test.describe('cycle review flow', () => {
     await page.goto('/today')
     await expect(page.getByRole('heading', { name: '长期事项', level: 2 })).toBeVisible()
     await page.getByRole('link', { name: '完成今天' }).click()
+    await expect(page.locator('header').getByText('理想自我', { exact: true })).toBeVisible()
     await page.getByLabel('备注').fill('22:30 前放下手机')
     await page.getByRole('button', { name: '完成今天' }).click()
     await expect(page.getByRole('link', { name: '更新今日备注' })).toBeVisible()
@@ -403,6 +469,7 @@ test.describe('energy log flow', () => {
     await page.getByRole('link', { name: '记录情绪' }).click()
     await expect(page).toHaveURL(/\/energy\/new$/)
     await expect(page.getByRole('heading', { name: '记录一件事', level: 1 })).toBeVisible()
+    await expect(page.locator('header').getByText('有能量', { exact: true })).toBeVisible()
     await page.getByRole('button', { name: '有能量' }).click()
     await page.getByLabel('发生了什么？').fill('散步后有精神')
     await page.getByRole('button', { name: '轻松' }).click()
@@ -411,7 +478,7 @@ test.describe('energy log flow', () => {
     await expect(page.getByRole('button', { name: '平静' })).toHaveAttribute('aria-pressed', 'true')
     await expect(page.getByRole('radio', { name: '0' })).toBeVisible()
     await page.getByRole('radio', { name: '0' }).check()
-    await page.getByText('补充感受与观察').click()
+    await page.getByText('补充更多').click()
     await page.getByLabel('原因').fill('身体有点累，但心情更稳')
     await page.getByRole('button', { name: '保存记录' }).click()
 
@@ -422,6 +489,7 @@ test.describe('energy log flow', () => {
     await expect(energyEntry.getByText('平静')).toBeVisible()
     await energyEntry.click()
     await expect(page.getByRole('heading', { name: '情绪详情', level: 1 })).toBeVisible()
+    await expect(page.locator('header').getByText('有能量', { exact: true })).toBeVisible()
     await expect(page.getByRole('heading', { name: '散步后有精神', level: 2 })).toBeVisible()
     await expect(page.getByText('平静')).toBeVisible()
     await page.getByRole('link', { name: '编辑' }).click()
@@ -430,6 +498,7 @@ test.describe('energy log flow', () => {
 
     await page.getByRole('link', { name: '记录情绪' }).click()
     await page.getByRole('button', { name: '被消耗' }).click()
+    await expect(page.locator('header').getByText('被消耗', { exact: true })).toBeVisible()
     await page.getByLabel('发生了什么？').fill('临时会议')
     await page.getByRole('button', { name: '疲惫' }).click()
     await page.getByRole('radio', { name: '-2' }).check()
@@ -442,9 +511,11 @@ test.describe('energy log flow', () => {
 
     await drainEntry.click()
     await expect(page.getByRole('heading', { name: '情绪详情', level: 1 })).toBeVisible()
+    await expect(page.locator('header').getByText('被消耗', { exact: true })).toBeVisible()
     await page.getByRole('link', { name: '编辑' }).click()
     await expect(page).toHaveURL(/\/energy\/.+\/edit$/)
     await expect(page.getByRole('heading', { name: '编辑记录', level: 1 })).toBeVisible()
+    await expect(page.locator('header').getByText('被消耗', { exact: true })).toBeVisible()
     await page.getByLabel('发生了什么？').fill('临时会议后复盘')
     await page.getByRole('button', { name: '保存修改' }).click()
     await page.getByRole('button', { name: '被消耗' }).click()

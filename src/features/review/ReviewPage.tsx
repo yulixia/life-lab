@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
-import { AppHeader } from '../../components/AppHeader'
+import { SubpageHeader } from '../../components/SubpageHeader'
 import { Button } from '../../components/Button'
 import { Card } from '../../components/Card'
 import { InlineError } from '../../components/InlineError'
@@ -75,7 +75,7 @@ export function ReviewPage() {
 
   return (
     <>
-      <AppHeader backTo="/today" title="周期复盘" />
+      <SubpageHeader backTo="/today" context={`第 ${cycle.cycleNumber} 轮`} title="周期复盘" />
       <Card>
         <form className={styles.form} onSubmit={handleSubmit}>
           <div className={styles.stack}>

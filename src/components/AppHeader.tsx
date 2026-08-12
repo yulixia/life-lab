@@ -6,12 +6,13 @@ import styles from './AppHeader.module.css'
 type AppHeaderProps = {
   title: string
   action?: ReactNode
+  meta?: ReactNode
   backTo?: string
   backLabel?: string
   className?: string
 }
 
-export function AppHeader({ title, action, backLabel = '返回', backTo, className }: AppHeaderProps) {
+export function AppHeader({ title, action, meta, backLabel = '返回', backTo, className }: AppHeaderProps) {
   const headerClassName = [styles.header, backTo ? styles.subpage : '', className].filter(Boolean).join(' ')
 
   return (
@@ -24,9 +25,10 @@ export function AppHeader({ title, action, backLabel = '返回', backTo, classNa
         ) : null}
         <h1>{title}</h1>
       </div>
-      {action ? (
+      {action || meta ? (
         <div className={styles.side}>
-          <div className={styles.action}>{action}</div>
+          {action ? <div className={styles.action}>{action}</div> : null}
+          {meta ? <div className={styles.meta}>{meta}</div> : null}
         </div>
       ) : null}
     </header>

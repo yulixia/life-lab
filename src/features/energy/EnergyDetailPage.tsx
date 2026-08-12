@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
-import { AppHeader } from '../../components/AppHeader'
+import { SubpageHeader } from '../../components/SubpageHeader'
 import { Button } from '../../components/Button'
 import { Card } from '../../components/Card'
 import { ConfirmDialog } from '../../components/ConfirmDialog'
@@ -48,7 +48,7 @@ export function EnergyDetailPage() {
 
   return (
     <>
-      <AppHeader backTo="/energy" title="情绪详情" />
+      <SubpageHeader backTo="/energy" context={categoryLabels[entry.category]} title="情绪详情" />
       <div className={styles.stack}>
         <Card className={`${styles.section} ${entry.category === 'energy' ? styles.energyTone : styles.drainTone}`}>
           <div className={styles.meta}>

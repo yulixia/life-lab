@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import { CloudRain, Sparkles } from 'lucide-react'
-import { AppHeader } from '../../components/AppHeader'
+import { SubpageHeader } from '../../components/SubpageHeader'
 import { Button } from '../../components/Button'
 import { Card } from '../../components/Card'
 import { EnergyScale } from '../../components/EnergyScale'
@@ -110,7 +110,11 @@ export function EnergyFormPage({ mode }: EnergyFormPageProps) {
 
   return (
     <>
-      <AppHeader backTo="/energy" title={mode === 'edit' ? '编辑记录' : '记录一件事'} />
+      <SubpageHeader
+        backTo="/energy"
+        context={category === 'energy' ? '有能量' : '被消耗'}
+        title={mode === 'edit' ? '编辑记录' : '记录一件事'}
+      />
       <Card className={`${styles.formCard} ${toneClass}`}>
         <form className={styles.form} onSubmit={handleSubmit}>
           <div className={styles.sectionIntro}>

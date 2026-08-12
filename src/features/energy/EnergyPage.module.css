@@ -15,7 +15,7 @@
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding-bottom: 12px;
+  padding-bottom: var(--layout-contained-scroll-bottom);
   scrollbar-width: thin;
 }
 

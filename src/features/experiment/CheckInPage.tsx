@@ -1,7 +1,7 @@
 import { useMemo, useState, type FormEvent } from 'react'
 import { ChevronDown, Sparkles } from 'lucide-react'
 import { Link, Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import { AppHeader } from '../../components/AppHeader'
+import { SubpageHeader } from '../../components/SubpageHeader'
 import { Button } from '../../components/Button'
 import { Card } from '../../components/Card'
 import { EnergyScale } from '../../components/EnergyScale'
@@ -12,9 +12,13 @@ import { useLifeLab } from '../../app/LifeLabContext'
 import { canRecordCycleDate, todayLocalDate } from '../../domain/dates'
 import { selectCycleDay, selectDailyEntry, selectEffectiveCyclePlan } from '../../domain/selectors'
 import { saveDailyEntry } from '../../domain/transitions'
-import { DomainError, type MissReason } from '../../domain/types'
+import { DomainError, type MissReason, type Track } from '../../domain/types'
 import styles from './CheckInPage.module.css'
 
+const trackLabels: Record<Track, string> = {
+  ideal_self: '理想自我',
+  side_hustle: '副业探索',
+}
 const feelingOptions = ['轻松', '清醒', '稳定', '兴奋', '疲惫', '焦虑', '烦躁', '卡住']
 const missReasonOptions = ['忙碌', '低能量', '忘记', '被阻塞', '身体不适', '优先级靠后']
 const legacyMissReasonLabels: Record<MissReason, string> = {
@@ -94,9 +98,9 @@ export function CheckInPage() {
 
   return (
     <>
-      <AppHeader
-        action={<span className={styles.headerDate}>{formatRecordDate(date)}</span>}
+      <SubpageHeader
         backTo="/today"
+        context={item ? trackLabels[item.track] : null}
         title={isNotPracticed ? '标记未实践' : '每日记录'}
       />
       <Card>
@@ -112,7 +116,7 @@ export function CheckInPage() {
             <div className={styles.plan}>
               <div className={styles.planHeader}>
                 <div className={styles.titleRow}>
-                  <h2>{item?.title ?? '今天的实践'}</h2>
+                  <h2>{formatRecordDate(date)} · {isNotPracticed ? '未实践' : '今日记录'}</h2>
                   <span className={styles.planDay}>{typeof cycleDay === 'number' ? `第 ${cycleDay} / 7 天` : '当前周期'}</span>
                 </div>
               </div>
@@ -120,7 +124,7 @@ export function CheckInPage() {
                 <div className={styles.focusAction}>
                   <span className={styles.focusIcon}><Sparkles aria-hidden="true" className={styles.focusSvg} /></span>
                   <div>
-                    <span>今日行动</span>
+                    <span>计划行动</span>
                     <p>{plan.actionPlan}</p>
                   </div>
                 </div>

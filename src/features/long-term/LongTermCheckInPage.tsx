@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
-import { AppHeader } from '../../components/AppHeader'
+import { SubpageHeader } from '../../components/SubpageHeader'
 import { Button } from '../../components/Button'
 import { Card } from '../../components/Card'
 import { InlineError } from '../../components/InlineError'
@@ -39,7 +39,11 @@ export function LongTermCheckInPage() {
 
   return (
     <>
-      <AppHeader backTo="/today" title="完成今天" />
+      <SubpageHeader
+        backTo="/today"
+        context={item.track === 'ideal_self' ? '理想自我' : '副业探索'}
+        title="完成今天"
+      />
       <Card className={styles.card}>
         <div className={styles.summary}>
           <h2>{item.title}</h2>

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import { Archive, Flag, MoreHorizontal, Play, Repeat2, RotateCcw, Trash2 } from 'lucide-react'
-import { AppHeader } from '../../components/AppHeader'
+import { SubpageHeader } from '../../components/SubpageHeader'
 import { StatusBadge, TrackBadge } from '../../components/Badge'
 import { Button } from '../../components/Button'
 import { Card } from '../../components/Card'
@@ -27,6 +27,7 @@ import {
   terminateLongTermItem,
 } from '../../domain/transitions'
 import { DomainError, type CycleStatus, type DailyEntry, type ItemStatus, type LifeLabState, type MissReason, type ReviewDecision } from '../../domain/types'
+import { trackLabels } from './libraryLabels'
 import styles from './ItemDetailPage.module.css'
 
 const cycleStatusLabels: Record<CycleStatus, string> = {
@@ -91,7 +92,7 @@ export function ItemDetailPage() {
 
   const item = selectItemById(state, itemId)
   if (!item) {
-    return <><AppHeader backTo="/library" title="记录不存在" /><Card className={styles.section}><p>这条记录不存在或已删除。</p></Card></>
+    return <><SubpageHeader backTo="/library" title="记录不存在" /><Card className={styles.section}><p>这条记录不存在或已删除。</p></Card></>
   }
 
   const cycles = selectCyclesByItem(state, item.id)
@@ -137,7 +138,7 @@ export function ItemDetailPage() {
 
   return (
     <>
-      <AppHeader backTo="/library" title="事项详情" />
+      <SubpageHeader backTo="/library" context={trackLabels[item.track]} title="事项详情" />
       <div className={styles.stack}>
         <Card className={styles.section}>
           <div className={styles.sectionHeader}>
