@@ -240,8 +240,8 @@ CSS 自定义属性不能用于媒体查询条件，因此 `340px` 等断点可�
 | 变量 | 数值 | 用途 |
 |---|---:|---|
 | `--app-max-width` | `430px` | App 最大宽度 |
-| `--tap-min` | `44px` | 最小触控目标 |
-| `--button-height` | `48px` | 标准按钮高度 |
+| `--tap-min` | `33px` | 最小触控目标 |
+| `--button-height` | `38px` | 标准按钮高度 |
 | `--icon-size-small` | `16px` | 行内图标 |
 | `--icon-size-regular` | `18px` | 普通图标 |
 | `--icon-size-nav` | `20px` | 底部导航图标 |

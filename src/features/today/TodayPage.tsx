@@ -76,8 +76,8 @@ export function TodayPage() {
             <Card className={`${styles.card} ${styles.focusCard}`} key={cycle.id}>
               <div className={styles.focusHeader}>
                 <div className={styles.focusHeading}>
-                  <TrackBadge track={track} />
                   <h2>{item?.title ?? '当前实践'}</h2>
+                  <TrackBadge track={track} />
                 </div>
               </div>
               <div className={styles.cyclePanel}>
@@ -113,7 +113,7 @@ export function TodayPage() {
               </div>
               {isRecordable ? (
                 entry ? (
-                  <Link className={styles.completedButton} to={`/experiments/${cycle.id}/check-in?date=${today}`}>
+                  <Link className={`${styles.completedButton} ${styles.recordedTodayButton}`} to={`/experiments/${cycle.id}/check-in?date=${today}`}>
                     <span>今天已记录 ✓</span>
                     <ArrowRight aria-hidden="true" className={styles.inlineIcon} />
                   </Link>
@@ -122,7 +122,7 @@ export function TodayPage() {
                     <Link className={styles.secondaryButton} to={`/experiments/${cycle.id}/check-in?date=${today}&status=not_practiced`}>
                       标记未实践
                     </Link>
-                    <Link className={styles.primaryButton} to={`/experiments/${cycle.id}/check-in?date=${today}`}>
+                    <Link className={`${styles.primaryButton} ${styles.recordTodayButton}`} to={`/experiments/${cycle.id}/check-in?date=${today}`}>
                       <span>记录今日</span>
                       <ArrowRight aria-hidden="true" className={styles.inlineIcon} />
                     </Link>
@@ -144,9 +144,9 @@ export function TodayPage() {
             <Card className={styles.card} key={track}>
               <div className={styles.cardTitleRow}>
                 <h2>{trackEmptyText[track]}</h2>
-                <Link className={styles.linkButton} to="/library">
+                <Link className={`${styles.linkButton} ${styles.libraryLinkButton}`} to="/library">
                   <span>去总库</span>
-                  <ArrowRight aria-hidden="true" className={styles.inlineIcon} />
+                  {/* <ArrowRight aria-hidden="true" className={styles.inlineIcon} /> */}
                 </Link>
               </div>
               <p>当前没有重点实践</p>

@@ -1,8 +1,6 @@
 .card {
-  border-radius: var(--radius-card);
-  padding: 16px;
-  /* background: var(--color-card); */
-  background: linear-gradient(145deg, #ffffffd1, #e9f3ffd1);
-  box-shadow: var(--shadow-card);
-  backdrop-filter: blur(18px);
+  border-radius: var(--radius-card-large);
+  padding: var(--card-padding);
+  background: var(--surface-card-standard);
+  box-shadow: var(--shadow-card-soft);
 }

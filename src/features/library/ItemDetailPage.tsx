@@ -108,11 +108,12 @@ export function ItemDetailPage() {
   const canStartFirstCycle = item.status === 'exploring' && !openCycle && !isTrackOccupiedByOther
   const canStartNextRound =
     !openCycle && !isTrackOccupiedByOther && latestCycleReviewed && ['terminated', 'completed', 'concluded'].includes(item.status)
-  const canArchive = latestCycleReviewed && (item.status === 'completed' || item.status === 'concluded')
+  const canArchive = latestCycleReviewed && item.status === 'completed'
+  const canConvertToLongTerm = item.status === 'archived' && item.archivedFromStatus === 'completed'
   const canDelete = !hasPracticeRecords && (item.status === 'exploring' || item.status === 'active')
   const canEndEarly = Boolean(openCycle && !isCyclePendingReview(openCycle) && hasPracticeRecords)
   const hasPrimaryActions = canStartFirstCycle || item.status === 'archived' || Boolean(pendingReviewCycle)
-  const hasQuietActions = canStartNextRound || canEndEarly || canArchive || item.status === 'archived' || item.status === 'long_term' || item.status === 'long_term_terminated' || canDelete
+  const hasQuietActions = canStartNextRound || canEndEarly || canArchive || canConvertToLongTerm || item.status === 'long_term' || item.status === 'long_term_terminated' || canDelete
   const pairStartWithMoreActions = canStartFirstCycle && hasQuietActions
 
   const runAction = (createNext: () => LifeLabState, onSuccess?: () => void) => {
@@ -168,7 +169,7 @@ export function ItemDetailPage() {
                       {canStartNextRound ? <Link className={`${styles.menuAction} ${styles.primaryMenuAction}`} onClick={() => setMoreActionsOpen(false)} to={`/items/${item.id}/experiments/new`}><Repeat2 aria-hidden="true" size={16} /><span>开启下一轮</span></Link> : null}
                       {canEndEarly ? <button className={styles.menuAction} onClick={() => setConfirmAction('end')} type="button"><Flag aria-hidden="true" size={16} /><span>终止本轮</span></button> : null}
                       {canArchive ? <button className={styles.menuAction} onClick={() => setConfirmAction('archive')} type="button"><Archive aria-hidden="true" size={16} /><span>归档事项</span></button> : null}
-                      {item.status === 'archived' ? <button className={`${styles.menuAction} ${styles.primaryMenuAction}`} onClick={() => runAction(() => convertArchivedItemToLongTerm(state, item.id, new Date()), () => setMoreActionsOpen(false))} type="button"><Play aria-hidden="true" size={16} /><span>转为长期</span></button> : null}
+                      {canConvertToLongTerm ? <button className={`${styles.menuAction} ${styles.primaryMenuAction}`} onClick={() => runAction(() => convertArchivedItemToLongTerm(state, item.id, new Date()), () => setMoreActionsOpen(false))} type="button"><Play aria-hidden="true" size={16} /><span>转为长期</span></button> : null}
                       {item.status === 'long_term' ? <button className={styles.menuAction} onClick={() => setConfirmAction('terminate_long_term')} type="button"><Flag aria-hidden="true" size={16} /><span>终止长期事项</span></button> : null}
                       {item.status === 'long_term_terminated' ? <button className={`${styles.menuAction} ${styles.primaryMenuAction}`} onClick={() => runAction(() => restartLongTermItem(state, item.id, new Date()), () => setMoreActionsOpen(false))} type="button"><RotateCcw aria-hidden="true" size={16} /><span>重启长期事项</span></button> : null}
                       {canDelete ? <button className={`${styles.menuAction} ${styles.dangerMenuAction}`} onClick={() => setConfirmAction('delete')} type="button"><Trash2 aria-hidden="true" size={16} /><span>删除事项</span></button> : null}

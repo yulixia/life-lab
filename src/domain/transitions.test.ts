@@ -116,12 +116,13 @@ describe('new item state flow', () => {
     expect(() => createExperimentCycle(next, { itemId: item.id, startDate: '2026-08-20', question: '重复开启？', actionPlan: '每天做一次', minimumStandard: '至少开始' }, atLocalNoon('2026-08-20'), idSequence('again'))).toThrowError(DomainError)
   })
 
-  it('archives only a reviewed completed or concluded item and restores the exact prior status', () => {
+  it('archives only a reviewed completed item and restores it to completed', () => {
     const cycle = makeCycle({ status: 'reviewed', reviewId: 'review-1' })
-    const state = makeState({ items: [makeItem({ status: 'concluded' })], cycles: [cycle] })
+    const state = makeState({ items: [makeItem({ status: 'completed' })], cycles: [cycle] })
     const archived = archiveLifeItem(state, 'item-1', atLocalNoon('2026-08-16'))
-    expect(archived.items[0]).toMatchObject({ status: 'archived', archivedFromStatus: 'concluded' })
-    expect(restoreArchivedItem(archived, 'item-1', atLocalNoon('2026-08-17')).items[0].status).toBe('concluded')
+    expect(archived.items[0]).toMatchObject({ status: 'archived', archivedFromStatus: 'completed' })
+    expect(restoreArchivedItem(archived, 'item-1', atLocalNoon('2026-08-17')).items[0].status).toBe('completed')
+    expect(() => archiveLifeItem(makeState({ items: [makeItem({ status: 'concluded' })], cycles: [cycle] }), 'item-1', atLocalNoon('2026-08-16'))).toThrowError(DomainError)
     expect(() => archiveLifeItem(makeState({ items: [makeItem({ status: 'terminated' })], cycles: [cycle] }), 'item-1', atLocalNoon('2026-08-16'))).toThrowError(DomainError)
   })
 
@@ -142,6 +143,7 @@ describe('new item state flow', () => {
     expect(restarted.items[0].status).toBe('long_term')
     expect(restarted.longTermEntries).toMatchObject([{ date: '2026-08-16', note: '散步完成' }])
     expect(() => saveLongTermEntry(terminated, { itemId: 'item-1', date: '2026-08-17' }, atLocalNoon('2026-08-17'), idSequence('long'))).toThrowError(DomainError)
+    expect(() => convertArchivedItemToLongTerm(makeState({ items: [makeItem({ status: 'archived', archivedFromStatus: 'concluded' })] }), 'item-1', atLocalNoon('2026-08-16'))).toThrowError(DomainError)
   })
 
   it('keeps the chosen category for a neutral energy entry', () => {

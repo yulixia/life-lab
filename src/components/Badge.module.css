@@ -1,12 +1,12 @@
 .badge {
   display: inline-flex;
-  min-height: 28px;
+  min-height: var(--badge-height);
   align-items: center;
-  border-radius: 999px;
-  padding: 4px 10px;
-  font-size: 0.74rem;
-  font-weight: 850;
-  line-height: 1.2;
+  border-radius: var(--radius-pill);
+  padding: var(--badge-padding-block) var(--badge-padding-inline);
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-title);
 }
 
 .track {
@@ -15,41 +15,41 @@
 }
 
 .exploring {
-  color: var(--summer-pastel-10-05);
-  background: color-mix(in srgb, var(--summer-pastel-10-05) 18%, #ffffff);
+  color: var(--status-exploring-foreground);
+  background: var(--status-exploring-surface);
 }
 
 .active {
-  color: var(--summer-pastel-10-02);
-  background: color-mix(in srgb, var(--summer-pastel-10-02) 18%, #ffffff);
+  color: var(--status-active-foreground);
+  background: var(--status-active-surface);
 }
 
 .long_term {
-  color: var(--summer-pastel-12-01);
-  background: color-mix(in srgb, var(--summer-pastel-12-01) 18%, #ffffff);
+  color: var(--status-long-term-foreground);
+  background: var(--status-long-term-surface);
 }
 
 .long_term_terminated {
-  color: var(--summer-pastel-04-03);
-  background: color-mix(in srgb, var(--summer-pastel-04-03) 46%, #ffffff);
+  color: var(--status-inactive-foreground);
+  background: var(--status-inactive-surface);
 }
 
 .terminated {
-  color: var(--summer-pastel-14-02);
-  background: color-mix(in srgb, var(--summer-pastel-14-02) 16%, #ffffff);
+  color: var(--status-terminated-foreground);
+  background: var(--status-terminated-surface);
 }
 
 .completed {
-  color: var(--summer-pastel-10-02);
-  background: color-mix(in srgb, var(--summer-pastel-10-02) 18%, #ffffff);
+  color: var(--status-active-foreground);
+  background: var(--status-active-surface);
 }
 
 .concluded {
-  color: var(--summer-pastel-14-03);
-  background: color-mix(in srgb, var(--summer-pastel-14-03) 22%, #ffffff);
+  color: var(--status-concluded-foreground);
+  background: var(--status-concluded-surface);
 }
 
 .archived {
-  color: var(--summer-pastel-04-03);
-  background: color-mix(in srgb, var(--summer-pastel-04-03) 46%, #ffffff);
+  color: var(--status-inactive-foreground);
+  background: var(--status-inactive-surface);
 }

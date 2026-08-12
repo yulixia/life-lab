@@ -5,61 +5,64 @@
 }
 
 .scale legend {
-  margin-bottom: 8px;
+  margin-bottom: var(--energy-scale-legend-gap);
   color: var(--color-ink);
-  font-size: 0.82rem;
-  font-weight: 850;
+  font-size: var(--font-size-meta);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-title);
 }
 
 .options {
   display: grid;
-  grid-template-columns: repeat(5, minmax(44px, 1fr));
-  gap: 8px;
+  grid-template-columns: repeat(5, minmax(var(--tap-min), 1fr));
+  gap: var(--energy-scale-gap);
 }
 
 .options label {
   display: grid;
   min-height: var(--tap-min);
-  gap: 2px;
+  gap: var(--energy-scale-option-gap);
   place-items: center;
   border: 0;
-  border-radius: 16px;
-  padding: 7px 4px;
+  border-radius: var(--radius-16);
+  padding: var(--energy-scale-option-padding-block) var(--energy-scale-option-padding-inline);
   color: var(--color-muted);
-  background: rgba(255, 255, 255, 0.62);
-  box-shadow: none;
-  font-weight: 850;
+  background: var(--surface-control);
+  box-shadow: var(--shadow-inset-faint);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-title);
   text-align: center;
 }
 
 .options label[data-tone='energy'] {
-  --scale-tone: #cf6f76;
-  --scale-soft: color-mix(in srgb, var(--palette-energy) 26%, #ffffff);
-  --scale-line: color-mix(in srgb, var(--palette-energy) 48%, #ffffff);
+  --scale-tone: var(--energy-scale-energy-foreground);
+  --scale-soft: var(--energy-scale-energy-surface);
+  --scale-line: var(--energy-scale-energy-line);
 }
 
 .options label[data-tone='drain'] {
-  --scale-tone: #6f8390;
-  --scale-soft: color-mix(in srgb, var(--palette-drain) 38%, #ffffff);
-  --scale-line: color-mix(in srgb, var(--palette-drain) 60%, #ffffff);
+  --scale-tone: var(--energy-scale-drain-foreground);
+  --scale-soft: var(--energy-scale-drain-surface);
+  --scale-line: var(--energy-scale-drain-line);
 }
 
 .options label[data-tone='energy'][data-intensity='2'] {
-  --scale-tone: #b95561;
-  --scale-soft: color-mix(in srgb, var(--palette-energy) 48%, #ffffff);
-  --scale-line: color-mix(in srgb, var(--palette-energy) 76%, #ffffff);
+  --scale-tone: var(--energy-scale-energy-deep-foreground);
+  --scale-soft: var(--energy-scale-energy-deep-surface);
+  --scale-line: var(--energy-scale-energy-deep-line);
 }
 
 .options label[data-tone='drain'][data-intensity='2'] {
-  --scale-tone: #4f6878;
-  --scale-soft: color-mix(in srgb, var(--palette-drain) 62%, #ffffff);
-  --scale-line: color-mix(in srgb, var(--palette-drain) 82%, #ffffff);
+  --scale-tone: var(--energy-scale-drain-deep-foreground);
+  --scale-soft: var(--energy-scale-drain-deep-surface);
+  --scale-line: var(--energy-scale-drain-deep-line);
 }
 
 .options label[data-tone='neutral'] {
-  --scale-tone: color-mix(in srgb, var(--palette-today) 68%, var(--color-ink));
-  --scale-soft: color-mix(in srgb, var(--palette-today) 16%, #ffffff);
-  --scale-line: color-mix(in srgb, var(--palette-today) 38%, #ffffff);
+  --scale-tone: var(--energy-scale-neutral-foreground);
+  --scale-soft: var(--energy-scale-neutral-surface);
+  --scale-line: var(--energy-scale-neutral-line);
 }
 
 .options input {
@@ -68,19 +71,19 @@
 }
 
 .options label:has(input:focus-visible) {
-  outline: 3px solid var(--color-focus);
-  outline-offset: 2px;
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: var(--focus-ring-offset);
 }
 
 .selected {
   color: var(--scale-tone) !important;
   background: var(--scale-soft) !important;
-  box-shadow: inset 0 0 0 1px var(--scale-line) !important;
+  box-shadow: var(--energy-scale-selected-shadow) !important;
 }
 
 .options small {
   color: inherit;
-  font-size: 0.62rem;
-  font-weight: 800;
-  line-height: 1.15;
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-tight);
 }

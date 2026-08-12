@@ -1,6 +1,6 @@
 # 事项状态流
 
-本文记录当前已确认并已实现的事项状态流。事项状态用于总库筛选和详情展示；周期状态用于判断某一轮 7 天实践的进行、结算和复盘。
+本文记录当前已确认并已实现的事项状态流。事项状态用于总库筛选和详情展示；周期状态用于判断某一轮 7 天实践的进行、结算和复盘。勋章规则见 [badge-rules.md](./badge-rules.md)。
 
 ```mermaid
 flowchart TD
@@ -15,7 +15,6 @@ flowchart TD
   completedReviewed["已完成\n已复盘"]
   concludedReviewed["已完结\n已复盘"]
   archived["已归档"]
-  restoreFrom{"归档前状态"}
   longTerm["长期进行"]
   longTermTerminated["长期已终止"]
 
@@ -38,10 +37,7 @@ flowchart TD
   concludedReviewed -->|"开启下一轮"| active
 
   completedReviewed -->|"归档"| archived
-  concludedReviewed -->|"归档"| archived
-  archived -->|"恢复"| restoreFrom
-  restoreFrom -->|"已完成"| completedReviewed
-  restoreFrom -->|"已完结"| concludedReviewed
+  archived -->|"恢复"| completedReviewed
   archived -->|"转为长期"| longTerm
 
   longTerm -->|"完成今天"| longTerm
@@ -55,8 +51,8 @@ flowchart TD
 - 到期后不允许补记。完成或完结后都需要复盘，复盘不会改变该轮的结算结果。
 - 提前结束只适用于本事项任一轮已有每日记录的情况，结果为“已终止，待复盘”。从未有过记录的事项直接删除，不保留“已作废”状态。
 - 开启下一轮会保留全部历史周期和复盘，从新一轮的第 1 天开始；同一方向同一时间只能有一个进行中或待复盘事项。
-- 只有已完成或已完结且已复盘的事项可以归档。恢复归档时回到归档前的原状态，而不是统一恢复为已完成。
-- 已归档的成功事项可以转为长期事项。长期事项只记录“完成今天”的日期、累计天数和可选备注，不考核时长；可终止，也可重启。
+- 只有已完成且已复盘的事项可以归档；已完结不能归档，只能开启下一轮或停留在已完结。归档恢复后回到“已完成，已复盘”。
+- 已归档事项均来自已完成且已复盘的成功实践，可以转为长期事项。长期事项只记录“完成今天”的日期、累计天数和可选备注，不考核时长；可终止，也可重启。
 
 ## 状态筛选
 

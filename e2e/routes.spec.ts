@@ -111,6 +111,7 @@ test.describe('primary routes', () => {
     await expect(page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).resolves.toBe(
       true,
     )
+    await expect(page.getByRole('link', { name: '去总库' }).first()).toHaveCSS('color', 'rgb(78, 181, 216)')
 
     await page.goto('/energy')
     await expect(page).toHaveURL(/\/energy$/)
@@ -215,7 +216,21 @@ test.describe('experiment creation and daily check-in', () => {
     await expect(page).toHaveURL(/\/today$/)
     await expect(page.getByRole('heading', { name: '晨间写作', level: 2 })).toBeVisible()
     await expect(page.getByText('第 1 天')).toBeVisible()
-    await page.getByRole('link', { name: '记录今日' }).click()
+    const recordToday = page.getByRole('link', { name: '记录今日' })
+    await expect(recordToday).toBeVisible()
+    const titleAndActionLayout = await page.getByRole('heading', { name: '晨间写作', level: 2 }).evaluate((title) => {
+      const card = title.closest('section')
+      const track = card?.querySelector('[class*="track"]')
+      const titleBounds = title.getBoundingClientRect()
+      const trackBounds = track?.getBoundingClientRect()
+      return {
+        titleRight: titleBounds.right,
+        trackLeft: trackBounds?.left,
+      }
+    })
+    expect(titleAndActionLayout.titleRight).toBeLessThanOrEqual(titleAndActionLayout.trackLeft ?? 0)
+    await expect(recordToday).toHaveCSS('justify-content', 'space-between')
+    await recordToday.click()
 
     await expect(page.getByRole('heading', { name: '每日记录', level: 1 })).toBeVisible()
     await expect(page.getByLabel('今天达到最低标准了吗？')).toBeHidden()
@@ -230,7 +245,11 @@ test.describe('experiment creation and daily check-in', () => {
     await page.getByRole('button', { name: '保存记录' }).click()
 
     await expect(page).toHaveURL(/\/today$/)
-    await page.getByRole('link', { name: '查看今日记录' }).click()
+    const recordedToday = page.getByRole('link', { name: '今天已记录' })
+    await expect(recordedToday).toBeVisible()
+    await expect(recordedToday).toHaveCSS('justify-content', 'space-between')
+    await expect(recordedToday).toHaveCSS('color', 'rgb(78, 181, 216)')
+    await recordedToday.click()
     await expect(page.getByLabel('行动摘要')).toHaveValue('写了 15 分钟')
     await page.getByLabel('行动摘要').fill('写了 18 分钟')
     await page.getByRole('button', { name: '保存记录' }).click()
@@ -262,9 +281,9 @@ test.describe('experiment creation and daily check-in', () => {
     await page.getByLabel('补充说明').fill('临时会议延长到很晚，回家后没有精力开始')
     await page.getByRole('button', { name: '保存未实践' }).click()
 
-    await expect(page.getByRole('link', { name: '查看今日记录' })).toBeVisible()
+    await expect(page.getByRole('link', { name: '今天已记录' })).toBeVisible()
     await expect(page.getByRole('link', { name: '标记未实践' })).toBeHidden()
-    await page.getByRole('link', { name: '查看今日记录' }).click()
+    await page.getByRole('link', { name: '今天已记录' }).click()
     await expect(page.getByRole('button', { name: '忙碌' })).toHaveAttribute('aria-pressed', 'true')
     await expect(page.getByRole('button', { name: '临时安排' })).toHaveAttribute('aria-pressed', 'true')
     await expect(page.getByLabel('补充说明')).toHaveValue('临时会议延长到很晚，回家后没有精力开始')
@@ -297,6 +316,7 @@ test.describe('cycle review flow', () => {
     await expect(page.getByText('已完结').first()).toBeVisible()
     await expect(page.getByRole('link', { name: '记录今日' })).toBeHidden()
     await page.getByText('更多操作').click()
+    await expect(page.getByRole('button', { name: '归档事项' })).toHaveCount(0)
     await page.getByRole('link', { name: '开启下一轮' }).click()
     await page.getByLabel('本轮唯一验证问题').fill('这轮继续是否更稳？')
     await page.getByLabel('每天／本周具体做什么').fill('每天做 3 分钟')

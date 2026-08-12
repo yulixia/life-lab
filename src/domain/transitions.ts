@@ -240,8 +240,8 @@ export function archiveLifeItem(state: LifeLabState, itemId: UUID, now: Date): L
   if (!item) {
     throw new DomainError('not_found', 'item does not exist')
   }
-  if (item.status !== 'completed' && item.status !== 'concluded') {
-    throw new DomainError('invalid_state', 'only completed or concluded items can be archived')
+  if (item.status !== 'completed') {
+    throw new DomainError('invalid_state', 'only completed items can be archived')
   }
   const latestCycle = state.cycles
     .filter((cycle) => cycle.itemId === item.id)
@@ -495,7 +495,7 @@ export function convertArchivedItemToLongTerm(state: LifeLabState, itemId: UUID,
   if (!item) {
     throw new DomainError('not_found', 'item does not exist')
   }
-  if (item.status !== 'archived' || !item.archivedFromStatus) {
+  if (item.status !== 'archived' || item.archivedFromStatus !== 'completed') {
     throw new DomainError('invalid_state', 'only archived successful items can become long term')
   }
 

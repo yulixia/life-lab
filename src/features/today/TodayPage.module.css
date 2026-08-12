@@ -44,13 +44,18 @@
 
 .focusHeading {
   display: grid;
-  justify-items: start;
-  gap: var(--space-10);
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-12);
 }
 
 .focusHeading h2 {
+  min-width: 0;
   font-size: var(--font-size-card-title);
   line-height: var(--line-height-title);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .cyclePanel {
@@ -214,6 +219,15 @@
   box-shadow: none;
 }
 
+.recordTodayButton,
+.recordedTodayButton {
+  justify-content: space-between;
+}
+
+.recordedTodayButton {
+  color: var(--theme-today-strong);
+}
+
 .primaryButton:focus-visible,
 .secondaryButton:focus-visible,
 .completedButton:focus-visible {
@@ -276,6 +290,10 @@
   color: var(--color-link);
   background: var(--surface-glass);
   box-shadow: inset 0 0 0 var(--line-width) var(--line-subtle);
+}
+
+.libraryLinkButton {
+  color: var(--theme-today-strong);
 }
 
 .disabledAction {

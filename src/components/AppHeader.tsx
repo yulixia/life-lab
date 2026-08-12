@@ -18,7 +18,7 @@ export function AppHeader({ title, action, backLabel = '返回', backTo, classNa
       <div className={styles.titleGroup}>
         {backTo ? (
           <Link aria-label={backLabel} className={styles.backLink} to={backTo}>
-            <ArrowLeft aria-hidden="true" size={22} strokeWidth={2.4} />
+            <ArrowLeft aria-hidden="true" className={styles.backIcon} strokeWidth={2.4} />
           </Link>
         ) : null}
         <div className={styles.headingText}>
