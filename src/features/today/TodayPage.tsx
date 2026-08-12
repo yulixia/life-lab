@@ -4,7 +4,7 @@ import { AppHeader } from '../../components/AppHeader'
 import { StatusBadge, TrackBadge } from '../../components/Badge'
 import { Card } from '../../components/Card'
 import { useLifeLab } from '../../app/LifeLabContext'
-import { addCalendarDays, todayLocalDate } from '../../domain/dates'
+import { addCalendarDays, compareLocalDate, todayLocalDate } from '../../domain/dates'
 import {
   selectCycleDay,
   selectDailyEntry,
@@ -202,14 +202,15 @@ function CycleProgress({ cycle, day, entries }: { cycle: ExperimentCycle; day: C
         const segmentDay = index + 1
         const segmentDate = addCalendarDays(cycle.startDate, index)
         const isPracticed = practicedDates.has(segmentDate)
+        const isPast = compareLocalDate(segmentDate, todayLocalDate()) < 0
         const isToday = typeof day === 'number' && segmentDay === day
         const stateClass = isPracticed
           ? isToday ? styles.progressToday : styles.progressComplete
-          : styles.progressFuture
+          : isPast ? styles.progressMissed : styles.progressFuture
         return (
           <span
             className={`${styles.progressSegment} ${stateClass}`}
-            data-status={isPracticed ? 'practiced' : 'empty'}
+            data-status={isPracticed ? 'practiced' : isPast ? 'missed' : 'empty'}
             key={segmentDay}
           />
         )

@@ -335,6 +335,7 @@
   --primary-gradient: linear-gradient(135deg, var(--color-primary), var(--color-primary-strong));
   --primary-button-shadow: 0 8px 18px color-mix(in srgb, var(--color-primary) 14%, transparent);
   --progress-complete-background: color-mix(in srgb, var(--color-primary) 66%, transparent);
+  --progress-missed-background: color-mix(in srgb, var(--color-label) 30%, transparent);
   --progress-current-shadow: 0 4px 10px color-mix(in srgb, var(--color-primary) 28%, transparent);
   --progress-panel-line: color-mix(in srgb, var(--color-primary) 8%, transparent);
   --check-in-focus-line: color-mix(in srgb, var(--color-primary) 18%, transparent);

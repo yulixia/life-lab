@@ -359,6 +359,44 @@ test.describe('experiment creation and daily check-in', () => {
     await expect(page.getByRole('button', { name: '临时安排' })).toHaveAttribute('aria-pressed', 'true')
     await expect(page.getByLabel('补充说明')).toHaveValue('临时会议延长到很晚，回家后没有精力开始')
   })
+
+  test('distinguishes past missed days from today and future days', async ({ page }) => {
+    await page.evaluate(() => {
+      const now = new Date()
+      const toLocalDate = (date: Date) => {
+        const year = date.getFullYear()
+        const month = String(date.getMonth() + 1).padStart(2, '0')
+        const day = String(date.getDate()).padStart(2, '0')
+        return `${year}-${month}-${day}`
+      }
+      const addDays = (days: number) => {
+        const date = new Date(now)
+        date.setDate(date.getDate() + days)
+        return toLocalDate(date)
+      }
+      const instant = now.toISOString()
+      window.localStorage.setItem('life-lab:v1', JSON.stringify({
+        schemaVersion: 2,
+        meta: { createdAt: instant, updatedAt: instant, hasSeenLocalDataNotice: true },
+        items: [{ id: 'item-progress', title: '进度测试', track: 'ideal_self', status: 'active', createdAt: instant, updatedAt: instant }],
+        cycles: [{ id: 'cycle-progress', itemId: 'item-progress', cycleNumber: 1, startDate: addDays(-2), endDate: addDays(4), status: 'active', question: '测试进度', actionPlan: '每天测试', minimumStandard: '完成一次', adjustments: [], createdAt: instant, updatedAt: instant }],
+        dailyEntries: [{ id: 'entry-progress', cycleId: 'cycle-progress', date: addDays(-1), status: 'not_practiced', feelingTags: [], createdAt: instant, updatedAt: instant }],
+        reviews: [],
+        longTermEntries: [],
+        energyEntries: [],
+      }))
+    })
+    await page.goto('/today')
+
+    const progress = page.getByRole('img', { name: /7 天实践当前为第 3 天/ })
+    await expect(progress.locator('[data-status="missed"]')).toHaveCount(2)
+    await expect(progress.locator('[data-status="empty"]')).toHaveCount(5)
+    const colors = await progress.evaluate((element) => ({
+      missed: getComputedStyle(element.querySelector('[data-status="missed"]') as Element).backgroundColor,
+      empty: getComputedStyle(element.querySelector('[data-status="empty"]') as Element).backgroundColor,
+    }))
+    expect(colors.missed).not.toBe(colors.empty)
+  })
 })
 
 test.describe('cycle review flow', () => {

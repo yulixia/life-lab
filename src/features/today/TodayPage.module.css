@@ -115,6 +115,11 @@
   box-shadow: var(--progress-current-shadow);
 }
 
+.progressMissed {
+  background: var(--progress-missed-background);
+  box-shadow: var(--shadow-inset-faint);
+}
+
 .progressFuture {
   background: var(--surface-control-strong);
   box-shadow: var(--shadow-inset-faint);
