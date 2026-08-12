@@ -17,6 +17,14 @@ const labels: Record<EnergyDelta, string> = {
   2: '明显补充',
 }
 
+const compactLabels: Record<EnergyDelta, string> = {
+  '-2': '强消耗',
+  '-1': '轻消耗',
+  0: '无变化',
+  1: '轻补充',
+  2: '强补充',
+}
+
 export function EnergyScale({ label, name, onChange, value }: EnergyScaleProps) {
   return (
     <fieldset className={styles.scale}>
@@ -37,7 +45,10 @@ export function EnergyScale({ label, name, onChange, value }: EnergyScaleProps) 
               value={option}
             />
             <span>{option > 0 ? `+${option}` : option}</span>
-            <small>{labels[option]}</small>
+            <small>
+              <span className={styles.longLabel}>{labels[option]}</span>
+              <span className={styles.compactLabel}>{compactLabels[option]}</span>
+            </small>
           </label>
         ))}
       </div>

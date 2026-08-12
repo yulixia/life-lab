@@ -87,3 +87,23 @@
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-tight);
 }
+
+.compactLabel {
+  display: none;
+}
+
+@media (max-width: 420px) {
+  .options label {
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  .longLabel {
+    display: none;
+  }
+
+  .compactLabel {
+    display: inline;
+    white-space: nowrap;
+  }
+}
