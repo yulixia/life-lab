@@ -255,7 +255,8 @@ CSS 自定义属性不能用于媒体查询条件，因此 `340px` 等断点可�
 ### 10.1 页面标题栏
 
 - 上间距使用 `--layout-page-top`，下间距使用 `--layout-header-bottom`。
-- 页面标题使用 `--font-size-page`，不超过 `--font-weight-bold`。
+- 无返回按钮的主页面标题使用 `--font-size-page`，不超过 `--font-weight-bold`。
+- 带返回按钮的子页标题使用 `--font-size-subpage` 和 `--font-weight-semibold`，保持单行省略；完整业务标题应在内容首屏展示。
 - 日期和辅助操作使用 `--font-size-meta` 与 `--color-label`。
 - 返回按钮使用 `--tap-min` 和 `--radius-button`。
 

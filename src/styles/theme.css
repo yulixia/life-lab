@@ -179,6 +179,8 @@
   --layout-page-gutter: var(--space-18);
   --layout-page-top: var(--space-24);
   --layout-header-bottom: var(--space-16);
+  --layout-subpage-header-top: var(--space-16);
+  --layout-subpage-header-bottom: var(--space-12);
   --layout-section-gap: var(--space-24);
   --layout-card-gap: var(--space-18);
   --layout-page-bottom: 112px;
@@ -187,6 +189,7 @@
   --font-family-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-size-page: 28px;
   --font-size-card-title: 20px;
+  --font-size-subpage: var(--font-size-card-title);
   --font-size-data: 16px;
   --font-size-body: 14px;
   --font-size-meta: 13px;
@@ -243,6 +246,7 @@
   --line-width: 1px;
   --focus-ring-width: 3px;
   --focus-ring-offset: 2px;
+  --transition-standard: 160ms ease;
   --nav-side-offset: var(--space-18);
   --nav-bottom-offset: var(--space-14);
   --nav-layer: 20;
@@ -250,6 +254,7 @@
 
   /* Component contracts */
   --card-padding: var(--space-20);
+  --header-subpage-gap: var(--space-10);
   --card-content-gap: var(--space-16);
   --panel-padding-block: var(--space-14);
   --panel-padding-inline: var(--space-16);
@@ -309,6 +314,19 @@
   --energy-scale-neutral-surface: color-mix(in srgb, var(--theme-today-primary) 16%, var(--color-white));
   --energy-scale-neutral-line: color-mix(in srgb, var(--theme-today-primary) 38%, var(--color-white));
   --energy-scale-selected-shadow: inset 0 0 0 var(--line-width) var(--scale-line);
+  --dialog-layer: 1000;
+  --dialog-backdrop-padding: var(--space-16) max(0px, calc((100vw - var(--app-max-width)) / 2)) 0;
+  --dialog-backdrop-blur: 8px;
+  --dialog-max-height: 86dvh;
+  --dialog-radius: var(--radius-card-large) var(--radius-card-large) 0 0;
+  --dialog-padding-inline: var(--space-22);
+  --dialog-padding-block-start: var(--space-22);
+  --dialog-padding-block-end: calc(var(--space-22) + env(safe-area-inset-bottom));
+  --dialog-surface-blur: 18px;
+  --dialog-shadow: 0 -18px 60px rgba(102, 131, 160, 0.2);
+  --dialog-title-margin-bottom: var(--space-10);
+  --dialog-body-margin-bottom: var(--space-18);
+  --dialog-actions-gap: var(--space-10);
   --progress-segment-gap: var(--space-7);
   --action-grid-columns: minmax(0, 0.82fr) minmax(0, 1fr);
   --primary-gradient: linear-gradient(135deg, var(--color-primary), var(--color-primary-strong));

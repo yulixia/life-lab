@@ -48,7 +48,7 @@ export function EnergyDetailPage() {
 
   return (
     <>
-      <AppHeader backTo="/energy" title="情绪详情" eyebrow={categoryLabels[entry.category]} />
+      <AppHeader backTo="/energy" title="情绪详情" />
       <div className={styles.stack}>
         <Card className={`${styles.section} ${entry.category === 'energy' ? styles.energyTone : styles.drainTone}`}>
           <div className={styles.meta}>

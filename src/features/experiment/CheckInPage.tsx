@@ -1,4 +1,5 @@
 import { useMemo, useState, type FormEvent } from 'react'
+import { ChevronDown } from 'lucide-react'
 import { Link, Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { AppHeader } from '../../components/AppHeader'
 import { Button } from '../../components/Button'
@@ -9,7 +10,7 @@ import { TagPicker } from '../../components/TagPicker'
 import { TextArea } from '../../components/TextArea'
 import { useLifeLab } from '../../app/LifeLabContext'
 import { canRecordCycleDate, todayLocalDate } from '../../domain/dates'
-import { selectDailyEntry, selectEffectiveCyclePlan } from '../../domain/selectors'
+import { selectCycleDay, selectDailyEntry, selectEffectiveCyclePlan } from '../../domain/selectors'
 import { saveDailyEntry } from '../../domain/transitions'
 import { DomainError, type MissReason } from '../../domain/types'
 import styles from './CheckInPage.module.css'
@@ -57,6 +58,7 @@ export function CheckInPage() {
   const item = state.items.find((candidate) => candidate.id === cycle.itemId)
   const recordable = canRecordCycleDate(cycle, date, todayLocalDate())
   const isNotPracticed = status === 'not_practiced'
+  const cycleDay = selectCycleDay(cycle, date)
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -91,7 +93,7 @@ export function CheckInPage() {
 
   return (
     <>
-      <AppHeader backTo="/today" title={isNotPracticed ? '标记未实践' : '每日记录'} eyebrow={item?.title ?? '实践'} />
+      <AppHeader backTo="/today" title={isNotPracticed ? '标记未实践' : '每日记录'} />
       <Card>
         {!recordable ? (
           <div className={styles.plan}>
@@ -103,9 +105,23 @@ export function CheckInPage() {
         ) : (
           <form className={styles.form} onSubmit={handleSubmit}>
             <div className={styles.plan}>
-              <h2>{isNotPracticed ? '今天没有完成实践' : date}</h2>
-              <p>行动计划：{plan.actionPlan}</p>
-              <p>最低标准：{plan.minimumStandard}</p>
+              <div className={styles.planHeader}>
+                <div>
+                  <p className={styles.planDate}>{formatRecordDate(date)} · {isNotPracticed ? '未实践' : '今日记录'}</p>
+                  <h2>{item?.title ?? '今天的实践'}</h2>
+                </div>
+                <span className={styles.planDay}>{typeof cycleDay === 'number' ? `第 ${cycleDay} / 7 天` : '当前周期'}</span>
+              </div>
+              <div className={styles.planDetails}>
+                <div className={styles.planDetail}>
+                  <span>今天要做</span>
+                  <p>{plan.actionPlan}</p>
+                </div>
+                <div className={styles.planDetail}>
+                  <span>最低标准</span>
+                  <p>{plan.minimumStandard}</p>
+                </div>
+              </div>
             </div>
             {!isNotPracticed ? (
               <>
@@ -136,7 +152,10 @@ export function CheckInPage() {
                 onToggle={(event) => setAdditionalOpen(event.currentTarget.open)}
                 open={additionalOpen}
               >
-                <summary>补充更多</summary>
+                <summary>
+                  <span>补充感受与观察</span>
+                  <ChevronDown aria-hidden="true" className={styles.optionalIcon} strokeWidth={2.4} />
+                </summary>
                 <div className={styles.optionalFields}>
                   <>
                     <TagPicker label="感受标签" onChange={setFeelingTags} options={feelingOptions} value={feelingTags} />
@@ -164,4 +183,9 @@ export function CheckInPage() {
       </Card>
     </>
   )
+}
+
+function formatRecordDate(date: string) {
+  const [, month, day] = date.split('-')
+  return `${Number(month)} 月 ${Number(day)} 日`
 }

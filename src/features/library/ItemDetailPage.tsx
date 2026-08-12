@@ -137,11 +137,14 @@ export function ItemDetailPage() {
 
   return (
     <>
-      <AppHeader backTo="/library" title={item.title} />
+      <AppHeader backTo="/library" title="事项详情" />
       <div className={styles.stack}>
         <Card className={styles.section}>
           <div className={styles.sectionHeader}>
-            <div className={styles.meta}><TrackBadge track={item.track} /><StatusBadge status={item.status} /></div>
+            <div className={styles.itemHeading}>
+              <h2>{item.title}</h2>
+              <div className={styles.meta}><TrackBadge track={item.track} /><StatusBadge status={item.status} /></div>
+            </div>
             <Link className={styles.textAction} to={`/items/${item.id}/edit`}>编辑</Link>
           </div>
           <div className={styles.descriptionBlock}>

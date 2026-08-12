@@ -80,7 +80,7 @@ export function ExperimentFormPage() {
 
   return (
     <>
-      <AppHeader backTo={`/items/${item.id}`} title="创建实践" eyebrow={item.title} />
+      <AppHeader backTo={`/items/${item.id}`} title="创建实践" />
       <Card>
         {occupiedCycle ? (
           <div className={styles.summary}>

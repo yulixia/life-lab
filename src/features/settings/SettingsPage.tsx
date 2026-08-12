@@ -80,7 +80,7 @@ export function SettingsPage() {
 
   return (
     <>
-      <AppHeader title="数据" eyebrow="本地保存" />
+      <AppHeader title="数据" />
       <div className={styles.stack}>
         <Card className={styles.section}>
           <div className={styles.overviewHero}>

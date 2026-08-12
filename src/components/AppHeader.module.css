@@ -17,6 +17,15 @@
   gap: var(--space-12);
 }
 
+.subpage {
+  padding-top: var(--layout-subpage-header-top);
+  padding-bottom: var(--layout-subpage-header-bottom);
+}
+
+.subpage .titleGroup {
+  gap: var(--header-subpage-gap);
+}
+
 .backLink {
   display: inline-flex;
   width: var(--tap-min);
@@ -50,10 +59,12 @@
   overflow-wrap: anywhere;
 }
 
-.headingText {
-  display: grid;
-  min-width: 0;
-  gap: var(--space-4);
+.subpage h1 {
+  overflow: hidden;
+  font-size: var(--font-size-subpage);
+  font-weight: var(--font-weight-semibold);
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .side {
@@ -63,16 +74,6 @@
   gap: var(--space-7);
   max-width: 44%;
   text-align: right;
-}
-
-.eyebrow {
-  margin: 0;
-  color: var(--color-label);
-  font-size: var(--font-size-meta);
-  font-weight: var(--font-weight-medium);
-  letter-spacing: 0;
-  line-height: var(--line-height-title);
-  overflow-wrap: anywhere;
 }
 
 .action {

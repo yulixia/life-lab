@@ -68,7 +68,6 @@ export function LibraryPage() {
           </Link>
         }
         title="总库"
-        eyebrow="理想自我 / 副业探索"
       />
       <div className={styles.listPage}>
         <div className={styles.toolbar}>

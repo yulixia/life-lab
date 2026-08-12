@@ -75,7 +75,7 @@ export function ReviewPage() {
 
   return (
     <>
-      <AppHeader backTo="/today" title="周期复盘" eyebrow={item.title} />
+      <AppHeader backTo="/today" title="周期复盘" />
       <Card>
         <form className={styles.form} onSubmit={handleSubmit}>
           <div className={styles.stack}>

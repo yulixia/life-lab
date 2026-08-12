@@ -34,6 +34,16 @@
   gap: 12px;
 }
 
+.itemHeading {
+  display: grid;
+  min-width: 0;
+  gap: var(--space-8);
+}
+
+.itemHeading h2 {
+  overflow-wrap: anywhere;
+}
+
 .textAction {
   color: var(--color-primary);
   font-size: 0.82rem;

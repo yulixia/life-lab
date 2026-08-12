@@ -77,7 +77,6 @@ export function ItemFormPage({ mode }: ItemFormPageProps) {
       <AppHeader
         backTo={isEdit && itemId ? `/items/${itemId}` : '/library'}
         title={isEdit ? '编辑事项' : '新建事项'}
-        eyebrow="总库"
       />
       <Card>
         <form className={styles.form} onSubmit={handleSubmit}>

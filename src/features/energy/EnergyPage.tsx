@@ -81,7 +81,6 @@ export function EnergyPage() {
           </Link>
         }
         title="情绪"
-        eyebrow="观察列表"
       />
       <div className={styles.listPage}>
         <div className={styles.fixedContent}>

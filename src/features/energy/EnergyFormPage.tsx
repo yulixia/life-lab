@@ -110,7 +110,7 @@ export function EnergyFormPage({ mode }: EnergyFormPageProps) {
 
   return (
     <>
-      <AppHeader backTo="/energy" title={mode === 'edit' ? '编辑记录' : '记录一件事'} eyebrow="情绪能量" />
+      <AppHeader backTo="/energy" title={mode === 'edit' ? '编辑记录' : '记录一件事'} />
       <Card className={`${styles.formCard} ${toneClass}`}>
         <form className={styles.form} onSubmit={handleSubmit}>
           <div className={styles.sectionIntro}>

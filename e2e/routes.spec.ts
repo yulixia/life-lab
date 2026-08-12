@@ -13,7 +13,8 @@ async function createItem(page: import('@playwright/test').Page, title: string, 
   await page.getByRole('checkbox', { name: '待探索' }).check()
   await expect(page.getByRole('heading', { name: title, level: 2 })).toBeVisible()
   await page.getByRole('link', { name: title }).click()
-  await expect(page.getByRole('heading', { name: title, level: 1 })).toBeVisible()
+  await expect(page.getByRole('heading', { name: '事项详情', level: 1 })).toBeVisible()
+  await expect(page.getByRole('heading', { name: title, level: 2 })).toBeVisible()
   return page.url().match(/\/items\/([^/?#]+)/)?.[1] ?? ''
 }
 
@@ -154,7 +155,8 @@ test.describe('library item flow', () => {
     await page.getByRole('checkbox', { name: '待探索' }).check()
     await expect(page.getByRole('heading', { name: '晨间写作', level: 2 })).toBeVisible()
     await page.getByRole('link', { name: /晨间写作/ }).click()
-    await expect(page.getByRole('heading', { name: '晨间写作', level: 1 })).toBeVisible()
+    await expect(page.getByRole('heading', { name: '事项详情', level: 1 })).toBeVisible()
+    await expect(page.getByRole('heading', { name: '晨间写作', level: 2 })).toBeVisible()
     await expect(page.getByText('副业探索')).toBeVisible()
     await expect(page.getByRole('link', { name: '开启 7 天实践' })).toBeHidden()
     const startAction = page.getByRole('link', { name: '开启实践' })
@@ -176,7 +178,8 @@ test.describe('library item flow', () => {
     await page.getByLabel('标题').fill('晨间写作实验')
     await page.getByRole('button', { name: '保存修改' }).click()
 
-    await expect(page.getByRole('heading', { name: '晨间写作实验', level: 1 })).toBeVisible()
+    await expect(page.getByRole('heading', { name: '事项详情', level: 1 })).toBeVisible()
+    await expect(page.getByRole('heading', { name: '晨间写作实验', level: 2 })).toBeVisible()
     await page.getByRole('link', { name: '返回' }).click()
     await expect(page).toHaveURL(/\/library$/)
     await expect(page.getByRole('navigation', { name: '主要导航' })).toBeVisible()
@@ -237,7 +240,7 @@ test.describe('experiment creation and daily check-in', () => {
     await page.getByLabel('行动摘要').fill('写了 15 分钟')
     await expect(page.getByLabel('时长（分钟）')).toBeHidden()
     await expect(page.getByLabel('调整后的行动计划')).toBeHidden()
-    await page.getByText('补充更多').click()
+    await page.getByText('补充感受与观察').click()
     await page.getByRole('radio', { name: '-1' }).check()
     await page.locator('input[name="energyDelta"][value="1"]').check()
     await page.getByRole('radio', { name: '0' }).check()
@@ -408,7 +411,7 @@ test.describe('energy log flow', () => {
     await expect(page.getByRole('button', { name: '平静' })).toHaveAttribute('aria-pressed', 'true')
     await expect(page.getByRole('radio', { name: '0' })).toBeVisible()
     await page.getByRole('radio', { name: '0' }).check()
-    await page.getByText('补充更多').click()
+    await page.getByText('补充感受与观察').click()
     await page.getByLabel('原因').fill('身体有点累，但心情更稳')
     await page.getByRole('button', { name: '保存记录' }).click()
 

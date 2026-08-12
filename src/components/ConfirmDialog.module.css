@@ -1,37 +1,38 @@
 .backdrop {
   position: fixed;
   inset: 0;
-  z-index: 1000;
+  z-index: var(--dialog-layer);
   display: grid;
   place-items: end center;
-  padding: 16px max(0px, calc((100vw - var(--app-max-width)) / 2)) 0;
-  background: rgba(23, 50, 77, 0.36);
-  backdrop-filter: blur(8px);
+  padding: var(--dialog-backdrop-padding);
+  background: var(--surface-overlay);
+  backdrop-filter: blur(var(--dialog-backdrop-blur));
 }
 
 .dialog {
   width: min(100%, var(--app-max-width));
-  max-height: 86dvh;
+  max-height: var(--dialog-max-height);
   overflow-y: auto;
-  border-radius: 28px 28px 0 0;
-  padding: 22px 22px calc(22px + env(safe-area-inset-bottom));
-  background: rgba(255, 255, 255, 0.94);
-  box-shadow: 0 -18px 60px rgba(102, 131, 160, 0.2);
-  backdrop-filter: blur(18px);
+  border-radius: var(--dialog-radius);
+  padding: var(--dialog-padding-block-start) var(--dialog-padding-inline) var(--dialog-padding-block-end);
+  background: var(--surface-card-strong);
+  box-shadow: var(--dialog-shadow);
+  backdrop-filter: blur(var(--dialog-surface-blur));
 }
 
 .dialog h2 {
-  margin: 0 0 10px;
+  margin: 0 0 var(--dialog-title-margin-bottom);
   color: var(--color-heading);
-  font-size: 1.16rem;
-  font-weight: 900;
-  line-height: 1.35;
+  font-size: var(--font-size-card-title);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-title);
 }
 
 .body {
-  margin-bottom: 18px;
+  margin-bottom: var(--dialog-body-margin-bottom);
   color: var(--color-muted);
-  line-height: 1.65;
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-copy);
 }
 
 .body p {
@@ -41,5 +42,5 @@
 .actions {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
+  gap: var(--dialog-actions-gap);
 }
