@@ -1,5 +1,5 @@
 import { useMemo, useState, type FormEvent } from 'react'
-import { ChevronDown } from 'lucide-react'
+import { ChevronDown, Sparkles } from 'lucide-react'
 import { Link, Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { AppHeader } from '../../components/AppHeader'
 import { Button } from '../../components/Button'
@@ -59,6 +59,7 @@ export function CheckInPage() {
   const recordable = canRecordCycleDate(cycle, date, todayLocalDate())
   const isNotPracticed = status === 'not_practiced'
   const cycleDay = selectCycleDay(cycle, date)
+  const additionalSummary = getAdditionalSummary(feelingTags, energyDelta, observation)
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -93,7 +94,11 @@ export function CheckInPage() {
 
   return (
     <>
-      <AppHeader backTo="/today" title={isNotPracticed ? '标记未实践' : '每日记录'} />
+      <AppHeader
+        action={<span className={styles.headerDate}>{formatRecordDate(date)}</span>}
+        backTo="/today"
+        title={isNotPracticed ? '标记未实践' : '每日记录'}
+      />
       <Card>
         {!recordable ? (
           <div className={styles.plan}>
@@ -106,18 +111,20 @@ export function CheckInPage() {
           <form className={styles.form} onSubmit={handleSubmit}>
             <div className={styles.plan}>
               <div className={styles.planHeader}>
-                <div>
-                  <p className={styles.planDate}>{formatRecordDate(date)} · {isNotPracticed ? '未实践' : '今日记录'}</p>
+                <div className={styles.titleRow}>
                   <h2>{item?.title ?? '今天的实践'}</h2>
+                  <span className={styles.planDay}>{typeof cycleDay === 'number' ? `第 ${cycleDay} / 7 天` : '当前周期'}</span>
                 </div>
-                <span className={styles.planDay}>{typeof cycleDay === 'number' ? `第 ${cycleDay} / 7 天` : '当前周期'}</span>
               </div>
-              <div className={styles.planDetails}>
-                <div className={styles.planDetail}>
-                  <span>今天要做</span>
-                  <p>{plan.actionPlan}</p>
+              <div className={styles.focusBlock}>
+                <div className={styles.focusAction}>
+                  <span className={styles.focusIcon}><Sparkles aria-hidden="true" className={styles.focusSvg} /></span>
+                  <div>
+                    <span>今日行动</span>
+                    <p>{plan.actionPlan}</p>
+                  </div>
                 </div>
-                <div className={styles.planDetail}>
+                <div className={styles.standardLine}>
                   <span>最低标准</span>
                   <p>{plan.minimumStandard}</p>
                 </div>
@@ -126,10 +133,13 @@ export function CheckInPage() {
             {!isNotPracticed ? (
               <>
                 <TextArea
+                  className={styles.actionTextArea}
+                  fieldClassName={styles.actionField}
                   label="行动摘要"
                   maxLength={500}
                   onChange={(event) => setActionSummary(event.target.value)}
                   placeholder="例如：写了开头 120 字，记录了一个案例"
+                  prefix="01"
                   required
                   value={actionSummary}
                 />
@@ -153,7 +163,10 @@ export function CheckInPage() {
                 open={additionalOpen}
               >
                 <summary>
-                  <span>补充感受与观察</span>
+                  <span className={styles.optionalCopy}>
+                    <span className={styles.optionalTitle}><span className={styles.stepNumber}>02</span><span>补充感受与观察</span></span>
+                    {additionalSummary ? <span className={styles.optionalSummary}>{additionalSummary}</span> : null}
+                  </span>
                   <ChevronDown aria-hidden="true" className={styles.optionalIcon} strokeWidth={2.4} />
                 </summary>
                 <div className={styles.optionalFields}>
@@ -188,4 +201,14 @@ export function CheckInPage() {
 function formatRecordDate(date: string) {
   const [, month, day] = date.split('-')
   return `${Number(month)} 月 ${Number(day)} 日`
+}
+
+function getAdditionalSummary(feelingTags: string[], energyDelta: number, observation: string) {
+  const details = [
+    feelingTags.length ? `感受 ${feelingTags.length} 个` : '',
+    energyDelta ? `能量 ${energyDelta > 0 ? '+' : ''}${energyDelta}` : '',
+    observation.trim() ? '观察' : '',
+  ].filter(Boolean)
+
+  return details.length ? `已补充：${details.join(' · ')}` : ''
 }

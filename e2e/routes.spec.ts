@@ -237,7 +237,7 @@ test.describe('experiment creation and daily check-in', () => {
 
     await expect(page.getByRole('heading', { name: '每日记录', level: 1 })).toBeVisible()
     await expect(page.getByLabel('今天达到最低标准了吗？')).toBeHidden()
-    await page.getByLabel('行动摘要').fill('写了 15 分钟')
+    await page.getByLabel('今天完成了什么？').fill('写了 15 分钟')
     await expect(page.getByLabel('时长（分钟）')).toBeHidden()
     await expect(page.getByLabel('调整后的行动计划')).toBeHidden()
     await page.getByText('补充感受与观察').click()
@@ -253,8 +253,8 @@ test.describe('experiment creation and daily check-in', () => {
     await expect(recordedToday).toHaveCSS('justify-content', 'space-between')
     await expect(recordedToday).toHaveCSS('color', 'rgb(78, 181, 216)')
     await recordedToday.click()
-    await expect(page.getByLabel('行动摘要')).toHaveValue('写了 15 分钟')
-    await page.getByLabel('行动摘要').fill('写了 18 分钟')
+    await expect(page.getByLabel('今天完成了什么？')).toHaveValue('写了 15 分钟')
+    await page.getByLabel('今天完成了什么？').fill('写了 18 分钟')
     await page.getByRole('button', { name: '保存记录' }).click()
 
     await page.getByRole('link', { name: '总库', exact: true }).click()
@@ -276,7 +276,7 @@ test.describe('experiment creation and daily check-in', () => {
 
     await page.getByRole('link', { name: '标记未实践' }).click()
     await expect(page.getByRole('heading', { name: '标记未实践', level: 1 })).toBeVisible()
-    await expect(page.getByLabel('行动摘要')).toBeHidden()
+    await expect(page.getByLabel('今天完成了什么？')).toBeHidden()
     await page.getByRole('button', { name: '忙碌' }).click()
     await page.getByLabel('自定义标签').fill('临时安排')
     await page.getByRole('button', { name: '添加' }).click()
@@ -343,7 +343,7 @@ test.describe('cycle review flow', () => {
     await page.goto(`/items/${itemId}`)
     await page.getByText('更多操作').click()
     await expect(page.getByRole('button', { name: '删除事项' })).toBeVisible()
-    await page.getByRole('heading', { name: '空白实验', level: 1 }).click()
+    await page.getByRole('heading', { name: '空白实验', level: 2 }).click()
     await expect(page.getByRole('button', { name: '删除事项' })).toBeHidden()
     await page.getByText('更多操作').click()
     await page.getByRole('button', { name: '删除事项' }).click()

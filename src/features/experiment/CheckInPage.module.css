@@ -5,41 +5,39 @@
 
 .plan {
   display: grid;
-  gap: var(--card-content-gap);
-  border-radius: var(--radius-panel);
-  padding: var(--panel-padding-block) var(--panel-padding-inline);
-  background: var(--surface-info-panel);
-  box-shadow: var(--shadow-inset-faint);
+  gap: var(--space-18);
 }
 
 .planHeader {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: var(--space-12);
-}
-
-.planHeader > div {
   display: grid;
-  min-width: 0;
-  gap: var(--space-4);
 }
 
-.planDate {
-  margin: 0;
+.headerDate {
   color: var(--color-label);
   font-size: var(--font-size-meta);
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-title);
+  white-space: nowrap;
+}
+
+.titleRow {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-12);
 }
 
 .plan h2 {
+  min-width: 0;
   margin: 0;
-  color: var(--color-heading);
+  overflow: hidden;
+  color: var(--color-muted);
   font-size: var(--font-size-card-title);
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-title);
-  overflow-wrap: anywhere;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .planDay {
@@ -56,30 +54,72 @@
   line-height: var(--line-height-title);
 }
 
-.planDetails {
+.focusBlock {
   display: grid;
+  gap: var(--space-16);
+  border-radius: var(--radius-panel);
+  padding: var(--space-16);
+  background: var(--color-primary-soft);
+}
+
+.focusAction {
+  display: grid;
+  grid-template-columns: var(--icon-base-size) minmax(0, 1fr);
+  align-items: center;
   gap: var(--space-12);
 }
 
-.planDetail {
+.focusAction > div {
   display: grid;
-  gap: var(--space-4);
-  border-top: var(--line-width) solid var(--line-subtle);
-  padding-top: var(--space-12);
+  gap: var(--space-6);
 }
 
-.planDetail span {
-  color: var(--color-label);
+.focusIcon {
+  display: inline-flex;
+  width: var(--icon-base-size);
+  height: var(--icon-base-size);
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-icon);
+  color: var(--color-primary-strong);
+  background: var(--surface-card-strong);
+}
+
+.focusSvg {
+  width: var(--icon-size-small);
+  height: var(--icon-size-small);
+}
+
+.focusAction span,
+.standardLine > span {
+  color: var(--color-primary-strong);
   font-size: var(--font-size-caption);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-title);
 }
 
-.planDetail p {
+.focusAction p {
   margin: 0;
-  color: var(--color-ink);
+  color: var(--color-heading);
+  font-size: var(--font-size-data);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-body);
+  overflow-wrap: anywhere;
+}
+
+.standardLine {
+  display: grid;
+  gap: var(--space-6);
+  border-top: var(--line-width) solid var(--check-in-focus-line);
+  padding-top: var(--space-16);
+}
+
+.standardLine p {
+  margin: 0;
+  color: var(--color-muted);
   font-size: var(--font-size-body);
   line-height: var(--line-height-copy);
+  overflow-wrap: anywhere;
 }
 
 .actions {
@@ -106,6 +146,41 @@
   line-height: var(--line-height-title);
   list-style: none;
   cursor: pointer;
+}
+
+.optionalCopy {
+  display: grid;
+  min-width: 0;
+  gap: var(--space-4);
+}
+
+.optionalTitle {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-8);
+  font-size: var(--font-size-meta);
+}
+
+.stepNumber {
+  color: var(--color-primary);
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-semibold);
+}
+
+.form .actionTextArea {
+  min-height: var(--check-in-summary-min-height);
+}
+
+.actionField {
+  color: var(--color-label);
+  font-size: var(--font-size-data);
+}
+
+.optionalSummary {
+  color: var(--color-label);
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-title);
 }
 
 .optional summary::-webkit-details-marker {
@@ -163,12 +238,7 @@
 }
 
 @media (max-width: 340px) {
-  .planHeader,
   .actions {
     grid-template-columns: 1fr;
-  }
-
-  .planHeader {
-    display: grid;
   }
 }

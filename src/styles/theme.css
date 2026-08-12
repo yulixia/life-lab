@@ -281,6 +281,7 @@
   --field-padding-block: var(--space-10);
   --field-padding-inline: var(--space-14);
   --textarea-min-height: 84px;
+  --check-in-summary-min-height: 104px;
   --segmented-legend-gap: var(--space-8);
   --segmented-gap: var(--space-4);
   --segmented-padding: var(--space-4);
@@ -334,5 +335,6 @@
   --progress-complete-background: color-mix(in srgb, var(--color-primary) 66%, transparent);
   --progress-current-shadow: 0 4px 10px color-mix(in srgb, var(--color-primary) 28%, transparent);
   --progress-panel-line: color-mix(in srgb, var(--color-primary) 8%, transparent);
+  --check-in-focus-line: color-mix(in srgb, var(--color-primary) 18%, transparent);
   --completed-foreground: color-mix(in srgb, var(--color-primary) 60%, var(--color-ink));
 }
