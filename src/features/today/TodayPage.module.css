@@ -293,7 +293,7 @@
 }
 
 .libraryLinkButton {
-  color: var(--theme-today-strong);
+  color: var(--color-label);
 }
 
 .disabledAction {

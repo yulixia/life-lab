@@ -159,7 +159,7 @@ test.describe('primary routes', () => {
       true,
     )
     await expectMainPageBottomSpacing(page)
-    await expect(page.getByRole('link', { name: '去总库' }).first()).toHaveCSS('color', 'rgb(78, 181, 216)')
+    await expect(page.getByRole('link', { name: '去总库' }).first()).toHaveCSS('color', 'rgb(131, 145, 165)')
 
     await page.goto('/energy')
     await expect(page).toHaveURL(/\/energy$/)
@@ -280,6 +280,8 @@ test.describe('experiment creation and daily check-in', () => {
     await expect(page).toHaveURL(/\/today$/)
     await expect(page.getByRole('heading', { name: '晨间写作', level: 2 })).toBeVisible()
     await expect(page.getByText('第 1 天')).toBeVisible()
+    const cycleProgress = page.getByRole('img', { name: /7 天实践当前为第 1 天/ })
+    await expect(cycleProgress.locator('[data-status="empty"]')).toHaveCount(7)
     const recordToday = page.getByRole('link', { name: '记录今日' })
     await expect(recordToday).toBeVisible()
     const titleAndActionLayout = await page.getByRole('heading', { name: '晨间写作', level: 2 }).evaluate((title) => {
@@ -312,6 +314,7 @@ test.describe('experiment creation and daily check-in', () => {
     await page.getByRole('button', { name: '保存记录' }).click()
 
     await expect(page).toHaveURL(/\/today$/)
+    await expect(page.getByRole('img', { name: /7 天实践当前为第 1 天/ }).locator('[data-status="practiced"]')).toHaveCount(1)
     const recordedToday = page.getByRole('link', { name: '今天已记录' })
     await expect(recordedToday).toBeVisible()
     await expect(recordedToday).toHaveCSS('justify-content', 'space-between')
@@ -349,6 +352,7 @@ test.describe('experiment creation and daily check-in', () => {
     await page.getByRole('button', { name: '保存未实践' }).click()
 
     await expect(page.getByRole('link', { name: '今天已记录' })).toBeVisible()
+    await expect(page.getByRole('img', { name: /7 天实践当前为第 1 天/ }).locator('[data-status="empty"]')).toHaveCount(7)
     await expect(page.getByRole('link', { name: '标记未实践' })).toBeHidden()
     await page.getByRole('link', { name: '今天已记录' }).click()
     await expect(page.getByRole('button', { name: '忙碌' })).toHaveAttribute('aria-pressed', 'true')

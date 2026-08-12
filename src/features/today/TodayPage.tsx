@@ -4,7 +4,7 @@ import { AppHeader } from '../../components/AppHeader'
 import { StatusBadge, TrackBadge } from '../../components/Badge'
 import { Card } from '../../components/Card'
 import { useLifeLab } from '../../app/LifeLabContext'
-import { todayLocalDate } from '../../domain/dates'
+import { addCalendarDays, todayLocalDate } from '../../domain/dates'
 import {
   selectCycleDay,
   selectDailyEntry,
@@ -12,7 +12,7 @@ import {
   selectOpenCycleByTrack,
   isCyclePendingReview,
 } from '../../domain/selectors'
-import type { Track } from '../../domain/types'
+import type { DailyEntry, ExperimentCycle, Track } from '../../domain/types'
 import styles from './TodayPage.module.css'
 
 const tracks: Track[] = ['ideal_self', 'side_hustle']
@@ -89,7 +89,7 @@ export function TodayPage() {
                     {day === 'scheduled' ? `${cycle.startDate} 开始` : day === 'ended' ? '等待系统结算' : `还剩 ${daysLeft} 天`}
                   </span>
                 </div>
-                <CycleProgress day={day} />
+                <CycleProgress cycle={cycle} day={day} entries={state.dailyEntries} />
               </div>
               <div className={styles.practiceBrief}>
                 <div className={styles.briefItem}>
@@ -188,21 +188,31 @@ export function TodayPage() {
 
 type CycleDay = ReturnType<typeof selectCycleDay>
 
-function CycleProgress({ day }: { day: CycleDay }) {
-  const activeDay = typeof day === 'number' ? day : day === 'ended' ? 7 : 0
+function CycleProgress({ cycle, day, entries }: { cycle: ExperimentCycle; day: CycleDay; entries: DailyEntry[] }) {
   const label = day === 'scheduled' ? '7 天实践尚未开始' : day === 'ended' ? '7 天实践已结束' : `7 天实践当前为第 ${day} 天`
+  const practicedDates = new Set(
+    entries
+      .filter((entry) => entry.cycleId === cycle.id && entry.status === 'practiced')
+      .map((entry) => entry.date),
+  )
 
   return (
     <div aria-label={label} className={styles.progress} role="img">
       {Array.from({ length: 7 }, (_, index) => {
         const segmentDay = index + 1
-        const stateClass =
-          segmentDay < activeDay
-            ? styles.progressComplete
-            : segmentDay === activeDay
-              ? styles.progressToday
-              : styles.progressFuture
-        return <span className={`${styles.progressSegment} ${stateClass}`} key={segmentDay} />
+        const segmentDate = addCalendarDays(cycle.startDate, index)
+        const isPracticed = practicedDates.has(segmentDate)
+        const isToday = typeof day === 'number' && segmentDay === day
+        const stateClass = isPracticed
+          ? isToday ? styles.progressToday : styles.progressComplete
+          : styles.progressFuture
+        return (
+          <span
+            className={`${styles.progressSegment} ${stateClass}`}
+            data-status={isPracticed ? 'practiced' : 'empty'}
+            key={segmentDay}
+          />
+        )
       })}
     </div>
   )
