@@ -127,7 +127,7 @@
 }
 
 .optionalTitle span {
-  color: var(--color-ink);
+  color: var(--color-primary);
   font-size: var(--font-size-body);
 }
 

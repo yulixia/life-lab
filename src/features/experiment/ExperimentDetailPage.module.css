@@ -80,6 +80,7 @@
 
 .settingHeading > span:first-child {
   flex: 0 0 auto;
+  color: var(--color-primary);
   font-size: var(--font-size-body);
 }
 
