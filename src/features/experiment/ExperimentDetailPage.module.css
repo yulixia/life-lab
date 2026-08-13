@@ -1,6 +1,7 @@
 .detailCard {
   display: grid;
   gap: var(--space-24);
+  border-radius: var(--radius-22);
   padding: var(--space-16);
   background: var(--surface-card-strong);
 }
