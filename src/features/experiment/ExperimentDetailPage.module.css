@@ -64,7 +64,7 @@
 }
 
 .settingSection + .settingSection {
-  padding-top: var(--space-24);
+  padding-top: var(--space-14);
 }
 
 .settingHeading {
