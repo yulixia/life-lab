@@ -58,7 +58,7 @@
 
 .settingSection {
   display: grid;
-  gap: var(--space-20);
+  gap: var(--space-10);
   border-bottom: var(--line-width) solid var(--line-soft);
   padding: 0 var(--space-12) var(--space-24);
 }
