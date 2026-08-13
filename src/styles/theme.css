@@ -1,18 +1,18 @@
 :root {
   /* Base semantic colors */
-  --color-heading: #03033f;
-  --color-ink: #14172b;
-  --color-muted: #666;
-  --color-label: #7f89ae;
-  --color-supporting-text: #525052;
-  --color-link: #48578f;
+  --color-heading: #202b3b;
+  --color-ink: #253142;
+  --color-muted: #69778a;
+  --color-label: #8391a5;
+  --color-supporting-text: #676669;
+  --color-link: #476ba6;
   --color-energy: #2f855a;
   --color-drain: #b45309;
   --color-danger: #b42318;
   --color-white: #ffffff;
-  --color-shell: #f1f4fa;
-  --color-surface: #f8f9fc;
-  --color-field: #f5f8fd;
+  --color-shell: #edf2fb;
+  --color-surface: #f7f9ff;
+  --color-field: #eef4ff;
 
   /* Summer Pastel palette: the approved decorative and category colors. */
   --summer-pastel-01-01: #f8a68d;
@@ -92,12 +92,12 @@
   --summer-pastel-15-05: #db9f27;
 
   /* Module themes */
-  --theme-today-primary: #08b7e8;
-  --theme-today-strong: #00a7dc;
-  --theme-today-soft: rgba(229, 248, 253, 0.94);
-  --theme-today-wash: rgba(226, 248, 253, 0.86);
-  --theme-today-focus: rgba(8, 183, 232, 0.34);
-  --theme-today-shadow: rgba(8, 183, 232, 0.14);
+  --theme-today-primary: #68c8e8;
+  --theme-today-strong: #4eb5d8;
+  --theme-today-soft: rgba(220, 245, 253, 0.9);
+  --theme-today-wash: rgba(222, 247, 253, 0.82);
+  --theme-today-focus: rgba(104, 200, 232, 0.34);
+  --theme-today-shadow: rgba(104, 200, 232, 0.14);
   --theme-today-ink: color-mix(in srgb, var(--theme-today-primary) 60%, var(--color-ink));
 
   --theme-energy-primary: var(--summer-pastel-01-02);
@@ -142,8 +142,8 @@
 
   /* Surfaces and lines */
   --surface-card: rgba(255, 255, 255, 0.74);
-  --surface-card-standard: rgba(255, 255, 255, 0.96);
-  --surface-card-strong: rgba(255, 255, 255, 0.98);
+  --surface-card-standard: rgba(255, 255, 255, 0.92);
+  --surface-card-strong: rgba(255, 255, 255, 0.94);
   --surface-glass: rgba(255, 255, 255, 0.76);
   --surface-control: rgba(255, 255, 255, 0.62);
   --surface-control-strong: rgba(255, 255, 255, 0.78);

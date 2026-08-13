@@ -159,7 +159,7 @@ test.describe('primary routes', () => {
       true,
     )
     await expectMainPageBottomSpacing(page)
-    await expect(page.getByRole('link', { name: '去总库' }).first()).toHaveCSS('color', 'rgb(127, 137, 174)')
+    await expect(page.getByRole('link', { name: '去总库' }).first()).toHaveCSS('color', 'rgb(131, 145, 165)')
 
     await page.goto('/energy')
     await expect(page).toHaveURL(/\/energy$/)
@@ -339,7 +339,7 @@ test.describe('experiment creation and daily check-in', () => {
     const recordedToday = page.getByRole('link', { name: '今天已记录' })
     await expect(recordedToday).toBeVisible()
     await expect(recordedToday).toHaveCSS('justify-content', 'space-between')
-    await expect(recordedToday).toHaveCSS('color', 'rgb(0, 167, 220)')
+    await expect(recordedToday).toHaveCSS('color', 'rgb(78, 181, 216)')
     await recordedToday.click()
     await expect(page.getByLabel('行动摘要')).toHaveValue('写了 15 分钟')
     await page.getByLabel('行动摘要').fill('写了 18 分钟')
