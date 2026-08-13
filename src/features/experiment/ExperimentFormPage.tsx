@@ -127,44 +127,46 @@ export function ExperimentFormPage() {
               required
               value={minimumStandard}
             />
-            <details className={styles.optional}>
-              <summary>
-                <span className={styles.optionalTitle}><span>04</span>补充更多</span>
-                <ChevronDown aria-hidden="true" />
-              </summary>
-              <div className={styles.optionalFields}>
-                <TextArea
-                  fieldClassName={styles.optionalField}
-                  label="适合时希望看到什么"
-                  maxLength={500}
-                  onChange={(event) => setPositiveSignals(event.target.value)}
-                  placeholder="例如：开始阻力变小，写完后更清醒，能积累素材"
-                  value={positiveSignals}
-                />
-                <TextArea
-                  fieldClassName={styles.optionalField}
-                  label="不适合时可能出现什么"
-                  maxLength={500}
-                  onChange={(event) => setNegativeSignals(event.target.value)}
-                  placeholder="例如：持续抗拒、明显消耗、挤占更重要的事"
-                  value={negativeSignals}
-                />
-                <TextArea
-                  fieldClassName={styles.optionalField}
-                  label="理想行动标准"
-                  maxLength={240}
-                  onChange={(event) => setIdealStandard(event.target.value)}
-                  placeholder="例如：写满 20 分钟并整理一个可复用片段"
-                  value={idealStandard}
-                />
+            <div className={styles.formFooter}>
+              <details className={styles.optional}>
+                <summary>
+                  <span className={styles.optionalTitle}><span>04</span>补充更多</span>
+                  <ChevronDown aria-hidden="true" />
+                </summary>
+                <div className={styles.optionalFields}>
+                  <TextArea
+                    fieldClassName={styles.optionalField}
+                    label="适合时希望看到什么"
+                    maxLength={500}
+                    onChange={(event) => setPositiveSignals(event.target.value)}
+                    placeholder="例如：开始阻力变小，写完后更清醒，能积累素材"
+                    value={positiveSignals}
+                  />
+                  <TextArea
+                    fieldClassName={styles.optionalField}
+                    label="不适合时可能出现什么"
+                    maxLength={500}
+                    onChange={(event) => setNegativeSignals(event.target.value)}
+                    placeholder="例如：持续抗拒、明显消耗、挤占更重要的事"
+                    value={negativeSignals}
+                  />
+                  <TextArea
+                    fieldClassName={styles.optionalField}
+                    label="理想行动标准"
+                    maxLength={240}
+                    onChange={(event) => setIdealStandard(event.target.value)}
+                    placeholder="例如：写满 20 分钟并整理一个可复用片段"
+                    value={idealStandard}
+                  />
+                </div>
+              </details>
+              {error ? <InlineError>{error}</InlineError> : null}
+              <div className={styles.actions}>
+                <Link className={styles.linkButton} to={`/items/${item.id}`}>
+                  取消
+                </Link>
+                <Button type="submit">创建 7 天实践</Button>
               </div>
-            </details>
-            {error ? <InlineError>{error}</InlineError> : null}
-            <div className={styles.actions}>
-              <Link className={styles.linkButton} to={`/items/${item.id}`}>
-                取消
-              </Link>
-              <Button type="submit">创建 7 天实践</Button>
             </div>
           </form>
         )}

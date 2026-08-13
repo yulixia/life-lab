@@ -72,7 +72,7 @@
   align-items: baseline;
   gap: var(--space-16);
   margin: 0;
-  color: var(--color-muted);
+  color: var(--color-ink);
   font-size: var(--font-size-data);
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-title);
@@ -93,7 +93,7 @@
 }
 
 .moreSection {
-  gap: var(--space-18);
+  gap: var(--space-10);
   border-bottom: 0;
   padding-bottom: var(--space-4);
 }
@@ -113,7 +113,7 @@
 }
 
 .moreSummary .settingHeading {
-  color: var(--color-muted);
+  color: var(--color-ink);
 }
 
 .moreSummary > svg {
@@ -132,10 +132,6 @@
   border-radius: var(--radius-8);
   outline: var(--focus-ring-width) solid var(--color-focus);
   outline-offset: var(--focus-ring-offset);
-}
-
-.moreSection[open] .moreList {
-  margin-top: var(--space-18);
 }
 
 .moreList {

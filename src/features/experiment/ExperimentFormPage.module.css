@@ -75,7 +75,7 @@
 
 .coreField > span:first-child > span {
   gap: var(--space-16);
-  color: var(--color-muted);
+  color: var(--color-ink);
   font-size: var(--font-size-data);
   font-weight: var(--font-weight-regular);
 }
@@ -109,7 +109,7 @@
   gap: var(--space-12);
   min-height: var(--tap-min);
   list-style: none;
-  color: var(--color-muted);
+  color: var(--color-ink);
   font-size: var(--font-size-data);
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-title);
@@ -127,7 +127,7 @@
 }
 
 .optionalTitle span {
-  color: var(--color-muted);
+  color: var(--color-ink);
   font-size: var(--font-size-body);
 }
 
@@ -175,6 +175,11 @@
   font-size: var(--font-size-data);
 }
 
+.formFooter {
+  display: grid;
+  gap: var(--space-10);
+}
+
 .actions {
   /* position: sticky; */
   bottom: calc(12px + env(safe-area-inset-bottom));
@@ -184,6 +189,11 @@
   margin-top: var(--space-8);
   padding-top: var(--space-8);
   /* background: linear-gradient(rgba(247, 250, 252, 0), var(--color-surface) 35%); */
+}
+
+.formFooter .actions {
+  margin-top: 0;
+  padding-top: 0;
 }
 
 .linkButton {
