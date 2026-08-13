@@ -159,7 +159,7 @@ test.describe('primary routes', () => {
       true,
     )
     await expectMainPageBottomSpacing(page)
-    await expect(page.getByRole('link', { name: '去总库' }).first()).toHaveCSS('color', 'rgb(131, 145, 165)')
+    await expect(page.getByRole('link', { name: '去总库' }).first()).toHaveCSS('color', 'rgb(127, 137, 174)')
 
     await page.goto('/energy')
     await expect(page).toHaveURL(/\/energy$/)
@@ -272,29 +272,50 @@ test.describe('experiment creation and daily check-in', () => {
     await page.goto(`/items/${itemId}/experiments/new`)
     await expect(page.getByRole('heading', { name: '创建实践', level: 1 })).toBeVisible()
     await expect(page.locator('header').getByText('理想自我', { exact: true })).toBeVisible()
+    await expect(page.getByRole('link', { name: /所属事项.*晨间写作/ })).toBeVisible()
+    await expect(page.getByLabel(/实践周期：.*共 7 天/)).toBeVisible()
+    await expect(page.getByLabel('适合时希望看到什么')).toBeVisible()
+    const optionalPracticeFields = page.locator('details').filter({ hasText: '补充更多' })
+    await optionalPracticeFields.locator('summary').click()
+    await expect(page.getByLabel('适合时希望看到什么')).toBeHidden()
+    await optionalPracticeFields.locator('summary').click()
+    await expect(page.getByLabel('适合时希望看到什么')).toBeVisible()
     await page.getByLabel('本轮唯一验证问题').fill('写作是否让我更稳定？')
     await page.getByLabel('每天／本周具体做什么').fill('每天写 20 分钟')
     await page.getByLabel('判断有效实践日的最低标准').fill('至少写 10 分钟')
     await page.getByRole('button', { name: '创建 7 天实践' }).click()
 
     await expect(page).toHaveURL(/\/today$/)
-    await expect(page.getByRole('heading', { name: '晨间写作', level: 2 })).toBeVisible()
+    await expect(page.getByRole('heading', { name: '写作是否让我更稳定？', level: 2 })).toBeVisible()
+    await expect(page.getByRole('link', { name: '实践详情' })).toBeVisible()
     await expect(page.getByText('第 1 天')).toBeVisible()
     const cycleProgress = page.getByRole('img', { name: /7 天实践当前为第 1 天/ })
     await expect(cycleProgress.locator('[data-status="empty"]')).toHaveCount(7)
     const recordToday = page.getByRole('link', { name: '记录今日' })
     await expect(recordToday).toBeVisible()
-    const titleAndActionLayout = await page.getByRole('heading', { name: '晨间写作', level: 2 }).evaluate((title) => {
+    const titleAndActionLayout = await page.getByRole('heading', { name: '写作是否让我更稳定？', level: 2 }).evaluate((title) => {
       const card = title.closest('section')
-      const track = card?.querySelector('[class*="track"]')
+      const detailLink = card?.querySelector('a[href^="/experiments/"]')
       const titleBounds = title.getBoundingClientRect()
-      const trackBounds = track?.getBoundingClientRect()
+      const detailBounds = detailLink?.getBoundingClientRect()
       return {
-        titleRight: titleBounds.right,
-        trackLeft: trackBounds?.left,
+        titleWidth: titleBounds.width,
+        detailWidth: detailBounds?.width,
       }
     })
-    expect(titleAndActionLayout.titleRight).toBeLessThanOrEqual(titleAndActionLayout.trackLeft ?? 0)
+    expect(titleAndActionLayout.titleWidth).toBeGreaterThan(titleAndActionLayout.detailWidth ?? 0)
+    await page.getByRole('link', { name: '实践详情' }).click()
+    await expect(page).toHaveURL(/\/experiments\/[^/]+$/)
+    await expect(page.getByRole('heading', { name: '实践详情', level: 1 })).toBeVisible()
+    await expect(page.locator('header').getByText('理想自我', { exact: true })).toBeVisible()
+    await expect(page.getByRole('link', { name: /所属事项.*晨间写作/ })).toBeVisible()
+    await expect(page.getByText('写作是否让我更稳定？', { exact: true })).toBeVisible()
+    await expect(page.getByText('每天写 20 分钟', { exact: true })).toBeVisible()
+    await expect(page.getByText('至少写 10 分钟', { exact: true })).toBeVisible()
+    await expect(page.getByText('未设置', { exact: true })).toHaveCount(3)
+    await expect(page.getByRole('navigation', { name: '主要导航' })).toBeHidden()
+    await page.getByRole('link', { name: '返回' }).click()
+    await expect(page).toHaveURL(/\/today$/)
     await expect(recordToday).toHaveCSS('justify-content', 'space-between')
     await recordToday.click()
 
@@ -318,7 +339,7 @@ test.describe('experiment creation and daily check-in', () => {
     const recordedToday = page.getByRole('link', { name: '今天已记录' })
     await expect(recordedToday).toBeVisible()
     await expect(recordedToday).toHaveCSS('justify-content', 'space-between')
-    await expect(recordedToday).toHaveCSS('color', 'rgb(78, 181, 216)')
+    await expect(recordedToday).toHaveCSS('color', 'rgb(0, 167, 220)')
     await recordedToday.click()
     await expect(page.getByLabel('行动摘要')).toHaveValue('写了 15 分钟')
     await page.getByLabel('行动摘要').fill('写了 18 分钟')

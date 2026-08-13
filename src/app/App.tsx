@@ -4,6 +4,7 @@ import { EnergyDetailPage } from '../features/energy/EnergyDetailPage'
 import { EnergyFormPage } from '../features/energy/EnergyFormPage'
 import { EnergyPage } from '../features/energy/EnergyPage'
 import { CheckInPage } from '../features/experiment/CheckInPage'
+import { ExperimentDetailPage } from '../features/experiment/ExperimentDetailPage'
 import { ExperimentFormPage } from '../features/experiment/ExperimentFormPage'
 import { LongTermCheckInPage } from '../features/long-term/LongTermCheckInPage'
 import { ReviewPage } from '../features/review/ReviewPage'
@@ -32,6 +33,7 @@ export function App() {
         <Route path="items/:itemId/long-term/check-in" element={<LongTermCheckInPage />} />
         <Route path="experiments/:cycleId/check-in" element={<CheckInPage />} />
         <Route path="experiments/:cycleId/review" element={<ReviewPage />} />
+        <Route path="experiments/:cycleId" element={<ExperimentDetailPage />} />
         <Route path="*" element={<Navigate to="/today" replace />} />
       </Route>
     </Routes>

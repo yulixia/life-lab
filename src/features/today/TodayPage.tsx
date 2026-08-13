@@ -1,4 +1,4 @@
-import { ArrowRight, Clock3, Sparkles, Target } from 'lucide-react'
+import { ArrowRight, ChevronRight, Clock3, Sparkles, Target } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { AppHeader } from '../../components/AppHeader'
 import { StatusBadge, TrackBadge } from '../../components/Badge'
@@ -75,11 +75,15 @@ export function TodayPage() {
           return (
             <Card className={`${styles.card} ${styles.focusCard}`} key={cycle.id}>
               <div className={styles.focusHeader}>
-                <div className={styles.focusHeading}>
-                  <h2>{item?.title ?? '当前实践'}</h2>
-                  <TrackBadge track={track} />
-                </div>
+                <span className={styles.focusEyebrow}>本轮想验证</span>
+                {item ? (
+                  <Link className={styles.detailLink} to={`/experiments/${cycle.id}`}>
+                    <span>实践详情</span>
+                    <ChevronRight aria-hidden="true" />
+                  </Link>
+                ) : null}
               </div>
+              <h2 className={styles.focusQuestion}>{cycle.question}</h2>
               <div className={styles.cyclePanel}>
                 <div className={styles.dayLine}>
                   <div>
@@ -134,6 +138,7 @@ export function TodayPage() {
                   开始前先保留精力
                 </span>
               )}
+              <div className={styles.focusFooter}>{trackEmptyText[track]}</div>
             </Card>
           )
         })}

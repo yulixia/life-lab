@@ -1,5 +1,5 @@
 import { mkdirSync, writeFileSync } from 'node:fs'
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath, URL } from 'node:url'
 import { join } from 'node:path'
 
 const outDir = fileURLToPath(new URL('../public/badges/', import.meta.url))

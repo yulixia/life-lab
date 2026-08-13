@@ -53,7 +53,15 @@
   background: var(--color-field);
   box-shadow: var(--shadow-inset);
   font-size: var(--font-size-body);
+  font-weight: var(--font-weight-regular);
   line-height: var(--line-height-body);
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: var(--color-label);
+  font-weight: var(--font-weight-regular);
+  opacity: 1;
 }
 
 .field textarea {

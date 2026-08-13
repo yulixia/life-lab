@@ -35,36 +35,64 @@
 }
 
 .focusCard {
+  gap: var(--space-18);
+  padding: var(--space-22);
   background: var(--surface-card-strong);
 }
 
 .focusHeader {
-  display: block;
-}
-
-.focusHeading {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  display: flex;
+  min-height: var(--tap-min);
   align-items: center;
+  justify-content: space-between;
   gap: var(--space-12);
 }
 
-.focusHeading h2 {
-  min-width: 0;
-  font-size: var(--font-size-card-title);
+.focusEyebrow {
+  color: var(--theme-today-strong);
+  font-size: var(--font-size-meta);
+  font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-title);
-  overflow: hidden;
-  text-overflow: ellipsis;
+}
+
+.detailLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+  min-height: var(--tap-min);
+  color: var(--color-label);
+  font-size: var(--font-size-meta);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-title);
+  text-decoration: none;
   white-space: nowrap;
+}
+
+.detailLink svg {
+  width: var(--icon-size-small);
+  height: var(--icon-size-small);
+}
+
+.detailLink:focus-visible {
+  border-radius: var(--radius-8);
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.card .focusQuestion {
+  color: var(--color-heading);
+  font-size: var(--font-size-card-title);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.45;
 }
 
 .cyclePanel {
   display: grid;
-  gap: var(--panel-content-gap);
-  border-radius: var(--radius-panel);
-  padding: var(--panel-padding-block) var(--panel-padding-inline);
+  gap: var(--space-14);
+  border-radius: var(--radius-22);
+  padding: var(--space-16);
   background: var(--surface-progress);
-  box-shadow: inset 0 0 0 var(--line-width) var(--progress-panel-line);
+  box-shadow: inset 0 0 0 var(--line-width) var(--progress-panel-line), var(--shadow-inset-faint);
 }
 
 .dayLine {
@@ -128,17 +156,19 @@
 .practiceBrief {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-10);
+  gap: var(--space-12);
 }
 
 .briefItem {
   display: grid;
   grid-template-columns: var(--icon-base-size) minmax(0, 1fr);
-  align-items: start;
+  align-items: center;
   gap: var(--space-10);
-  border-radius: var(--radius-panel);
-  padding: var(--space-14);
+  min-height: 96px;
+  border-radius: var(--radius-22);
+  padding: var(--space-14) var(--space-12);
   background: var(--surface-info-panel);
+  box-shadow: var(--shadow-inset-faint);
 }
 
 .briefIcon {
@@ -186,7 +216,7 @@
 .primaryActions {
   display: grid;
   grid-template-columns: var(--action-grid-columns);
-  gap: var(--space-10);
+  gap: var(--space-12);
 }
 
 .primaryButton,
@@ -204,6 +234,14 @@
   line-height: var(--line-height-title);
   text-align: center;
   text-decoration: none;
+}
+
+.focusCard .primaryButton,
+.focusCard .secondaryButton,
+.focusCard .completedButton,
+.focusCard .disabledAction {
+  min-height: 44px;
+  border-radius: var(--radius-pill);
 }
 
 .primaryButton {
@@ -231,6 +269,15 @@
 
 .recordedTodayButton {
   color: var(--theme-today-strong);
+}
+
+.focusFooter {
+  border-top: var(--line-width) solid var(--line-soft);
+  padding-top: var(--space-14);
+  color: var(--color-label);
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-title);
 }
 
 .primaryButton:focus-visible,

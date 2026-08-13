@@ -51,7 +51,7 @@
   gap: var(--space-16);
   border-radius: var(--radius-panel);
   padding: var(--space-16);
-  background: var(--color-primary-soft);
+  background: var(--color-field);
 }
 
 .focusAction {

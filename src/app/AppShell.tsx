@@ -80,6 +80,9 @@ function getSection(pathname: string) {
   if (pathname.startsWith('/energy')) {
     return 'energy'
   }
+  if (/^\/items\/[^/]+\/experiments\/new$/.test(pathname)) {
+    return 'today'
+  }
   if (pathname.startsWith('/library') || pathname.startsWith('/items')) {
     return 'library'
   }
