@@ -75,7 +75,7 @@
 
 .coreField > span:first-child > span {
   gap: var(--space-16);
-  color: var(--color-primary);
+  color: var(--color-muted);
   font-size: var(--font-size-data);
   font-weight: var(--font-weight-regular);
 }
