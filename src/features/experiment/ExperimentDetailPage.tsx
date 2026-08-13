@@ -1,4 +1,4 @@
-import { ChevronRight } from 'lucide-react'
+import { ChevronDown, ChevronRight } from 'lucide-react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { Card } from '../../components/Card'
 import { SubpageHeader } from '../../components/SubpageHeader'
@@ -40,17 +40,20 @@ export function ExperimentDetailPage() {
           <SettingSection label="本轮唯一验证问题" number="01" value={cycle.question} />
           <SettingSection label="每天／本周具体做什么" number="02" value={cycle.actionPlan} />
           <SettingSection label="判断有效实践日的最低标准" number="03" value={cycle.minimumStandard} />
-          <section className={`${styles.settingSection} ${styles.moreSection}`}>
-            <h2 className={styles.settingHeading}>
-              <span>04</span>
-              <span>更多设定</span>
-            </h2>
+          <details className={`${styles.settingSection} ${styles.moreSection}`}>
+            <summary className={styles.moreSummary}>
+              <span className={styles.settingHeading}>
+                <span>04</span>
+                <span>更多设定</span>
+              </span>
+              <ChevronDown aria-hidden="true" />
+            </summary>
             <dl className={styles.moreList}>
               <SettingDetail label="适合时希望看到什么" value={cycle.positiveSignals} />
               <SettingDetail label="不适合时可能出现什么" value={cycle.negativeSignals} />
               <SettingDetail label="理想行动标准" value={cycle.idealStandard} />
             </dl>
-          </section>
+          </details>
         </div>
       </Card>
     </>

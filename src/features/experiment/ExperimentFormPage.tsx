@@ -127,7 +127,7 @@ export function ExperimentFormPage() {
               required
               value={minimumStandard}
             />
-            <details className={styles.optional} open>
+            <details className={styles.optional}>
               <summary>
                 <span className={styles.optionalTitle}><span>04</span>补充更多</span>
                 <ChevronDown aria-hidden="true" />

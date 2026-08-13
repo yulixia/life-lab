@@ -47,6 +47,32 @@ async function expectDetailPageBottomSpacing(page: Page) {
   expect(layout.bottomPadding).toBeLessThanOrEqual(40)
 }
 
+async function expectTodayContentTrack(page: Page) {
+  const layout = await page.evaluate(() => {
+    const main = document.querySelector('main')
+    const content = main?.children[1]
+    if (!main || !content) {
+      return null
+    }
+
+    const mainBounds = main.getBoundingClientRect()
+    const contentBounds = content.getBoundingClientRect()
+    const mainStyle = getComputedStyle(main)
+    return {
+      contentLeftInset: contentBounds.left - mainBounds.left,
+      contentRightInset: mainBounds.right - contentBounds.right,
+      paddingLeft: Number.parseFloat(mainStyle.paddingLeft),
+      paddingRight: Number.parseFloat(mainStyle.paddingRight),
+    }
+  })
+
+  expect(layout).not.toBeNull()
+  expect(layout?.paddingLeft).toBe(18)
+  expect(layout?.paddingRight).toBe(18)
+  expect(layout?.contentLeftInset).toBe(18)
+  expect(layout?.contentRightInset).toBe(18)
+}
+
 async function createItem(page: import('@playwright/test').Page, title: string, track: 'ideal_self' | 'side_hustle') {
   await page.getByRole('link', { name: '新建事项' }).first().click()
   await page.getByLabel('标题').fill(title)
@@ -159,6 +185,7 @@ test.describe('primary routes', () => {
       true,
     )
     await expectMainPageBottomSpacing(page)
+    await expectTodayContentTrack(page)
     await expect(page.getByRole('link', { name: '去总库' }).first()).toHaveCSS('color', 'rgb(131, 145, 165)')
 
     await page.goto('/energy')
@@ -168,6 +195,7 @@ test.describe('primary routes', () => {
       true,
     )
     await expectMainPageBottomSpacing(page, true)
+    await expectTodayContentTrack(page)
 
     await page.getByRole('link', { name: '总库', exact: true }).click()
     await expect(page).toHaveURL(/\/library$/)
@@ -176,13 +204,16 @@ test.describe('primary routes', () => {
       true,
     )
     await expectMainPageBottomSpacing(page, true)
+    await expectTodayContentTrack(page)
 
     await page.getByRole('link', { name: '数据', exact: true }).click()
     await expect(page.getByRole('heading', { name: '数据', level: 1 })).toBeVisible()
     await expectMainPageBottomSpacing(page)
+    await expectTodayContentTrack(page)
 
     await page.goto('/items/new')
     await expectDetailPageBottomSpacing(page)
+    await expectTodayContentTrack(page)
   })
 })
 
@@ -274,9 +305,7 @@ test.describe('experiment creation and daily check-in', () => {
     await expect(page.locator('header').getByText('理想自我', { exact: true })).toBeVisible()
     await expect(page.getByRole('link', { name: /所属事项.*晨间写作/ })).toBeVisible()
     await expect(page.getByLabel(/实践周期：.*共 7 天/)).toBeVisible()
-    await expect(page.getByLabel('适合时希望看到什么')).toBeVisible()
     const optionalPracticeFields = page.locator('details').filter({ hasText: '补充更多' })
-    await optionalPracticeFields.locator('summary').click()
     await expect(page.getByLabel('适合时希望看到什么')).toBeHidden()
     await optionalPracticeFields.locator('summary').click()
     await expect(page.getByLabel('适合时希望看到什么')).toBeVisible()
@@ -312,7 +341,12 @@ test.describe('experiment creation and daily check-in', () => {
     await expect(page.getByText('写作是否让我更稳定？', { exact: true })).toBeVisible()
     await expect(page.getByText('每天写 20 分钟', { exact: true })).toBeVisible()
     await expect(page.getByText('至少写 10 分钟', { exact: true })).toBeVisible()
-    await expect(page.getByText('未设置', { exact: true })).toHaveCount(3)
+    const moreSettings = page.locator('details').filter({ hasText: '更多设定' })
+    const unsetSettings = moreSettings.getByText('未设置', { exact: true })
+    await expect(unsetSettings).toHaveCount(3)
+    await expect(unsetSettings.first()).toBeHidden()
+    await moreSettings.locator('summary').click()
+    await expect(unsetSettings.first()).toBeVisible()
     await expect(page.getByRole('navigation', { name: '主要导航' })).toBeHidden()
     await page.getByRole('link', { name: '返回' }).click()
     await expect(page).toHaveURL(/\/today$/)

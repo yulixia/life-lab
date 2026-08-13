@@ -13,7 +13,6 @@ export function PageContainer({ children }: PageContainerProps) {
   const hasBottomNav = ['/today', '/energy', '/library', '/settings'].includes(location.pathname)
   const className = [
     styles.container,
-    location.pathname === '/today' ? styles.today : '',
     hasBottomNav ? styles.withBottomNav : '',
     usesContainedScroll ? styles.containedScroll : '',
   ].filter(Boolean).join(' ')

@@ -3,7 +3,7 @@
   width: 100%;
   height: 100%;
   margin: 0 auto;
-  padding: 0 var(--space-page) calc(var(--layout-detail-bottom) + env(safe-area-inset-bottom));
+  padding: 0 var(--layout-page-gutter) calc(var(--layout-detail-bottom) + env(safe-area-inset-bottom));
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
@@ -12,11 +12,6 @@
 
 .withBottomNav {
   padding-bottom: calc(var(--layout-page-bottom) + env(safe-area-inset-bottom));
-}
-
-.today {
-  padding-right: var(--layout-page-gutter);
-  padding-left: var(--layout-page-gutter);
 }
 
 .containedScroll {

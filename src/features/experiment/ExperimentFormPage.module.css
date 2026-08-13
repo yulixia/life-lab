@@ -183,7 +183,7 @@
   gap: var(--space-10);
   margin-top: var(--space-8);
   padding-top: var(--space-8);
-  background: linear-gradient(rgba(247, 250, 252, 0), var(--color-surface) 35%);
+  /* background: linear-gradient(rgba(247, 250, 252, 0), var(--color-surface) 35%); */
 }
 
 .linkButton {
