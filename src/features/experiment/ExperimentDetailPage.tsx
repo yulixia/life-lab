@@ -42,10 +42,7 @@ export function ExperimentDetailPage() {
           <SettingSection label="判断有效实践日的最低标准" number="03" value={cycle.minimumStandard} />
           <details className={`${styles.settingSection} ${styles.moreSection}`}>
             <summary className={styles.moreSummary}>
-              <span className={styles.settingHeading}>
-                <span>04</span>
-                <span>更多设定</span>
-              </span>
+              <span className={styles.settingHeading}>更多设定</span>
               <ChevronDown aria-hidden="true" />
             </summary>
             <dl className={styles.moreList}>

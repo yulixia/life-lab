@@ -130,7 +130,7 @@ export function ExperimentFormPage() {
             <div className={styles.formFooter}>
               <details className={styles.optional}>
                 <summary>
-                  <span className={styles.optionalTitle}><span>04</span>补充更多</span>
+                  <span className={styles.optionalTitle}>补充更多</span>
                   <ChevronDown aria-hidden="true" />
                 </summary>
                 <div className={styles.optionalFields}>

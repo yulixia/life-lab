@@ -1,7 +1,7 @@
 .panel {
   display: grid;
   gap: var(--space-18);
-  border-radius: var(--radius-12);
+  border-radius: var(--radius-22);
   padding: var(--space-16) var(--space-14);
   color: var(--color-muted);
   background: var(--color-field);

@@ -123,12 +123,7 @@
 .optionalTitle {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-16);
-}
-
-.optionalTitle span {
   color: var(--color-primary);
-  font-size: var(--font-size-body);
 }
 
 .optional summary > svg {
